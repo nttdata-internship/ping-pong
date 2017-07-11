@@ -49,4 +49,9 @@ public class Location implements Serializable {
 		this.region = region;
 	}
 
+	@Override
+	public boolean equals(Object obj) {
+
+		return this.country.equals(((Location)obj).country) && this.region.equals(((Location)obj).region);
+	}
 }
