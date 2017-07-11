@@ -1,1 +1,4 @@
-[{"city":"city","country":"RO","region":"region"},{"city":"city","country":"RO","region":"region"}]
+[
+	{"city":"city","country":"RO","region":"region","temperature":12},
+	{"city":"city","country":"RO","region":"region","temperature":11.5}
+]

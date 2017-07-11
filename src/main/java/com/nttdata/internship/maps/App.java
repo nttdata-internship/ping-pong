@@ -1,7 +1,15 @@
 package com.nttdata.internship.maps;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Optional;
+import java.util.stream.IntStream;
 
 import com.nttdata.internship.maps.databind.ObjectReader;
 import com.nttdata.internship.maps.entity.Location;
@@ -20,13 +28,69 @@ public class App {
 
 		ObjectReader<Location> objectReader = new ObjectReader<Location>("locations.json", Location.class);
 		try {
-			List<Location> location = (List<Location>) objectReader.readList();
+			List<Location> locations = (List<Location>) objectReader.readList();
 
-			System.out.println(location.size());
+			// System.out.println(locations.size());
+
+			locations.forEach(l -> System.out.println("Stream it " + l.getCity() + l.getTemperature()));
+
+			HashMap<Location, Long> map = new HashMap<Location, Long>();
+			for (Location location : locations) {
+				map.put(location, location.getTemperature());
+			}
+
+			for (Location key : map.keySet()) {
+
+				long temperature = map.get(key);
+				System.out.println(key.getCity() + " " + temperature);
+			}
+
+			//for (Entry<Location, Long> mapEntry : map.entrySet()) {
+			//	System.out.println(mapEntry.getKey().getRegion() + " " + mapEntry.getValue());
+			//}
 			
-			location.forEach(l -> System.out.println(l.getCity()));
-		} catch (IOException e) {
+			//IntStream.of(11, 12).max()
+			//.ifPresent(maxInt->System.out.println("Maximum temperature is: " + maxInt));
+			
+			Map.Entry<Location, Long> maxEntry = null;
+			
+			for(Map.Entry<Location, Long> entry : map.entrySet()) {
+				if (maxEntry == null || entry.getValue().compareTo(maxEntry.getValue()) > 0) {
+					maxEntry = entry;
+				}
+				System.out.println("Maximum temperature: " + maxEntry);
+			}
+			
+			
+			
+		} catch (IOException e) { 
 			e.printStackTrace();
 		}
+
+		// List<Location> newList = new ArrayList<Location>();
+		// Location l1 = new Location();
+		// Location l2 = new Location();
+		// Location l3 = new Location();
+		// Location l4 = new Location();
+		// Location l5 = new Location();
+		//
+		// l1.setTemperature(0);
+		// l2.setTemperature(30);
+		// l3.setTemperature(40);
+		// l4.setTemperature(25);
+		// l5.setTemperature(30);
+		// l1.setCity("Berlin");
+		// l2.setCity("Dortmund");
+		// l3.setCity("Oslo");
+		// l4.setCity("Copenhaga");
+		// l5.setCity("Frankfurt");
+		//
+		// newList.add(l1);
+		// newList.add(l2);
+		// newList.add(l3);
+		// newList.add(l4);
+		// newList.add(l5);
+
 	}
+
 }
