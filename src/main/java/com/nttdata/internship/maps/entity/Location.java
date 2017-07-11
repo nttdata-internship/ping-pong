@@ -15,13 +15,14 @@ public class Location implements Serializable {
 
 	private String region;
 
-	private long temperature;
+	private float temperature;
+
 	
-	public long getTemperature() {
+	public float getTemperature() {
 		return temperature;
 	}
 
-	public void setTemperature(long temperature) {
+	public void setTemperature(float temperature) {
 		this.temperature = temperature;
 	}
 
