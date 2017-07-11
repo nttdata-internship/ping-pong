@@ -24,7 +24,7 @@ public class App {
 
 			System.out.println(location.size());
 			
-			location.forEach(l -> System.out.println(l.getCity()));
+			location.forEach(l -> System.out.println(l.getCity() + " " + l.getRegion()));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
