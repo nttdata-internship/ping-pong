@@ -1,15 +1,12 @@
 package com.nttdata.internship.maps;
 
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Optional;
-import java.util.stream.IntStream;
+import java.util.stream.LongStream;
 
 import com.nttdata.internship.maps.databind.ObjectReader;
 import com.nttdata.internship.maps.entity.Location;
@@ -23,8 +20,8 @@ import com.nttdata.internship.maps.entity.Location;
  *
  */
 public class App {
-
-	public static void main(String[] args) {
+	// "a","b","c".......
+	public static void main(String... args) {
 
 		ObjectReader<Location> objectReader = new ObjectReader<Location>("locations.json", Location.class);
 		try {
@@ -42,28 +39,37 @@ public class App {
 			for (Location key : map.keySet()) {
 
 				long temperature = map.get(key);
-				System.out.println(key.getCity() + " " + temperature);
+				System.out.println(key.getCity() + "," + " temperature: " + temperature);
 			}
 
-			//for (Entry<Location, Long> mapEntry : map.entrySet()) {
-			//	System.out.println(mapEntry.getKey().getRegion() + " " + mapEntry.getValue());
+			// for (Entry<Location, Long> mapEntry : map.entrySet()) {
+			// System.out.println(mapEntry.getKey().getRegion() + " " +
+			// mapEntry.getValue());
+			// }
+
+			//Long[] values = map.values().toArray(new Long[map.values().size()]);
+			//LongStream.of(values);
+			// .max(values)
+			// .ifPresent(maxInt -> System.out.println("Maximum temperature is: " +
+			// maxInt));
+			
+
+			//Map.Entry<Location, Long> maxEntry = null;
+			//for (Map.Entry<Location, Long> entry : map.entrySet()) {
+			//	if (maxEntry == null || entry.getValue().compareTo(maxEntry.getValue()) > 0) {
+			//		maxEntry = entry;
+			//	}
+			//	System.out.println("Maximum temperature: " + maxEntry);
 			//}
 			
-			//IntStream.of(11, 12).max()
-			//.ifPresent(maxInt->System.out.println("Maximum temperature is: " + maxInt));
-			
-			Map.Entry<Location, Long> maxEntry = null;
-			
-			for(Map.Entry<Location, Long> entry : map.entrySet()) {
-				if (maxEntry == null || entry.getValue().compareTo(maxEntry.getValue()) > 0) {
-					maxEntry = entry;
-				}
-				System.out.println("Maximum temperature: " + maxEntry);
-			}
-			
-			
-			
-		} catch (IOException e) { 
+			Collection<Long> c = map.values();
+            System.out.println("Maximum temperature: " + Collections.max(c));
+            System.out.println("Minimum temperature: " + Collections.min(c));
+            
+            
+            
+
+		} catch (IOException e) {
 			e.printStackTrace();
 		}
 
