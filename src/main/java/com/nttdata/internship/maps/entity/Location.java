@@ -49,6 +49,7 @@ public class Location implements Serializable {
 	public void setRegion(String region) {
 		this.region = region;
 	}
+
 	
 		
 }

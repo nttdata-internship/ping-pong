@@ -11,6 +11,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Optional;
 import java.util.Set;
 import java.util.SortedMap;
 import java.util.SortedSet;
@@ -82,12 +84,27 @@ public class App {
 			
 			
 			System.out.println();
+			Entry<Location, Long> maxEntry = null;
 			
+			for(Entry<Location, Long> entry : treeMap.entrySet()) {
+				if (maxEntry == null || entry.getValue() > maxEntry.getValue()) {
+					maxEntry = entry;
+				}
+			}
 			
-			Collection<Long> c2 = ()
-			System.out.println("Maximum temperature: " + Collections.max(c2));
-			System.out.println("Minimum temperature: " + Collections.min(c2));
-
+			System.out.println(maxEntry);
+			
+			Entry<Location, Long> minEntry = null;
+			
+			for(Entry<Location, Long> entry : treeMap.entrySet()) {
+				Location loc1 = entry.getKey();
+				if (minEntry.equals(loc1.getCountry()) && entry.getValue() < minEntry.getValue()) {
+					minEntry = entry;
+				}
+			}
+			
+			System.out.println(minEntry);
+		
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
