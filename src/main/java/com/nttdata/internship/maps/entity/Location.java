@@ -1,6 +1,8 @@
 package com.nttdata.internship.maps.entity;
 
 import java.io.Serializable;
+import java.util.Comparator;
+import java.util.Map;
 
 public class Location implements Serializable {
 
@@ -54,4 +56,8 @@ public class Location implements Serializable {
 
 		return this.country.equals(((Location)obj).country) && this.region.equals(((Location)obj).region);
 	}
+
+	
+	
+	
 }
