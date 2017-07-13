@@ -1,15 +1,26 @@
 package com.nttdata.internship.maps;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.text.Collator;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Optional;
+import java.util.Set;
+import java.util.SortedMap;
+import java.util.SortedSet;
 import java.util.TreeMap;
+import java.util.TreeSet;
+import java.util.stream.Collectors;
+import java.util.stream.LongStream;
 
 import com.nttdata.internship.maps.databind.ObjectReader;
 import com.nttdata.internship.maps.entity.Country;
@@ -118,6 +129,14 @@ public class App {
 			}
 
 			// TODO citeste de la consola si apeleaza getter
+			System.out.println("args.length" + args.length);
+            for (String st : args) {
+//                for (Map.Entry<Location, Float> entry : treeMap.entrySet()){
+//                    if(st.equals(entry.getKey().getCity()))
+//                        System.out.println(entry.getValue());
+                map.get(new Location(args[0], Country.valueOf(args[1])));
+                System.out.println("Input =" + st +" nu exista!");    
+            }
 
 		} catch (IOException e) {
 			e.printStackTrace();

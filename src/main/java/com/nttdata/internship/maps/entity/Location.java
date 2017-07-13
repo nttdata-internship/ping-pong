@@ -18,6 +18,7 @@ public class Location implements Serializable {
 
 	private long temperature;
 	
+
 	public long getTemperature() {
 		return temperature;
 	}
@@ -28,6 +29,18 @@ public class Location implements Serializable {
 
 	public Country getCountry() {
 		return country;
+	}
+	public Location() {
+		
+	}
+
+	public Location(String city) {
+		super();
+		this.city = city;
+	}
+
+	public Location(String string, Country valueOf) {
+		// TODO Auto-generated constructor stub
 	}
 
 	public void setCountry(Country country) {
@@ -50,6 +63,4 @@ public class Location implements Serializable {
 		this.region = region;
 	}
 
-	
-		
 }
