@@ -130,13 +130,13 @@ public class App {
 
 			// TODO citeste de la consola si apeleaza getter
 			System.out.println("args.length" + args.length);
-            for (String st : args) {
-//                for (Map.Entry<Location, Float> entry : treeMap.entrySet()){
-//                    if(st.equals(entry.getKey().getCity()))
-//                        System.out.println(entry.getValue());
-                map.get(new Location(args[0], Country.valueOf(args[1])));
-                System.out.println("Input =" + st +" nu exista!");    
-            }
+			for (String st : args) {
+				// for (Map.Entry<Location, Float> entry : treeMap.entrySet()){
+				// if(st.equals(entry.getKey().getCity()))
+				// System.out.println(entry.getValue());
+				map.get(new Location(args[0], Country.valueOf(args[1])));
+				System.out.println("Input =" + st + " nu exista!");
+			}
 
 		} catch (IOException e) {
 			e.printStackTrace();

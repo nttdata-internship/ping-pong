@@ -30,8 +30,7 @@ public class ObjectReader<T> {
 
 	public <T> List readList() throws JsonParseException, JsonMappingException, IOException {
 
-		return objectMapper.readValue(is, objectMapper.getTypeFactory().
-				  constructCollectionType(List.class, clazz));
+		return objectMapper.readValue(is, objectMapper.getTypeFactory().constructCollectionType(List.class, clazz));
 	}
 
 }

@@ -17,7 +17,6 @@ public class Location implements Serializable {
 	private String region;
 
 	private long temperature;
-	
 
 	public long getTemperature() {
 		return temperature;
@@ -30,8 +29,9 @@ public class Location implements Serializable {
 	public Country getCountry() {
 		return country;
 	}
+
 	public Location() {
-		
+
 	}
 
 	public Location(String city) {
