@@ -1,25 +1,15 @@
 package com.nttdata.internship.maps;
 
 import java.io.IOException;
-import java.text.Collator;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Optional;
-import java.util.Set;
-import java.util.SortedMap;
-import java.util.SortedSet;
 import java.util.TreeMap;
-import java.util.TreeSet;
-import java.util.stream.Collectors;
-import java.util.stream.LongStream;
 
 import com.nttdata.internship.maps.databind.ObjectReader;
 import com.nttdata.internship.maps.entity.Country;
@@ -36,6 +26,9 @@ import com.nttdata.internship.maps.entity.Location;
 public class App {
 	// "a","b","c".......
 	public static void main(String... args) {
+
+		final String MIN_TEMPERATURE = "MIN";
+		final String MAX_TEMPERATURE = "MAX";
 
 		ObjectReader<Location> objectReader = new ObjectReader<Location>("locations.json", Location.class);
 		try {
@@ -55,13 +48,13 @@ public class App {
 				long temperature = map.get(key);
 				System.out.println(key.getCity() + "," + " temperature: " + temperature);
 			}
-			
+
 			System.out.println();
 
 			Collection<Long> c = map.values();
 			System.out.println("Maximum temperature: " + Collections.max(c));
 			System.out.println("Minimum temperature: " + Collections.min(c));
-			
+
 			System.out.println();
 
 			Map<Location, Long> treeMap = new TreeMap<Location, Long>(new Comparator<Location>() {
@@ -81,70 +74,55 @@ public class App {
 				Location loc = entry.getKey();
 				System.out.println("Country: " + loc.getCountry() + " City: " + loc.getCity());
 			}
-			
-			
+
 			System.out.println();
-			Entry<Location, Long> maxEntry = null;
-			
-			for(Entry<Location, Long> entry : treeMap.entrySet()) {
-				if (maxEntry == null || entry.getValue() > maxEntry.getValue()) {
-					maxEntry = entry;
+
+			Iterator<Location> locationIt = treeMap.keySet().iterator();
+			Country currentCountry = null;
+			float minTemperature = 0;
+			float maxTemperature = 0;
+			Map<Country, Map<String, Location>> weatherStatistics = new HashMap<Country, Map<String, Location>>();
+			while (locationIt.hasNext()) {
+				Location currentLocation = locationIt.next();
+				float currentTemperature = currentLocation.getTemperature();
+				Map<String, Location> countryStatistics = weatherStatistics.get(currentLocation.getCountry());
+				if (currentCountry != currentLocation.getCountry()) {
+					countryStatistics = new HashMap<String, Location>();
+					countryStatistics.put(MAX_TEMPERATURE, currentLocation);
+					countryStatistics.put(MIN_TEMPERATURE, currentLocation);
+					weatherStatistics.put(currentLocation.getCountry(), countryStatistics);
+					minTemperature = currentTemperature;
+					maxTemperature = currentTemperature;
+
 				}
-			}
-			
-			System.out.println(maxEntry);
-			
-			Entry<Location, Long> minEntry = null;
-			
-			for(Entry<Location, Long> entry : treeMap.entrySet()) {
-				Location loc1 = entry.getKey();
-				if (minEntry.equals(loc1.getCountry()) && entry.getValue() < minEntry.getValue()) {
-					minEntry = entry;
+				if (currentTemperature < minTemperature) {
+					countryStatistics.put(MIN_TEMPERATURE, currentLocation);
+					minTemperature = currentTemperature;
 				}
+				if (currentTemperature > maxTemperature) {
+					countryStatistics.put(MAX_TEMPERATURE, currentLocation);
+					maxTemperature = currentTemperature;
+				}
+				currentCountry = currentLocation.getCountry();
+
 			}
-			
-			System.out.println(minEntry);
-		
+
+			for (Entry<Country, Map<String, Location>> countryData : weatherStatistics.entrySet()) {
+				System.out.println("Country Statistic for country=[" + countryData.getKey() + "]");
+				Map<String, Location> cityData = countryData.getValue();
+				System.out.println(String.format("Min Temparature %s for city %s",
+						cityData.get(MIN_TEMPERATURE).getTemperature(), cityData.get(MIN_TEMPERATURE).getCity()));
+
+				System.out.println(String.format("Max Temparature %s for city %s",
+						cityData.get(MAX_TEMPERATURE).getTemperature(), cityData.get(MAX_TEMPERATURE).getCity()));
+			}
+
+			// TODO citeste de la consola si apeleaza getter
+
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 
-		// List<Location> newList = new ArrayList<Location>();
-		// Location l1 = new Location();
-		// Location l2 = new Location();
-		// Location l3 = new Location();
-		// Location l4 = new Location();
-		// Location l5 = new Location();
-		//
-		// l1.setTemperature(0);
-		// l2.setTemperature(30);
-		// l3.setTemperature(40);
-		// l4.setTemperature(25);
-		// l5.setTemperature(30);
-		// l1.setCity("Berlin");
-		// l2.setCity("Dortmund");
-		// l3.setCity("Oslo");
-		// l4.setCity("Copenhaga");
-		// l5.setCity("Frankfurt");
-		//
-		// newList.add(l1);
-		// newList.add(l2);
-		// newList.add(l3);
-		// newList.add(l4);
-		// newList.add(l5);
-
 	}
 
-	/*
-	 * static <Location, Long extends Comparable<? super Long>>
-	 * SortedSet<Map.Entry<Location, Long>> entriesSortedByValues(Map<Location,
-	 * Long> map) { SortedSet<Map.Entry<Location, Long>> sortedEntries = new
-	 * TreeSet<Map.Entry<Location, Long>>( new Comparator<Map.Entry<Location,
-	 * Long>>() {
-	 * 
-	 * @Override public int compare(Map.Entry<Location, Long> e1,
-	 * Map.Entry<Location, Long> e2) { int res =
-	 * e1.getValue().compareTo(e2.getValue()); return res != 0 ? res : 1; } } );
-	 * sortedEntries.addAll(map.entrySet()); return sortedEntries;
-	 */
 }
