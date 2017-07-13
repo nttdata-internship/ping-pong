@@ -82,7 +82,7 @@ public class App {
 			{
 				Location loc2 = entry.getKey();
 				Location loc = null;
-
+				Location loc3 = null;
 				if(loc == null || loc.getCountry().equals(loc2.getCountry())){
 					
 					if (maxValueFromCountry == null || entry.getValue().compareTo(maxValueFromCountry.getValue()) > 0)
