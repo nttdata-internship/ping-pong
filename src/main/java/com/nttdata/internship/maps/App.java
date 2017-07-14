@@ -1,15 +1,21 @@
 package com.nttdata.internship.maps;
 
+import java.io.BufferedReader;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.text.Collator;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.SortedMap;
+import java.util.SortedSet;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
@@ -26,36 +32,60 @@ import com.nttdata.internship.maps.entity.Location;
  *
  */
 public class App {
+	// "a","b","c".......
+	public static void main(String... args) {
 
-	private static final String MIN_TEMPERATURE = "MIN";
-	private static final String MAX_TEMPERATURE = "MAX";
-
-	public static void main(String[] args) {
+		final String MIN_TEMPERATURE = "MIN";
+		final String MAX_TEMPERATURE = "MAX";
 
 		ObjectReader<Location> objectReader = new ObjectReader<Location>("locations.json", Location.class);
 		try {
-			List<Location> locations = objectReader.readList();
+			List<Location> locations = (List<Location>) objectReader.readList();
 
-			System.out.println(locations.size());
+			// System.out.println(locations.size());
 
-			Map<Location, Float> weatherData = new TreeMap<Location, Float>(new Comparator<Location>() {
+//			locations.forEach(l -> System.out.println("Stream it: " + l.getCity() + " " + l.getTemperature()));
 
-				public int compare(Location o1, Location o2) {
-					if (o1.getCountry().equals(o2.getCountry())) {
-						return o1.getCity().compareTo(o2.getCity());
-					} else
-						return o1.getCountry().compareTo(o2.getCountry());
-				}
-			});
-
+			Map<Location, Float> map = new HashMap<Location, Float>();
 			for (Location location : locations) {
-				weatherData.put(location, location.getTemperature());
-
+				map.put(location, location.getTemperature());
 			}
 
-			// TODO citeste de la consola si apeleaza getter
+			for (Location key : map.keySet()) {
 
-			Iterator<Location> locationIt = weatherData.keySet().iterator();
+				float temperature = map.get(key);
+				System.out.println(key.getCity() + "," + " temperature: " + temperature);
+			}
+
+			System.out.println();
+
+			Collection<Float> c = map.values();
+			System.out.println("Maximum temperature: " + Collections.max(c));
+			System.out.println("Minimum temperature: " + Collections.min(c));
+
+			System.out.println();
+
+			Map<Location, Float> treeMap = new TreeMap<Location, Float>(new Comparator<Location>() {
+
+				@Override
+				public int compare(Location o1, Location o2) {
+					if (o1.getCountry().equals(o2.getCountry()))
+						return o1.getCity().compareTo(o2.getCity());
+					else
+						return o1.getCountry().name().compareTo(o2.getCountry().name());
+				}
+
+			});
+
+			treeMap.putAll(map);
+			for (Map.Entry<Location, Float> entry : treeMap.entrySet()) {
+				Location loc = entry.getKey();
+				System.out.println("Country: " + loc.getCountry() + " City: " + loc.getCity());
+			}
+
+			System.out.println();
+
+			Iterator<Location> locationIt = treeMap.keySet().iterator();
 			Country currentCountry = null;
 			float minTemperature = 0;
 			float maxTemperature = 0;
@@ -95,8 +125,34 @@ public class App {
 						cityData.get(MAX_TEMPERATURE).getTemperature(), cityData.get(MAX_TEMPERATURE).getCity()));
 			}
 
+			// TODO citeste de la consola si apeleaza getter
+			System.out.println("args.length" + args.length);
+			for (String st : args) {
+				/// for (Map.Entry<Location, Float> entry : treeMap.entrySet()){
+				// if(st.equals(entry.getKey().getCity()))
+				// System.out.println(entry.getValue());
+				map.get(new Location(args[0], Country.valueOf(args[1])));
+				System.out.println("Input =" + st + " nu exista!");
+			}
+
+			/// Timer: pornesc de la 100 si un timer numara pana la 0 si unu pana la 200.
+			/// Outputul in consola.
+
+			// asta face doar scadere
+			ThreadTimer t1 = new ThreadTimer(new Scadere(), 200, 100);
+			// asta face doar adunare
+			ThreadTimer t2 = new ThreadTimer(new Adunare(), 0, 100);
+
+			Thread thread2 = new Thread(t2);
+
+			Thread thread1 = new Thread(t1);
+			thread2.start();
+			thread1.start();
+
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+
 	}
+
 }
