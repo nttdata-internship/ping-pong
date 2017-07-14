@@ -9,6 +9,6 @@
 {"region":"region","country":"EN_US","city":"Detroit","temperature":27.9},
 
 
-{"region":"region","country":"EN_GB","city":"London","temperature":12},
-{"region":"region","country":"EN_GB","city":"Plymouth","temperature":12.1}
+{"region":"region","country":"EN","city":"London","temperature":12},
+{"region":"region","country":"EN","city":"Plymouth","temperature":12.1}
 ]
