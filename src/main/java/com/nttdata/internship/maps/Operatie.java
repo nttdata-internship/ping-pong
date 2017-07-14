@@ -7,4 +7,4 @@ interface Operatie {
 	public boolean stop(int a, int b);
 
 	void writeToFile();
- }
+  }
