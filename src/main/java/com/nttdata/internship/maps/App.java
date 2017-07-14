@@ -19,6 +19,7 @@ import java.util.SortedMap;
 import java.util.SortedSet;
 import java.util.TreeMap;
 import java.util.TreeSet;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
 import java.util.stream.LongStream;
 
@@ -137,6 +138,20 @@ public class App {
 				map.get(new Location(args[0], Country.valueOf(args[1])));
 				System.out.println("Input =" + st + " nu exista!");
 			}
+
+			// Timer: pornesc de la 100 si un timer numara pana la 0 si unu pana la 200.
+			// Outputul in consola.
+
+			// asta face doar scadere
+			ThreadTimer t1 = new ThreadTimer(new Scadere(), 200, 100);
+			// asta face doar adunare
+			ThreadTimer t2 = new ThreadTimer(new Adunare(), 0, 100);
+
+			Thread thread2 = new Thread(t2);
+
+			Thread thread1 = new Thread(t1);
+			thread2.start();
+			thread1.start();
 
 		} catch (IOException e) {
 			e.printStackTrace();
