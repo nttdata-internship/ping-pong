@@ -11,4 +11,10 @@ class Scadere implements Operatie {
 		// TODO Auto-generated method stub
 		return a >= b;
 	}
+
+	@Override
+	public void writeToFile() {
+		// TODO Auto-generated method stub
+		
+	}
 }

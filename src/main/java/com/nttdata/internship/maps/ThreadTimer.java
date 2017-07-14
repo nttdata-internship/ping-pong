@@ -18,7 +18,7 @@ public class ThreadTimer implements Runnable {
 	@Override
 	public void run() {
 
-		// pre initializare
+		/// pre initializare
 		int i = start;
 		while (op.stop(i, end)) {
 

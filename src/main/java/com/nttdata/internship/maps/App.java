@@ -139,8 +139,8 @@ public class App {
 				System.out.println("Input =" + st + " nu exista!");
 			}
 
-			// Timer: pornesc de la 100 si un timer numara pana la 0 si unu pana la 200.
-			// Outputul in consola.
+			/// Timer: pornesc de la 100 si un timer numara pana la 0 si unu pana la 200.
+			/// Outputul in consola.
 
 			// asta face doar scadere
 			ThreadTimer t1 = new ThreadTimer(new Scadere(), 200, 100);
