@@ -13,15 +13,11 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Optional;
 import java.util.Set;
 import java.util.SortedMap;
 import java.util.SortedSet;
 import java.util.TreeMap;
 import java.util.TreeSet;
-import java.util.concurrent.atomic.AtomicLong;
-import java.util.stream.Collectors;
-import java.util.stream.LongStream;
 
 import com.nttdata.internship.maps.databind.ObjectReader;
 import com.nttdata.internship.maps.entity.Country;
@@ -48,28 +44,28 @@ public class App {
 
 			// System.out.println(locations.size());
 
-			locations.forEach(l -> System.out.println("Stream it: " + l.getCity() + " " + l.getTemperature()));
+//			locations.forEach(l -> System.out.println("Stream it: " + l.getCity() + " " + l.getTemperature()));
 
-			HashMap<Location, Long> map = new HashMap<Location, Long>();
+			Map<Location, Float> map = new HashMap<Location, Float>();
 			for (Location location : locations) {
 				map.put(location, location.getTemperature());
 			}
 
 			for (Location key : map.keySet()) {
 
-				long temperature = map.get(key);
+				float temperature = map.get(key);
 				System.out.println(key.getCity() + "," + " temperature: " + temperature);
 			}
 
 			System.out.println();
 
-			Collection<Long> c = map.values();
+			Collection<Float> c = map.values();
 			System.out.println("Maximum temperature: " + Collections.max(c));
 			System.out.println("Minimum temperature: " + Collections.min(c));
 
 			System.out.println();
 
-			Map<Location, Long> treeMap = new TreeMap<Location, Long>(new Comparator<Location>() {
+			Map<Location, Float> treeMap = new TreeMap<Location, Float>(new Comparator<Location>() {
 
 				@Override
 				public int compare(Location o1, Location o2) {
@@ -82,7 +78,7 @@ public class App {
 			});
 
 			treeMap.putAll(map);
-			for (Map.Entry<Location, Long> entry : treeMap.entrySet()) {
+			for (Map.Entry<Location, Float> entry : treeMap.entrySet()) {
 				Location loc = entry.getKey();
 				System.out.println("Country: " + loc.getCountry() + " City: " + loc.getCity());
 			}

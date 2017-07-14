@@ -23,6 +23,11 @@ public class Location implements Serializable {
 		this.region = region;
 	}
 
+	public Location(String country, Country valueOf) {
+		this.city = city;
+		this.country = valueOf;
+	}
+
 	private float temperature;
 
 	public float getTemperature() {
@@ -90,7 +95,5 @@ public class Location implements Serializable {
 			return false;
 		return true;
 	}
-
-
 
 }
