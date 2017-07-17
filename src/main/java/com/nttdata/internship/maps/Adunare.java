@@ -1,6 +1,6 @@
 package com.nttdata.internship.maps;
 
-class Adunare implements Operatie {
+public class Adunare implements Operatie {
 	public int op(int a) {
 		return ++a;
 	}
