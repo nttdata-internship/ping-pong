@@ -31,7 +31,7 @@ import com.nttdata.internship.maps.entity.Location;
  * Hello world!
  *
  */
-public class App {
+public class Maps_Main {
 	// "a","b","c".......
 	public static void main(String... args) {
 
