@@ -14,7 +14,7 @@ interface Operatie {
 	 * 
 	 * @param operand
 	 * @return The result of an operation. I.e
-	 *         Subtraction/Addition/Division/Multiplication.
+	 *         Subtraction/ Addition/ Division/ Multiplication.
 	 */
 	public int op(int operand);
 
