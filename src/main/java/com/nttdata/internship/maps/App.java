@@ -1,27 +1,16 @@
 package com.nttdata.internship.maps;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
 import java.util.TreeMap;
-import java.util.stream.Collectors;
 
 import com.nttdata.internship.maps.databind.ObjectReader;
 import com.nttdata.internship.maps.entity.Location;
-import java.util.stream.*;
-
-import java.util.stream.Collectors;
-import java.util.stream.Collectors;
 
 //HashMap cu locatii ca si key si valoarea va fi temperatura maxima a locatiei.
 //Compare locations with hashcode or .equals().
@@ -41,24 +30,24 @@ public class App {
 		try {
 
 			List<Location> location = (List<Location>) objectReader.readList();
-			location.forEach(l -> System.out.println(l.getCity() + " " + l.getTemperature()));
+//			location.forEach(l -> System.out.println(l.getCity() + " " + l.getTemperature()));
 			System.out.println(location.size());
 
-			Map<Location, Long> map = new HashMap<Location, Long>();
+			Map<Location, Float> map = new HashMap<Location, Float>();
 			for (Location o : location)
 				map.put(o, o.getTemperature());
 
 			for (Location loc : map.keySet()) {
-				long temp = map.get(loc);
+				float temp = map.get(loc);
 				System.out.println(loc.getCity() + " " + temp);
 			}
 
-			Collection<Long> c = map.values();
+			Collection<Float> c = map.values();
 			System.out.println(Collections.max(c));
 
-			Map<Location, Long> treeMap = new TreeMap<Location, Long>(new Comparator<Location>() {
+			
+			Map<Location, Float> treeMap = new TreeMap<Location, Float>(new Comparator<Location>() {
 
-				@Override
 				public int compare(Location o1, Location o2) {
 					if (o1.getCountry().equals(o2.getCountry()))
 						return o1.getCity().compareTo(o2.getCity());
@@ -70,15 +59,15 @@ public class App {
 
 			
 			treeMap.putAll(map);
-			for (Map.Entry<Location, Long> entry : treeMap.entrySet()) {
+			for (Map.Entry<Location, Float> entry : treeMap.entrySet()) {
 				Location loc = entry.getKey();
 				System.out.println("tara: " + loc.getCountry() + " oras : " + loc.getCity());
 			}
 
 			
-			Map.Entry<Location, Long> maxValueFromCountry =null;
+			Map.Entry<Location, Float> maxValueFromCountry =null;
 			
-			for (Map.Entry<Location, Long> entry : treeMap.entrySet())
+			for (Map.Entry<Location, Float> entry : treeMap.entrySet())
 			{
 				Location loc2 = entry.getKey();
 				Location loc = null;
