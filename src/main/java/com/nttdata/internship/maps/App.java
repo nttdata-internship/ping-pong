@@ -1,53 +1,73 @@
 package com.nttdata.internship.maps;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.text.Collator;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
+import java.util.SortedMap;
+import java.util.SortedSet;
 import java.util.TreeMap;
+import java.util.TreeSet;
 
 import com.nttdata.internship.maps.databind.ObjectReader;
+import com.nttdata.internship.maps.entity.Country;
 import com.nttdata.internship.maps.entity.Location;
 
 //HashMap cu locatii ca si key si valoarea va fi temperatura maxima a locatiei.
 //Compare locations with hashcode or .equals().
 //MAPA IN JSON, CUM ADAUG DATE IN JSON, CUM LE CITESC
-//sa gasim maximul si minimul pt temp intr-o tara din mapa din json si le afisam si sortam dupa tara si oras
-// citim de la tastatura un oras si trebuie sa ne intoarca temperatura
-
+//sa gasim maximul si minimul intr-o tara din mapa din json
 /**
  * Hello world!
  *
  */
 public class App {
+	// "a","b","c".......
+	public static void main(String... args) {
 
-	public static void main(String[] args) {
+		final String MIN_TEMPERATURE = "MIN";
+		final String MAX_TEMPERATURE = "MAX";
 
 		ObjectReader<Location> objectReader = new ObjectReader<Location>("locations.json", Location.class);
 		try {
+			List<Location> locations = (List<Location>) objectReader.readList();
 
-			List<Location> location = (List<Location>) objectReader.readList();
-//			location.forEach(l -> System.out.println(l.getCity() + " " + l.getTemperature()));
-			System.out.println(location.size());
+			// System.out.println(locations.size());
+
+//			locations.forEach(l -> System.out.println("Stream it: " + l.getCity() + " " + l.getTemperature()));
 
 			Map<Location, Float> map = new HashMap<Location, Float>();
-			for (Location o : location)
-				map.put(o, o.getTemperature());
-
-			for (Location loc : map.keySet()) {
-				float temp = map.get(loc);
-				System.out.println(loc.getCity() + " " + temp);
+			for (Location location : locations) {
+				map.put(location, location.getTemperature());
 			}
 
-			Collection<Float> c = map.values();
-			System.out.println(Collections.max(c));
+			for (Location key : map.keySet()) {
 
-			
+				float temperature = map.get(key);
+				System.out.println(key.getCity() + "," + " temperature: " + temperature);
+			}
+
+			System.out.println();
+
+			Collection<Float> c = map.values();
+			System.out.println("Maximum temperature: " + Collections.max(c));
+			System.out.println("Minimum temperature: " + Collections.min(c));
+
+			System.out.println();
+
 			Map<Location, Float> treeMap = new TreeMap<Location, Float>(new Comparator<Location>() {
 
+				@Override
 				public int compare(Location o1, Location o2) {
 					if (o1.getCountry().equals(o2.getCountry()))
 						return o1.getCity().compareTo(o2.getCity());
@@ -57,40 +77,82 @@ public class App {
 
 			});
 
-			
 			treeMap.putAll(map);
 			for (Map.Entry<Location, Float> entry : treeMap.entrySet()) {
 				Location loc = entry.getKey();
-				System.out.println("tara: " + loc.getCountry() + " oras : " + loc.getCity());
+				System.out.println("Country: " + loc.getCountry() + " City: " + loc.getCity());
 			}
 
-			
-			Map.Entry<Location, Float> maxValueFromCountry =null;
-			
-			for (Map.Entry<Location, Float> entry : treeMap.entrySet())
-			{
-				Location loc2 = entry.getKey();
-				Location loc = null;
-				Location loc3 = null;
-				if(loc == null || loc.getCountry().equals(loc2.getCountry())){
-					
-					if (maxValueFromCountry == null || entry.getValue().compareTo(maxValueFromCountry.getValue()) > 0)
-					{
-						maxValueFromCountry = entry;
-						loc = maxValueFromCountry.getKey();
-					}
+			System.out.println();
+
+			Iterator<Location> locationIt = treeMap.keySet().iterator();
+			Country currentCountry = null;
+			float minTemperature = 0;
+			float maxTemperature = 0;
+			Map<Country, Map<String, Location>> weatherStatistics = new HashMap<Country, Map<String, Location>>();
+			while (locationIt.hasNext()) {
+				Location currentLocation = locationIt.next();
+				float currentTemperature = currentLocation.getTemperature();
+				Map<String, Location> countryStatistics = weatherStatistics.get(currentLocation.getCountry());
+				if (currentCountry != currentLocation.getCountry()) {
+					countryStatistics = new HashMap<String, Location>();
+					countryStatistics.put(MAX_TEMPERATURE, currentLocation);
+					countryStatistics.put(MIN_TEMPERATURE, currentLocation);
+					weatherStatistics.put(currentLocation.getCountry(), countryStatistics);
+					minTemperature = currentTemperature;
+					maxTemperature = currentTemperature;
+
 				}
-				else{
-					System.out.println(maxValueFromCountry.getValue());
-					maxValueFromCountry = null;
-				}	
+				if (currentTemperature < minTemperature) {
+					countryStatistics.put(MIN_TEMPERATURE, currentLocation);
+					minTemperature = currentTemperature;
+				}
+				if (currentTemperature > maxTemperature) {
+					countryStatistics.put(MAX_TEMPERATURE, currentLocation);
+					maxTemperature = currentTemperature;
+				}
+				currentCountry = currentLocation.getCountry();
+
 			}
-			
+
+			for (Entry<Country, Map<String, Location>> countryData : weatherStatistics.entrySet()) {
+				System.out.println("Country Statistic for country=[" + countryData.getKey() + "]");
+				Map<String, Location> cityData = countryData.getValue();
+				System.out.println(String.format("Min Temparature %s for city %s",
+						cityData.get(MIN_TEMPERATURE).getTemperature(), cityData.get(MIN_TEMPERATURE).getCity()));
+
+				System.out.println(String.format("Max Temparature %s for city %s",
+						cityData.get(MAX_TEMPERATURE).getTemperature(), cityData.get(MAX_TEMPERATURE).getCity()));
+			}
+
+			// TODO citeste de la consola si apeleaza getter
+			System.out.println("args.length" + args.length);
+			for (String st : args) {
+				/// for (Map.Entry<Location, Float> entry : treeMap.entrySet()){
+				// if(st.equals(entry.getKey().getCity()))
+				// System.out.println(entry.getValue());
+				map.get(new Location(args[0], Country.valueOf(args[1])));
+				System.out.println("Input =" + st + " nu exista!");
+			}
+
+			/// Timer: pornesc de la 100 si un timer numara pana la 0 si unu pana la 200.
+			/// Outputul in consola.
+
+			// asta face doar scadere
+			ThreadTimer t1 = new ThreadTimer(new Scadere(), 200, 100);
+			// asta face doar adunare
+			ThreadTimer t2 = new ThreadTimer(new Adunare(), 0, 100);
+
+			Thread thread2 = new Thread(t2);
+
+			Thread thread1 = new Thread(t1);
+			thread2.start();
+			thread1.start();
+
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 
 	}
-
 
 }
