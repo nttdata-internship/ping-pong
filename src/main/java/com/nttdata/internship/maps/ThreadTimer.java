@@ -9,6 +9,8 @@ public class ThreadTimer implements Runnable {
 
 	public ThreadTimer(Operatie op, int start, int end) {
 		super();
+		
+		
 		this.op = op;
 
 		this.start = start;
