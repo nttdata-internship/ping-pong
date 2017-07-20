@@ -2,66 +2,61 @@ package com.nttdata.internship.chatapp.server;
 
 import java.io.*;
 import java.net.*;
+import java.util.ArrayList;
+import java.util.List;
+
+import com.nttdata.internship.chatapp.client.ChatClient;
 
 public class ChatServer {
-	public static void main(String[] args) {
-		final int maxClientsCount = 10;
+	Socket socket = null;
+	ServerSocket server = null;
+	DataInputStream streamIn = null;
+
+	public ChatServer(int port) {
 		try {
-			ServerSocket server = new ServerSocket(1200);
-			Socket socket = server.accept();
-
-			DataInputStream dis = new DataInputStream(socket.getInputStream());
-			DataOutputStream dos = new DataOutputStream(socket.getOutputStream());
-
-			BufferedReader breader = new BufferedReader(new InputStreamReader(System.in));
-
-			String msgin = "";
-			String msgout = "";
-			boolean isConnected = false;
-			while (!msgin.equals("End")) {
-				Socket clientSocket = null;
-
+			System.out.println("Bindint to a port " + port + " ,please wait...");
+			server = new ServerSocket(port);
+			System.out.println("Server started. " + server);
+			System.out.println("Waitinf for a client...");
+			socket = server.accept();
+			System.out.println("Client accepted. " + socket);
+			open();
+			boolean done = false;
+			while (!done) {
 				try {
-
-					if (!isConnected) {
-						clientSocket = server.accept();
-						isConnected = true;
-
-						DataInputStream disz = new DataInputStream(socket.getInputStream());
-						DataOutputStream dosz = new DataOutputStream(socket.getOutputStream());
-
-						BufferedReader breaderz = new BufferedReader(new InputStreamReader(System.in));
-
-						String msgin2 = "";
-						String msgout2 = "";
-
-						msgin2 = disz.readUTF();
-						System.out.println(msgin2);
-						msgout2 = breaderz.readLine();
-						dosz.writeUTF(msgout2);
-						dosz.flush();
-
-					}
-
-					msgin = dis.readUTF();
-					System.out.println(msgin);
-					msgout = breader.readLine();
-					dos.writeUTF(msgout);
-					dos.flush();
-
+					String line = streamIn.readUTF();
+					System.out.println(line);
+					done = line.equals("Bye");
+				} catch (IOException ioe) {
+					done = true;
 				}
-
-				catch (IOException ioex) {
-					throw ioex;
-				} finally {
-
-				}
-
 			}
-			socket.close();
+			close();
+		} catch (IOException ioe) {
+			System.out.println(ioe);
+		}
+	}
 
-		} catch (Exception e) {
-			// Handle the exceptions
+	public void open() throws IOException {
+		streamIn = new DataInputStream(new BufferedInputStream(socket.getInputStream()));
+
+	}
+
+	public void close() throws IOException {
+		if (socket != null) {
+			socket.close();
+		}
+		if (streamIn != null) {
+			streamIn.close();
+		}
+	}
+
+	public static void main(String[] args) {
+		ChatServer server = null;
+		if (args.length != 1) {
+			System.out.println("Usage: Java ChatServer port.");
+		} else {
+			server = new ChatServer(Integer.parseInt(args[0]));
 		}
 	}
 }
