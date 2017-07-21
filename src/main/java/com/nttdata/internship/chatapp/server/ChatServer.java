@@ -59,4 +59,5 @@ public class ChatServer {
 			server = new ChatServer(Integer.parseInt(args[0]));
 		}
 	}
+
 }

@@ -18,6 +18,7 @@ public class MultiServers {
 	ServerSocket server = null;
 	Thread thread = null;
 	SocketConnectionListener client = null;
+	static Socket c;
 
 	// public MultiServers(int port) {
 	// try {
@@ -76,24 +77,24 @@ public class MultiServers {
 		SocketConnectionListener connectionListener = new SocketConnectionListener(Integer.parseInt(args[0]));
 		connectionListener.start();
 
-		System.out.println("Chat Server Thead started");
+		System.out.println("Chat Server Thread started");
 
-		while (true) {
-			for (Entry<String, Socket> clients : Collections
-					.synchronizedMap((Map<String, Socket>) connectionListener.connectedClients).entrySet()) {
+		/*
+		 * while (true) { for (Entry<String, Socket> clients :
+		 * connectionListener.connectedClients .entrySet()) {
+		 * 
+		 * String clientName = clients.getKey(); Socket clientSocket =
+		 * clients.getValue();
+		 * 
+		 * PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
+		 * BufferedReader in = new BufferedReader( new
+		 * InputStreamReader(clientSocket.getInputStream())); out.println("Stream");
+		 * 
+		 * String inputLine, outputLine; String read = null; System.out.println("read "
+		 * + read + "  from" + clientName);
+		 * 
+		 * }
+		 */
 
-				String clientName = clients.getKey();
-				Socket clientSocket = clients.getValue();
-
-				DataInputStream dais = new DataInputStream(clientSocket.getInputStream());
-				DataOutputStream daos = new DataOutputStream(clientSocket.getOutputStream());
-
-				String read = dais.readUTF();
-				System.out.println("read " + read + "  from" + clientName);
-
-			}
-
-		}
 	}
-
 }

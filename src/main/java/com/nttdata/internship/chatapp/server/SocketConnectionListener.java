@@ -5,6 +5,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class SocketConnectionListener extends Thread {
 	Socket socket = null;
@@ -15,7 +16,7 @@ public class SocketConnectionListener extends Thread {
 	Map<String, Socket> connectedClients;
 
 	public SocketConnectionListener(int serverPort) {
-		connectedClients = new LinkedHashMap<>();
+		connectedClients = new ConcurrentHashMap<>();
 		this.serverPort = serverPort;
 	}
 
@@ -25,23 +26,23 @@ public class SocketConnectionListener extends Thread {
 		try {
 			ServerSocket server = new ServerSocket(serverPort);
 			int clientCount = 0;
-			while (clientCount<=10) {
+			while (clientCount <= 10) {
 				System.out.println("waiting for connection....");
-				
-				
-				
+
 				String clientName = "clientName " + clientCount++;
 				Socket establishedConnection = server.accept();
-				connectedClients.put(clientName, establishedConnection);
+				// connectedClients.put(clientName, establishedConnection);
 
 				// System.out.println(streamIn.readUTF());
-				
-				System.out.println("Connection established ..."+clientName);
-				
+
+				ClientServer cs = new ClientServer(establishedConnection, clientName);
+				cs.start();
+
+				System.out.println("Connection established ..." + clientName);
+
 			}
 
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
@@ -50,15 +51,12 @@ public class SocketConnectionListener extends Thread {
 				try {
 					server.close();
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
 		}
 
 	}
-	
-	
 
 	public Map<String, Socket> getConnectedClients() {
 		return connectedClients;
