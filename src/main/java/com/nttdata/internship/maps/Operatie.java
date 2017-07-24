@@ -7,7 +7,7 @@ package com.nttdata.internship.maps;
  *
  */
 
-interface Operatie {
+public interface Operatie {
 
 	/**
 	 * Strategy method for overriding.
