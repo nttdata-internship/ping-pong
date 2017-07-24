@@ -53,7 +53,7 @@ public class ServerGUI extends JFrame implements ActionListener, WindowListener 
 	
 	public static void main(String[] args) {
 		ServerGUI cg = new ServerGUI(2222);
-		cg.setSize(new Dimension(666, 666));
+		cg.setSize(new Dimension(800, 600));
 		cg.setVisible(true);
 	}
 
