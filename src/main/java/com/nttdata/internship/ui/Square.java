@@ -1,3 +1,4 @@
+
 package com.nttdata.internship.ui;
 
 import java.awt.Color;
@@ -19,6 +20,7 @@ public class Square extends JPanel implements
 	double x = 275, y = 265, Ox = 0, Oy = 0;
 	double xc = 0, yc = 0, Oxc = 2, Oyc = 2;
 
+	boolean running;
 	private static int PAINT = 0;
 	Thread t = new Thread(
 
@@ -162,13 +164,17 @@ public class Square extends JPanel implements
 		System.out.println("mesaj");
 		Thread t2 = null;
 
-		boolean running;
 		if (e.getButton() == MouseEvent.BUTTON1) {
 			running = true;
 			t2 = new Thread(() -> {
 				while (running) {
-					xc += 1;
-					yc += 1;
+					if (xc < 0 || xc > 660)
+						Oxc = -Oxc; 
+					if (yc < 0 || yc > 560) 
+						Oyc = -Oyc;
+					 xc += Oxc;
+					yc += Oyc;
+					
 					repaint();
 					try {
 						Thread.sleep(10);
@@ -183,7 +189,7 @@ public class Square extends JPanel implements
 			t2.start();
 		}
 
-		if (e.getButton() == MouseEvent.BUTTON2) {
+		if (e.getButton() == MouseEvent.BUTTON3) {
 			running = false;
 
 			if (t2 != null && !(t2.getState() == Thread.State.TERMINATED))
