@@ -39,12 +39,6 @@ public class ClientGUI extends JFrame implements ActionListener, MouseListener, 
 		this.clear = new Button("Clear");
 		clear.addActionListener(this);
 		p.add(clear);
-/*
-		String st = send_area.getText();
-        if (st.length() == 0) {
-            st = null;
-        }
-		message_area.setText(st);*/
 		
 		this.add(p, "South");
 		this.setVisible(true);
@@ -73,9 +67,13 @@ public class ClientGUI extends JFrame implements ActionListener, MouseListener, 
 	   
 	        if (st.length() == 0) 
 	            st = null;
+	        message_area.append("\n" + st);
 	        
 		} 
-		message_area.append("\n" + st);
+		else
+			if(e.getSource() == clear)
+				 message_area.setText("");
+		
 		send_area.setText("");
 	}
 
