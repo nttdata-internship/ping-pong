@@ -197,6 +197,13 @@ public class Square extends JPanel implements
 				System.exit(1);
 
 		}
+		
+		try {
+			Thread.sleep(2220);
+		} catch (InterruptedException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 	}
 
 	@Override
