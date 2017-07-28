@@ -6,15 +6,24 @@ import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.geom.Ellipse2D;
+import java.awt.geom.RoundRectangle2D;
+import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
+import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.net.InetSocketAddress;
+import java.net.ServerSocket;
 import java.net.Socket;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+
+import com.nttdata.internship.ui.ServerSquare.ClientShape;
 
 public class ClientSquare extends JPanel implements KeyListener {
 
@@ -23,7 +32,14 @@ public class ClientSquare extends JPanel implements KeyListener {
 
 	private int x = 0, v_x = 0;
 	private int y = 0, v_y = 0;
+	
+	static class ServerShape {
+		private int x;
+		private int y;
+	}
 
+	private ServerShape server;
+/*
 	Thread t = new Thread(() -> {
 		while (true) {
 			try {
@@ -36,10 +52,12 @@ public class ClientSquare extends JPanel implements KeyListener {
 	}
 
 	);
-
+*/
 	public ClientSquare() {
-		t.start();
+		//t.start();
+		setFocusable(true);
 		addKeyListener(this);
+		setFocusTraversalKeysEnabled(false);
 	}
 
 	@Override
@@ -51,15 +69,40 @@ public class ClientSquare extends JPanel implements KeyListener {
 		Graphics2D g2 = (Graphics2D) g;
 		g2.setColor(Color.red);
 		g2.fill(new Ellipse2D.Double(x, y, 50, 50));
+		if (server != null) {
+			g2.fill(new Ellipse2D.Double(server.x, server.y, 50, 50));
+		}
 
 	}
-
+/*
 	public static void sendDataToServer(String sir) throws IOException {
 		DataOutputStream out = new DataOutputStream(new BufferedOutputStream(socket.getOutputStream()));
 		out.writeUTF(sir);
 		out.flush();
 
+	}*/
+	
+	public void sendingDataToServer(ClientSquare ss) throws IOException {
+		if (socket != null) {
+			ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
+			// out.writeUTF(sir); write clientShape Object
+			out.writeObject(ss);
+			out.flush();
+		}
+
 	}
+	
+	public Object receiveData(ObjectInputStream in) throws IOException, ClassNotFoundException {
+		return  in.readObject();
+		
+	}
+	/*
+	public String[] receiveData(DataInputStream in) throws IOException {
+
+		return in.readUTF().trim().split(",");
+
+	}
+	*/
 
 	public static void main(String[] args) throws IOException {
 		JFrame f = new JFrame();
@@ -69,8 +112,30 @@ public class ClientSquare extends JPanel implements KeyListener {
 		f.setVisible(true);
 		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		f.setSize(700, 600);
+		
+		Thread thread = new Thread(() -> {
 
-		socket = new Socket("localhost", port);
+			try {
+				socket = new Socket("localhost", port);
+				cs.server = new ServerShape();
+				
+				while(true){
+				//DataInputStream in = new DataInputStream(new BufferedInputStream(socket.getInputStream()));
+				//String coords[] = cs.receiveData(in);
+				ObjectInputStream in = new ObjectInputStream(new BufferedInputStream(socket.getInputStream()));
+				Object ss = cs.receiveData(in);
+				cs.server.x = ss.x;
+				cs.server.y = ss.y;
+				System.out.println("x " + cs.server.x + " " + cs.server.y);
+				cs.repaint();
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		
+		
+		});
+		thread.start();
 	}
 
 	@Override
@@ -106,10 +171,15 @@ public class ClientSquare extends JPanel implements KeyListener {
 		x += v_x;
 		y += v_y;
 		try {
-			sendDataToServer(x + "," + y + "\n");
+			ClientSquare sq = new ClientSquare();
+			sq.x = x;
+			sq.y = y;
+
+			sendingDataToServer(sq);
 		} catch (IOException e1) {
 			e1.printStackTrace();
 		}
+		repaint();
 	}
 
 	@Override
