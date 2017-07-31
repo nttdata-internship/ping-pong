@@ -124,8 +124,8 @@ public class ClientSquare extends JPanel implements KeyListener {
 				//String coords[] = cs.receiveData(in);
 				ObjectInputStream in = new ObjectInputStream(new BufferedInputStream(socket.getInputStream()));
 				Object ss = cs.receiveData(in);
-				cs.server.x = ss.x;
-				cs.server.y = ss.y;
+				//cs.server.x = ss.x;
+				//cs.server.y = ss.y;
 				System.out.println("x " + cs.server.x + " " + cs.server.y);
 				cs.repaint();
 				}
