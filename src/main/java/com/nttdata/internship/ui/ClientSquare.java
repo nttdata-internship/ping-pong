@@ -1,59 +1,32 @@
 package com.nttdata.internship.ui;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.geom.Ellipse2D;
-import java.awt.geom.RoundRectangle2D;
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.BufferedReader;
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
-import java.net.InetSocketAddress;
-import java.net.ServerSocket;
 import java.net.Socket;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
-import com.nttdata.internship.ui.ServerSquare.ClientShape;
-
 public class ClientSquare extends JPanel implements KeyListener,Serializable {
 
+	private static final long serialVersionUID = 1L;
 	static Socket socket = null;
 	static int port = 2222;
 
 	private int x = 0, v_x = 0;
 	private int y = 0, v_y = 0;
 	
-	static class ServerShape {
-		private int x;
-		private int y;
-	}
+	private ObjectShape shape;
 
-	private ServerShape server;
-/*
-	Thread t = new Thread(() -> {
-		while (true) {
-			try {
-				Thread.sleep(6);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-			this.repaint();
-		}
-	}
-
-	);
-*/
 	public int getX(){
 		return x;
 	}
@@ -78,11 +51,10 @@ public class ClientSquare extends JPanel implements KeyListener,Serializable {
 		Graphics2D g2 = (Graphics2D) g;
 		g2.setColor(Color.red);
 		g2.fill(new Ellipse2D.Double(x, y, 50, 50));
-		if (server != null) {
+		if (shape != null) {
 			g2.setColor(Color.blue);
-			g2.fill(new Ellipse2D.Double(server.x, server.y, 50, 50));
+			g2.fill(new Ellipse2D.Double(shape.x, shape.y, 50, 50));
 		}
-
 	}
 /*
 	public static void sendDataToServer(String sir) throws IOException {
@@ -113,6 +85,11 @@ public class ClientSquare extends JPanel implements KeyListener,Serializable {
 
 	}
 	*/
+	
+	 @Override
+	 public Dimension getPreferredSize() {
+		 return new Dimension(700, 600);
+	 }
 
 	public static void main(String[] args) throws IOException {
 		JFrame f = new JFrame();
@@ -121,13 +98,13 @@ public class ClientSquare extends JPanel implements KeyListener,Serializable {
 		f.add(cs);
 		f.setVisible(true);
 		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		f.setSize(700, 600);
+		f.pack();
 		
 		Thread thread = new Thread(() -> {
 
 			try {
 				socket = new Socket("localhost", port);
-				cs.server = new ServerShape();
+				cs.shape = new ObjectShape();
 				
 				while(true){
 					//DataInputStream in = new DataInputStream(new BufferedInputStream(socket.getInputStream()));
@@ -135,9 +112,9 @@ public class ClientSquare extends JPanel implements KeyListener,Serializable {
 					
 					ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
 					ServerSquare coords =  (ServerSquare) cs.receiveData(in);
-					cs.server.x = coords.getX();
-					cs.server.y = coords.getY();
-					System.out.println("x " + cs.server.x + " " + cs.server.y);
+					cs.shape.x = coords.getX();
+					cs.shape.y = coords.getY();
+					System.out.println("x " + cs.shape.x + " " + cs.shape.y);
 					cs.repaint();
 				}
 			} catch (Exception e) {
@@ -157,33 +134,29 @@ public class ClientSquare extends JPanel implements KeyListener,Serializable {
 	@Override
 	public void keyPressed(KeyEvent e) {
 		int code = e.getKeyCode();
-		if (code == KeyEvent.VK_W) {
-			v_x = 0;
-			v_y = -1;
+		if (code == KeyEvent.VK_UP) {
+			y -= 1;
 		}
-		if (code == KeyEvent.VK_S) {
-			v_x = 0;
-			v_y = 1;
+		if (code == KeyEvent.VK_DOWN) {
+			y += 1;
 		}
-		if (code == KeyEvent.VK_A) {
-			v_x = -1;
-			v_y = 0;
+		if (code == KeyEvent.VK_LEFT) {
+			x -= 1;
 		}
-		if (code == KeyEvent.VK_D) {
-			v_x = 1;
-			v_y = 0;
+		if (code == KeyEvent.VK_RIGHT) {
+			x += 1;
 		}
-		boolean validPosition = ((x + v_x ) >= 0 || (x + v_x ) <= 660) && ((y + v_y) >= 0 || (y + v_y) <= 560);
-		if (validPosition){
-			x += v_x;
-			y += v_y;
-		}
+		if (x < 0 || x > 660)
+			x = -x;
+		if (y < 0 || y > 560)
+			y = -y;
+		
 		try {
 			ClientSquare sq = new ClientSquare();
 			sq.x = x;
 			sq.y = y;
 
-			sendingDataToServer(sq);
+			sendingDataToServer(sq);		
 		} catch (IOException e1) {
 			e1.printStackTrace();
 		}

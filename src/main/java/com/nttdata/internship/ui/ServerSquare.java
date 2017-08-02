@@ -1,14 +1,12 @@
 package com.nttdata.internship.ui;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.geom.Rectangle2D;
-import java.awt.geom.RoundRectangle2D;
-import java.io.BufferedInputStream;
-import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -30,18 +28,11 @@ public class ServerSquare extends JPanel implements KeyListener, Serializable{
 	private int x = 0;
 	private int y = 0;
 
-	static class ClientShape {
-		private int x;
-		private int y;
-
-	}
-
-	private ClientShape client;
+	private ObjectShape shape;
 
 	public ServerSquare() {
 		setFocusable(true);
 		addKeyListener(this);
-
 		setFocusTraversalKeysEnabled(false);
 
 	}
@@ -84,12 +75,17 @@ public class ServerSquare extends JPanel implements KeyListener, Serializable{
 		Graphics2D g2 = (Graphics2D) g;
 		g2.setColor(Color.red);
 		g2.fill(new Rectangle2D.Double(x, y, 50, 50));
-		if (client != null) {
-			g2.fill(new RoundRectangle2D.Double(client.x, client.y, 50, 50, 0, 0));
+		if (shape != null) {
+			g2.fill(new Rectangle2D.Double(shape.x, shape.y, 50, 50));
 		}
 
 	}
 
+	@Override
+	public Dimension getPreferredSize() {
+		return new Dimension(700, 600);
+	}
+	
 	public static void main(String[] args) throws IOException {
 
 		JFrame f = new JFrame();
@@ -98,7 +94,7 @@ public class ServerSquare extends JPanel implements KeyListener, Serializable{
 		f.add(ssquare);
 		f.setVisible(true);
 		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		f.setSize(700, 600);
+		f.pack();
 
 		Thread thread = new Thread(() -> {
 
@@ -107,7 +103,8 @@ public class ServerSquare extends JPanel implements KeyListener, Serializable{
 				server = new ServerSocket();
 				server.bind(new InetSocketAddress("localhost", port));
 				socket = server.accept();
-				ssquare.client = new ClientShape(); 
+				//ssquare.client = new ClientShape(); 
+				ssquare.shape = new ObjectShape();
 				
 				while (true) {
 					//DataInputStream in = new DataInputStream(new BufferedInputStream(socket.getInputStream()));
@@ -118,9 +115,9 @@ public class ServerSquare extends JPanel implements KeyListener, Serializable{
 					
 					ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
 					ClientSquare coords = (ClientSquare) ssquare.receiveData(in);
-					ssquare.client.x = coords.getX();
-					ssquare.client.y = coords.getY();
-					System.out.println("x " + ssquare.client.x + " " + ssquare.client.y);
+					ssquare.shape.x = coords.getX();
+					ssquare.shape.y = coords.getY();
+					System.out.println("x " + ssquare.shape.x + " " + ssquare.shape.y);
 					ssquare.repaint();
 				}
 
