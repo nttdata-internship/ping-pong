@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -25,7 +26,7 @@ import javax.swing.JPanel;
 
 import com.nttdata.internship.ui.ServerSquare.ClientShape;
 
-public class ClientSquare extends JPanel implements KeyListener {
+public class ClientSquare extends JPanel implements KeyListener,Serializable {
 
 	static Socket socket = null;
 	static int port = 2222;
@@ -53,6 +54,14 @@ public class ClientSquare extends JPanel implements KeyListener {
 
 	);
 */
+	public int getX(){
+		return x;
+	}
+	
+	public int getY(){
+		return y;
+	}
+	
 	public ClientSquare() {
 		//t.start();
 		setFocusable(true);
@@ -70,6 +79,7 @@ public class ClientSquare extends JPanel implements KeyListener {
 		g2.setColor(Color.red);
 		g2.fill(new Ellipse2D.Double(x, y, 50, 50));
 		if (server != null) {
+			g2.setColor(Color.blue);
 			g2.fill(new Ellipse2D.Double(server.x, server.y, 50, 50));
 		}
 
@@ -93,7 +103,7 @@ public class ClientSquare extends JPanel implements KeyListener {
 	}
 	
 	public Object receiveData(ObjectInputStream in) throws IOException, ClassNotFoundException {
-		return  in.readObject();
+		return in.readObject();
 		
 	}
 	/*
@@ -120,14 +130,15 @@ public class ClientSquare extends JPanel implements KeyListener {
 				cs.server = new ServerShape();
 				
 				while(true){
-				//DataInputStream in = new DataInputStream(new BufferedInputStream(socket.getInputStream()));
-				//String coords[] = cs.receiveData(in);
-				ObjectInputStream in = new ObjectInputStream(new BufferedInputStream(socket.getInputStream()));
-				Object ss = cs.receiveData(in);
-				//cs.server.x = ss.x;
-				//cs.server.y = ss.y;
-				System.out.println("x " + cs.server.x + " " + cs.server.y);
-				cs.repaint();
+					//DataInputStream in = new DataInputStream(new BufferedInputStream(socket.getInputStream()));
+					//String coords[] = cs.receiveData(in);
+					
+					ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
+					ServerSquare coords =  (ServerSquare) cs.receiveData(in);
+					cs.server.x = coords.getX();
+					cs.server.y = coords.getY();
+					System.out.println("x " + cs.server.x + " " + cs.server.y);
+					cs.repaint();
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -147,29 +158,26 @@ public class ClientSquare extends JPanel implements KeyListener {
 	public void keyPressed(KeyEvent e) {
 		int code = e.getKeyCode();
 		if (code == KeyEvent.VK_W) {
-			v_y -= 1;
 			v_x = 0;
+			v_y = -1;
 		}
-
 		if (code == KeyEvent.VK_S) {
-			v_y = 1;
 			v_x = 0;
+			v_y = 1;
 		}
 		if (code == KeyEvent.VK_A) {
-			v_x -= 1;
+			v_x = -1;
 			v_y = 0;
 		}
 		if (code == KeyEvent.VK_D) {
-			v_x += 1;
+			v_x = 1;
 			v_y = 0;
 		}
-		if (x < 0 || x > 660)
-			v_x = -v_x;
-		if (y < 0 || y > 560)
-			v_y = -v_y;
-
-		x += v_x;
-		y += v_y;
+		boolean validPosition = ((x + v_x ) >= 0 || (x + v_x ) <= 660) && ((y + v_y) >= 0 || (y + v_y) <= 560);
+		if (validPosition){
+			x += v_x;
+			y += v_y;
+		}
 		try {
 			ClientSquare sq = new ClientSquare();
 			sq.x = x;
