@@ -27,8 +27,8 @@ public class ServerSquare extends JPanel implements KeyListener, Serializable {
 	static Socket socket = null;
 	static int port = 2222;
 	private static final long serialVersionUID = 1L;
-
-	private int x = 0;
+	float hypotenuse = 0;
+	private int x = 0; 
 	private int y = 0;
 
 	private ObjectShape shape;
@@ -62,10 +62,12 @@ public class ServerSquare extends JPanel implements KeyListener, Serializable {
 		super.paintComponent(g);
 		setBackground(Color.pink);
 		Graphics2D g2 = (Graphics2D) g;
-		g2.setColor(Color.red);
+		g2.setColor(Color.blue);
 		g2.fill(new Rectangle2D.Double(x, y, 50, 50));
 		if (shape != null) {
+			g2.setColor(Color.red);
 			g2.fill(new Rectangle2D.Double(shape.getX(), shape.getY(), 50, 50));
+			
 		}
 
 	}
@@ -111,14 +113,12 @@ public class ServerSquare extends JPanel implements KeyListener, Serializable {
 			public void run() {
 
 				try {
-
 					server = new ServerSocket();
 					server.bind(new InetSocketAddress("localhost", port));
 					socket = server.accept();
 					ssquare.shape = new ObjectShape();
 
 					while (true) {
-
 						ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
 						ObjectShape coords = (ObjectShape) ssquare.receiveData(in);
 						ssquare.shape.setX(coords.getX());
@@ -145,10 +145,12 @@ public class ServerSquare extends JPanel implements KeyListener, Serializable {
 
 	@Override
 	public void keyPressed(KeyEvent e) {
+		
+		
 		int code = e.getKeyCode();
-
 		int prevX = x;
 		int prevY = y;
+		
 		if (code == KeyEvent.VK_UP) {
 			y -= SPEED_INCREMENT;
 		}
@@ -161,11 +163,15 @@ public class ServerSquare extends JPanel implements KeyListener, Serializable {
 		if (code == KeyEvent.VK_RIGHT) {
 			x += SPEED_INCREMENT;
 		}
-
+		
+		float cathetusX = Math.abs(x - shape.getX());
+		float cathetusY = Math.abs(y - shape.getY());
+		hypotenuse = (float) Math.sqrt(Math.pow(cathetusY, 2) + Math.pow(cathetusX, 2));
+		System.out.println("hypo" + hypotenuse);
 		// check window boundaries
-		if (x < 0 || x > frameSize.getWidth() - 75) {
+		if ((x < 0 || x > frameSize.getWidth() - 75) || hypotenuse < 100) {
 			x = prevX;
-		} else if (y < 0 || y > frameSize.getHeight() - 75) {
+		} else if ((y < 0 || y > frameSize.getHeight() - 75) || hypotenuse < 100) {
 			y = prevY;
 		}
 

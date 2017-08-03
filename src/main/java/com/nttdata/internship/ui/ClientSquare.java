@@ -49,7 +49,8 @@ public class ClientSquare extends JPanel implements KeyListener, Serializable {
 		g2.setColor(Color.red);
 		g2.fill(new Ellipse2D.Double(x, y, 50, 50));
 		if (shape != null) {
-			g2.fill(new Rectangle2D.Double(shape.getX(), shape.getY(), 50, 50));
+			g2.setColor(Color.blue);
+			g2.fill(new Ellipse2D.Double(shape.getX(), shape.getY(), 50, 50));
 		}
 
 	}
@@ -136,6 +137,7 @@ public class ClientSquare extends JPanel implements KeyListener, Serializable {
 
 	@Override
 	public synchronized void keyPressed(KeyEvent e) {
+		
 		int prevX = x;
 		int prevY = y;
 		int code = e.getKeyCode();
@@ -151,14 +153,19 @@ public class ClientSquare extends JPanel implements KeyListener, Serializable {
 		if (code == KeyEvent.VK_RIGHT) {
 			x += SPEED_INCREMENT;
 		}
+		
+		float cathetusX = Math.abs(x - shape.getX());
+		float cathetusY = Math.abs(y - shape.getY());
+		
+		float hypotenuse = (float) Math.sqrt(Math.pow(cathetusY, 2) + Math.pow(cathetusX, 2));
+		System.out.println("hypo" + hypotenuse);
 		// check window boundaries
-		if (x < 0 || x > frameSize.getWidth()) {
+		if ((x < 0 || x > frameSize.getWidth() - 75) || hypotenuse < 100) {
 			x = prevX;
-		} else if (y < 0 || y > frameSize.getHeight()) {
+		} else if ((y < 0 || y > frameSize.getHeight() - 75 )|| hypotenuse < 100) {
 			y = prevY;
 		}
-
-		// if (x - prevX != 0 || y - prevY != 0) {
+		
 		try {
 			// ClientSquare sq = new ClientSquare();
 			// sq.x = x;
@@ -175,7 +182,8 @@ public class ClientSquare extends JPanel implements KeyListener, Serializable {
 		// }
 
 		cs.repaint();
-	}
+		}
+	
 
 	@Override
 	public void keyReleased(KeyEvent e) {
