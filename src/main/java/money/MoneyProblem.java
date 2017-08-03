@@ -4,8 +4,6 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.Currency;
 
-import javax.swing.plaf.RootPaneUI;
-
 public class MoneyProblem {
     public static void main(String... aArgs) {
         //TODO: transform first 2 arguments in big decimal values

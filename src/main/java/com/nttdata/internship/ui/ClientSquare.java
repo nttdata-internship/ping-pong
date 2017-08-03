@@ -4,9 +4,12 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.geom.Ellipse2D;
+import java.awt.geom.Rectangle2D;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -16,113 +19,113 @@ import java.net.Socket;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
-public class ClientSquare extends JPanel implements KeyListener,Serializable {
+public class ClientSquare extends JPanel implements KeyListener, Serializable {
 
 	private static final long serialVersionUID = 1L;
+	private static final int SPEED_INCREMENT = 10;
 	static Socket socket = null;
 	static int port = 2222;
 
-	private int x = 0, v_x = 0;
-	private int y = 0, v_y = 0;
-	
+	private int x = 0;
+	private int y = 0;
+
 	private ObjectShape shape;
 
-	public int getX(){
-		return x;
-	}
-	
-	public int getY(){
-		return y;
-	}
-	
+	private static Dimension frameSize = new Dimension(700, 600);
+
+	static ClientSquare cs;
+
 	public ClientSquare() {
-		//t.start();
 		setFocusable(true);
 		addKeyListener(this);
-		setFocusTraversalKeysEnabled(false);
+		setPreferredSize(frameSize);
 	}
 
 	@Override
 	public void paintComponent(Graphics g) {
-
 		super.paintComponent(g);
-
 		setBackground(Color.pink);
 		Graphics2D g2 = (Graphics2D) g;
 		g2.setColor(Color.red);
 		g2.fill(new Ellipse2D.Double(x, y, 50, 50));
 		if (shape != null) {
-			g2.setColor(Color.blue);
-			g2.fill(new Ellipse2D.Double(shape.x, shape.y, 50, 50));
+			g2.fill(new Rectangle2D.Double(shape.getX(), shape.getY(), 50, 50));
 		}
-	}
-/*
-	public static void sendDataToServer(String sir) throws IOException {
-		DataOutputStream out = new DataOutputStream(new BufferedOutputStream(socket.getOutputStream()));
-		out.writeUTF(sir);
-		out.flush();
 
-	}*/
-	
-	public void sendingDataToServer(ClientSquare ss) throws IOException {
+	}
+
+	public void sendingDataToServer(ObjectShape ss) throws IOException {
 		if (socket != null) {
 			ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
-			// out.writeUTF(sir); write clientShape Object
 			out.writeObject(ss);
 			out.flush();
 		}
 
 	}
-	
+
 	public Object receiveData(ObjectInputStream in) throws IOException, ClassNotFoundException {
 		return in.readObject();
-		
-	}
-	/*
-	public String[] receiveData(DataInputStream in) throws IOException {
-
-		return in.readUTF().trim().split(",");
 
 	}
-	*/
-	
-	 @Override
-	 public Dimension getPreferredSize() {
-		 return new Dimension(700, 600);
-	 }
 
 	public static void main(String[] args) throws IOException {
 		JFrame f = new JFrame();
-		ClientSquare cs = new ClientSquare();
-		f.addKeyListener(cs);
+		f.setTitle("CLIENT");
+		cs = new ClientSquare();
 		f.add(cs);
 		f.setVisible(true);
 		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		f.pack();
-		
-		Thread thread = new Thread(() -> {
 
-			try {
-				socket = new Socket("localhost", port);
-				cs.shape = new ObjectShape();
-				
-				while(true){
-					//DataInputStream in = new DataInputStream(new BufferedInputStream(socket.getInputStream()));
-					//String coords[] = cs.receiveData(in);
-					
-					ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
-					ServerSquare coords =  (ServerSquare) cs.receiveData(in);
-					cs.shape.x = coords.getX();
-					cs.shape.y = coords.getY();
-					System.out.println("x " + cs.shape.x + " " + cs.shape.y);
-					cs.repaint();
-				}
-			} catch (Exception e) {
-				e.printStackTrace();
+		f.addComponentListener(new ComponentListener() {
+
+			@Override
+			public void componentShown(ComponentEvent e) {
+				// TODO Auto-generated method stub
+
 			}
-		
-		
+
+			@Override
+			public void componentResized(ComponentEvent e) {
+				frameSize = e.getComponent().getSize();
+
+			}
+
+			@Override
+			public void componentMoved(ComponentEvent e) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void componentHidden(ComponentEvent e) {
+				// TODO Auto-generated method stub
+
+			}
 		});
+		f.pack();
+
+		Thread thread = new Thread(
+
+				new Runnable() {
+					public void run() {
+						try {
+							socket = new Socket("localhost", port);
+							cs.shape = new ObjectShape();
+
+							while (true) {
+								ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
+								ObjectShape coords = (ObjectShape) cs.receiveData(in);
+								cs.shape.setX(coords.getX());
+								cs.shape.setY(coords.getY());
+								System.out.println("x " + cs.shape.getX() + " " + cs.shape.getY());
+								cs.repaint();
+							}
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+
+					}
+				});
 		thread.start();
 	}
 
@@ -132,35 +135,46 @@ public class ClientSquare extends JPanel implements KeyListener,Serializable {
 	}
 
 	@Override
-	public void keyPressed(KeyEvent e) {
+	public synchronized void keyPressed(KeyEvent e) {
+		int prevX = x;
+		int prevY = y;
 		int code = e.getKeyCode();
 		if (code == KeyEvent.VK_UP) {
-			y -= 1;
+			y -= SPEED_INCREMENT;
 		}
 		if (code == KeyEvent.VK_DOWN) {
-			y += 1;
+			y += SPEED_INCREMENT;
 		}
 		if (code == KeyEvent.VK_LEFT) {
-			x -= 1;
+			x -= SPEED_INCREMENT;
 		}
 		if (code == KeyEvent.VK_RIGHT) {
-			x += 1;
+			x += SPEED_INCREMENT;
 		}
-		if (x < 0 || x > 660)
-			x = -x;
-		if (y < 0 || y > 560)
-			y = -y;
-		
-		try {
-			ClientSquare sq = new ClientSquare();
-			sq.x = x;
-			sq.y = y;
+		// check window boundaries
+		if (x < 0 || x > frameSize.getWidth()) {
+			x = prevX;
+		} else if (y < 0 || y > frameSize.getHeight()) {
+			y = prevY;
+		}
 
-			sendingDataToServer(sq);		
-		} catch (IOException e1) {
+		// if (x - prevX != 0 || y - prevY != 0) {
+		try {
+			// ClientSquare sq = new ClientSquare();
+			// sq.x = x;
+			// sq.y = y;
+			ObjectShape shape = new ObjectShape();
+			shape.setX(x);
+			shape.setY(y);
+			sendingDataToServer(shape);
+
+		} catch (Exception e1) {
 			e1.printStackTrace();
 		}
-		repaint();
+
+		// }
+
+		cs.repaint();
 	}
 
 	@Override

@@ -9,6 +9,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Rectangle2D;
+
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
@@ -21,21 +22,21 @@ public class Square extends JPanel implements
 
 	boolean running;
 	private static int PAINT = 0;
-	Thread t = new Thread(
+	Thread t = new Thread(new Runnable() {
+		public void run() {
+			while (true) {
 
-	() -> {
-		while (true) {
+				try {
 
-			try {
+					Thread.sleep(6);
+				} catch (InterruptedException e) {
 
-				Thread.sleep(6);
-			} catch (InterruptedException e) {
-
-				e.printStackTrace();
+					e.printStackTrace();
+				}
+				repaint();
 			}
-			this.repaint();
-		}
 
+		}
 	}
 
 	);
@@ -163,29 +164,30 @@ public class Square extends JPanel implements
 		System.out.println("mesaj");
 		Thread t2 = null;
 
-		
 		if (e.getButton() == MouseEvent.BUTTON1) {
 			running = true;
-			t2 = new Thread(() -> {
-				while (running) {
-					if (xc < 0 || xc > 660)
-						Oxc = -Oxc;
-					if (yc < 0 || yc > 560) 
-						Oyc = -Oyc;
-							
-					xc += Oxc; 
-					yc += Oyc;
-				
-					repaint();
-					try {
-						Thread.sleep(10);
-					} catch (Exception e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
+			t2 = new Thread(new Runnable() {
+				public void run() {
+					while (running) {
+						if (xc < 0 || xc > 660)
+							Oxc = -Oxc;
+						if (yc < 0 || yc > 560)
+							Oyc = -Oyc;
+
+						xc += Oxc;
+						yc += Oyc;
+
+						repaint();
+						try {
+							Thread.sleep(10);
+						} catch (Exception e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						}
+
 					}
 
 				}
-
 			});
 			t2.start();
 		}
@@ -197,7 +199,7 @@ public class Square extends JPanel implements
 				System.exit(1);
 
 		}
-		
+
 		try {
 			Thread.sleep(2220);
 		} catch (InterruptedException e1) {
