@@ -25,7 +25,7 @@ public class ClientSquare extends JPanel implements KeyListener, Serializable {
 	private static final int SPEED_INCREMENT = 10;
 	static Socket socket = null;
 	static int port = 2222;
-
+	static Ball b1;
 	private int x = 0;
 	private int y = 0;
 
@@ -39,6 +39,7 @@ public class ClientSquare extends JPanel implements KeyListener, Serializable {
 		setFocusable(true);
 		addKeyListener(this);
 		setPreferredSize(frameSize);
+		b1 = new Ball();
 	}
 
 	@Override
@@ -52,7 +53,14 @@ public class ClientSquare extends JPanel implements KeyListener, Serializable {
 			g2.setColor(Color.blue);
 			g2.fill(new Ellipse2D.Double(shape.getX(), shape.getY(), 50, 50));
 		}
-
+		if(b1.getX() < -10 || b1.getX() > 610) {
+			g.setColor(Color.red);
+//			g.drawString("Game over", 350, 250);
+			System.out.println("Collision detected: " + b1.getX() + b1.getY());
+		} else {
+			b1.draw(g);
+		}
+		
 	}
 
 	public void sendingDataToServer(ObjectShape ss) throws IOException {
@@ -69,14 +77,13 @@ public class ClientSquare extends JPanel implements KeyListener, Serializable {
 
 	}
 
-	public static void main(String[] args) throws IOException {
+	public static void main(String[] args) throws IOException, InterruptedException {
 		JFrame f = new JFrame();
 		f.setTitle("CLIENT");
 		cs = new ClientSquare();
 		f.add(cs);
 		f.setVisible(true);
 		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
 		f.addComponentListener(new ComponentListener() {
 
 			@Override
@@ -128,6 +135,25 @@ public class ClientSquare extends JPanel implements KeyListener, Serializable {
 					}
 				});
 		thread.start();
+		
+		Thread thread2 = new Thread(
+				new Runnable() {
+					public void run() {
+						try {
+						cs.shape = new ObjectShape();	
+						while(true) {
+						b1.move();
+						b1.ballCollision();
+						cs.repaint();
+						Thread.sleep(60);
+						}
+					}
+					catch (Exception e) {
+						e.printStackTrace();
+					}
+					}
+				});
+		thread2.start();
 	}
 
 	@Override

@@ -26,6 +26,7 @@ public class ServerSquare extends JPanel implements KeyListener, Serializable {
 	static ServerSocket server;
 	static Socket socket = null;
 	static int port = 2222;
+	static Ball b1;
 	private static final long serialVersionUID = 1L;
 	float hypotenuse = 0;
 	private int x = 0; 
@@ -33,14 +34,14 @@ public class ServerSquare extends JPanel implements KeyListener, Serializable {
 
 	private ObjectShape shape;
 
-	static Dimension frameSize = new Dimension(640, 560);
+	static Dimension frameSize = new Dimension(700, 600);
 
 	public ServerSquare() {
 		setFocusable(true);
 		addKeyListener(this);
 		setFocusTraversalKeysEnabled(false);
 		setPreferredSize(frameSize);
-
+		b1 = new Ball();
 	}
 
 	public Object receiveData(ObjectInputStream in) throws IOException, ClassNotFoundException {
@@ -68,6 +69,12 @@ public class ServerSquare extends JPanel implements KeyListener, Serializable {
 			g2.setColor(Color.red);
 			g2.fill(new Rectangle2D.Double(shape.getX(), shape.getY(), 50, 50));
 			
+		}
+		if(b1.getX() < -10 || b1.getX() > 610) {
+			g.setColor(Color.red);
+			g.drawString("Game over", 350, 250);
+		} else {
+			b1.draw(g);
 		}
 
 	}
@@ -124,7 +131,6 @@ public class ServerSquare extends JPanel implements KeyListener, Serializable {
 						ssquare.shape.setX(coords.getX());
 						ssquare.shape.setY(coords.getY());
 						System.out.println(" Sending x " + ssquare.shape.getX() + " y" + ssquare.shape.getY());
-
 						ssquare.repaint();
 					}
 
@@ -136,6 +142,25 @@ public class ServerSquare extends JPanel implements KeyListener, Serializable {
 
 		);
 		thread.start();
+		Thread thread2 = new Thread(
+				new Runnable() {
+					public void run() {
+						try {
+							ssquare.shape = new ObjectShape();
+							
+							while(true) {
+								b1.move();
+								b1.ballCollision();
+								ssquare.repaint();
+								Thread.sleep(60);
+							}
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+					}
+					
+				});
+		thread2.start();
 	}
 
 	@Override
