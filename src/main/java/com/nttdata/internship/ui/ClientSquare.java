@@ -9,7 +9,6 @@ import java.awt.event.ComponentListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.geom.Ellipse2D;
-import java.awt.geom.Rectangle2D;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -22,30 +21,24 @@ import javax.swing.JPanel;
 public class ClientSquare extends JPanel implements KeyListener, Serializable {
 
 	private static final long serialVersionUID = 1L;
-	private static final int SPEED_INCREMENT = 5;
+	private static final int SPEED_INCREMENT = 10;
 	static Socket socket = null;
 	static int port = 2222;
-
+	static Ball b1;
 	private int x = 0;
 	private int y = 0;
-	private int length = 50;
-	private int width = 50;
 
 	private ObjectShape shape;
-
-	boolean isDown = false;
-	int startX;
-	int startY;
 
 	private static Dimension frameSize = new Dimension(700, 600);
 
 	static ClientSquare cs;
 
 	public ClientSquare() {
-		shape = new ObjectShape();
 		setFocusable(true);
 		addKeyListener(this);
 		setPreferredSize(frameSize);
+		b1 = new Ball();
 	}
 
 	@Override
@@ -57,9 +50,16 @@ public class ClientSquare extends JPanel implements KeyListener, Serializable {
 		g2.fill(new Ellipse2D.Double(x, y, 50, 50));
 		if (shape != null) {
 			g2.setColor(Color.blue);
-			g2.fill(new Rectangle2D.Double(shape.getX(), shape.getY(), length, width));
+			g2.fill(new Ellipse2D.Double(shape.getX(), shape.getY(), 50, 50));
 		}
-
+		if(b1.getX() < -10 || b1.getX() > 610) {
+			g.setColor(Color.red);
+//			g.drawString("Game over", 350, 250);
+			System.out.println("Collision detected: " + b1.getX() + b1.getY());
+		} else {
+			b1.draw(g);
+		}
+		
 	}
 
 	public void sendingDataToServer(ObjectShape ss) throws IOException {
@@ -76,14 +76,13 @@ public class ClientSquare extends JPanel implements KeyListener, Serializable {
 
 	}
 
-	public static void main(String[] args) throws IOException {
+	public static void main(String[] args) throws IOException, InterruptedException {
 		JFrame f = new JFrame();
 		f.setTitle("CLIENT");
 		cs = new ClientSquare();
 		f.add(cs);
 		f.setVisible(true);
 		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
 		f.addComponentListener(new ComponentListener() {
 
 			@Override
@@ -114,52 +113,64 @@ public class ClientSquare extends JPanel implements KeyListener, Serializable {
 
 		Thread thread = new Thread(
 
-		new Runnable() {
-			public void run() {
-				try {
-					socket = new Socket("localhost", port);
-					cs.shape = new ObjectShape();
+				new Runnable() {
+					public void run() {
+						try {
+							socket = new Socket("localhost", port);
+							cs.shape = new ObjectShape();
 
-					while (true) {
-						ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
-						ObjectShape coords = (ObjectShape) cs.receiveData(in);
-						cs.shape.setX(coords.getX());
-						cs.shape.setY(coords.getY());
-						System.out.println("x " + cs.shape.getX() + " " + cs.shape.getY());
-						cs.repaint();
+							while (true) {
+								ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
+								ObjectShape coords = (ObjectShape) cs.receiveData(in);
+								cs.shape.setX(coords.getX());
+								cs.shape.setY(coords.getY());
+								System.out.println("x " + cs.shape.getX() + " " + cs.shape.getY());
+								cs.repaint();
+							}
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+
 					}
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-
-			}
-		});
+				});
 		thread.start();
-		// cs.sendingDataToServer(cs.shape);
+		
+		Thread thread2 = new Thread(
+				new Runnable() {
+					public void run() {
+						try {
+						cs.shape = new ObjectShape();	
+						while(true) {
+						b1.move();
+						b1.ballCollision();
+						cs.repaint();
+						Thread.sleep(60);
+						}
+					}
+					catch (Exception e) {
+						e.printStackTrace();
+					}
+					}
+				});
+		thread2.start();
 	}
 
 	@Override
 	public void keyTyped(KeyEvent e) {
-		float dx = startX - shape.getX();
-		float dy = startY - shape.getY();
-		isDown = (dx * dx + dy * dy < shape.getRadius() * shape.getRadius());
+
 	}
 
 	@Override
 	public synchronized void keyPressed(KeyEvent e) {
-
-		int code = e.getKeyCode();
+		
 		int prevX = x;
 		int prevY = y;
-		//boolean ox = true;
-		//boolean oy = true;
-
+		int code = e.getKeyCode();
 		if (code == KeyEvent.VK_UP) {
 			y -= SPEED_INCREMENT;
 		}
 		if (code == KeyEvent.VK_DOWN) {
 			y += SPEED_INCREMENT;
-			//startY = y - prevY;
 		}
 		if (code == KeyEvent.VK_LEFT) {
 			x -= SPEED_INCREMENT;
@@ -167,34 +178,28 @@ public class ClientSquare extends JPanel implements KeyListener, Serializable {
 		if (code == KeyEvent.VK_RIGHT) {
 			x += SPEED_INCREMENT;
 		}
-
-		//int dx = startX - shape.getX();
-		//int dy = startY - shape.getY();
-		//isDown = (dx * dx + dy * dy < shape.getRadius() * shape.getRadius());
-
-		if (x < 0 || x > frameSize.getWidth() - 75) {
+		
+		float cathetusX = Math.abs(x - shape.getX());
+		float cathetusY = Math.abs(y - shape.getY());
+		
+		float hypotenuse = (float) Math.sqrt(Math.pow(cathetusY, 2) + Math.pow(cathetusX, 2));
+		System.out.println("hypo" + hypotenuse);
+		// check window boundaries
+		if ((x < 0 || x > frameSize.getWidth() - 75) || hypotenuse < 100) {
 			x = prevX;
-
-		} else if (y < 0 || y > frameSize.getHeight() - 75) {
+		} else if ((y < 0 || y > frameSize.getHeight() - 75 )|| hypotenuse < 100) {
 			y = prevY;
-
 		}
-
-		//shape.setX(shape.getX() + dx);
-		//shape.setY(shape.getY() + dy);
-
-		if (collision()) {
-			System.out.println("s-au ciocnit");
-
-		} else {
-			System.out.println("nu s-au ciocnit");
-		}
-
+		
 		try {
-			ObjectShape sq = new ObjectShape();
-			sq.setX(x);
-			sq.setY(y);
-			sendingDataToServer(sq);
+			// ClientSquare sq = new ClientSquare();
+			// sq.x = x;
+			// sq.y = y;
+			ObjectShape shape = new ObjectShape();
+			shape.setX(x);
+			shape.setY(y);
+			sendingDataToServer(shape);
+
 		} catch (Exception e1) {
 			e1.printStackTrace();
 		}
@@ -202,31 +207,8 @@ public class ClientSquare extends JPanel implements KeyListener, Serializable {
 		// }
 
 		cs.repaint();
-	}
-
-	public boolean collision() {
-		float distX = Math.abs(shape.getX() - x - width / 2);
-		float distY = Math.abs(shape.getY() - y - length / 2);
-
-		if (distX > (width / 2 + shape.getRadius())) {
-			return false;
 		}
-		if (distY > (length / 2 + shape.getRadius())) {
-			return false;
-		}
-
-		if (distX <= (width / 2)) {
-			return true;
-		}
-		if (distY <= (length / 2)) {
-			return true;
-		}
-
-		float dx = distX - width / 2;
-		float dy = distY - length / 2;
-		return (dx * dx + dy * dy <= (shape.getRadius() * shape.getRadius()));
-
-	}
+	
 
 	@Override
 	public void keyReleased(KeyEvent e) {
