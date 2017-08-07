@@ -8,6 +8,7 @@ import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.geom.Ellipse2D;
 import java.awt.geom.Rectangle2D;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -27,15 +28,19 @@ public class ServerSquare extends JPanel implements KeyListener, Serializable {
 	static Socket socket = null;
 	static int port = 2222;
 	private static final long serialVersionUID = 1L;
-	float hypotenuse = 0;
+
 	private int x = 0; 
 	private int y = 0;
+	private int length = 50;
+	private int width = 50;
 
 	private ObjectShape shape;
+
 
 	static Dimension frameSize = new Dimension(640, 560);
 
 	public ServerSquare() {
+		shape = new ObjectShape();
 		setFocusable(true);
 		addKeyListener(this);
 		setFocusTraversalKeysEnabled(false);
@@ -66,7 +71,7 @@ public class ServerSquare extends JPanel implements KeyListener, Serializable {
 		g2.fill(new Rectangle2D.Double(x, y, 50, 50));
 		if (shape != null) {
 			g2.setColor(Color.red);
-			g2.fill(new Rectangle2D.Double(shape.getX(), shape.getY(), 50, 50));
+			g2.fill(new Ellipse2D.Double(shape.getX(), shape.getY(), length, width));
 			
 		}
 
@@ -110,14 +115,13 @@ public class ServerSquare extends JPanel implements KeyListener, Serializable {
 		f.pack();
 
 		Thread thread = new Thread(new Runnable() {
-			public void run() {
-
+			public void run() {                         
 				try {
 					server = new ServerSocket();
 					server.bind(new InetSocketAddress("localhost", port));
 					socket = server.accept();
 					ssquare.shape = new ObjectShape();
-
+					
 					while (true) {
 						ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
 						ObjectShape coords = (ObjectShape) ssquare.receiveData(in);
@@ -136,6 +140,8 @@ public class ServerSquare extends JPanel implements KeyListener, Serializable {
 
 		);
 		thread.start();
+		//square.sendingDataToClient(ssquare.shape);
+	
 	}
 
 	@Override
@@ -150,31 +156,34 @@ public class ServerSquare extends JPanel implements KeyListener, Serializable {
 		int code = e.getKeyCode();
 		int prevX = x;
 		int prevY = y;
-		
+		boolean ox = false, oy = false;
 		if (code == KeyEvent.VK_UP) {
 			y -= SPEED_INCREMENT;
+			oy = true;
 		}
 		if (code == KeyEvent.VK_DOWN) {
 			y += SPEED_INCREMENT;
+			oy = true;
 		}
 		if (code == KeyEvent.VK_LEFT) {
 			x -= SPEED_INCREMENT;
+			ox = true;
 		}
 		if (code == KeyEvent.VK_RIGHT) {
 			x += SPEED_INCREMENT;
-		}
-		
-		float cathetusX = Math.abs(x - shape.getX());
-		float cathetusY = Math.abs(y - shape.getY());
-		hypotenuse = (float) Math.sqrt(Math.pow(cathetusY, 2) + Math.pow(cathetusX, 2));
-		System.out.println("hypo" + hypotenuse);
-		// check window boundaries
-		if ((x < 0 || x > frameSize.getWidth() - 75) || hypotenuse < 100) {
-			x = prevX;
-		} else if ((y < 0 || y > frameSize.getHeight() - 75) || hypotenuse < 100) {
-			y = prevY;
+			ox = true;
 		}
 
+		if (x < 0 || x > frameSize.getWidth() - 75) {
+			x = prevX;
+
+		} else if (y < 0 || y > frameSize.getHeight() - 75) {
+			y = prevY;
+
+		}
+		
+
+		
 		try {
 			ObjectShape sq = new ObjectShape();
 			sq.setX(x);
@@ -187,7 +196,31 @@ public class ServerSquare extends JPanel implements KeyListener, Serializable {
 		repaint();
 
 	}
+	public boolean collision() {
+		float cathetusX = Math.abs(shape.getX() - x - width / 2);
+		float cathetusY = Math.abs(shape.getY() - y - length / 2);
 
+		if (cathetusX > (width / 2 + shape.getRadius())) {
+			return false;
+		}
+		if (cathetusY > (length / 2 + shape.getRadius())) {
+			return false;
+		}
+
+		if (cathetusX <= (width / 2)) {
+			return true;
+		}
+		if (cathetusY <= (length / 2)) {
+			return true;
+		}
+
+		float dx = cathetusX - width / 2;
+		float dy = cathetusY - length / 2;
+		return (dx * dx + dy * dy <= (shape.getRadius() * shape.getRadius()));
+
+	}
+	
+	
 	@Override
 	public void keyReleased(KeyEvent e) {
 	}

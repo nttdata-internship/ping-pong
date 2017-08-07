@@ -22,20 +22,27 @@ import javax.swing.JPanel;
 public class ClientSquare extends JPanel implements KeyListener, Serializable {
 
 	private static final long serialVersionUID = 1L;
-	private static final int SPEED_INCREMENT = 10;
+	private static final int SPEED_INCREMENT = 5;
 	static Socket socket = null;
 	static int port = 2222;
 
 	private int x = 0;
 	private int y = 0;
+	private int length = 50;
+	private int width = 50;
 
 	private ObjectShape shape;
+
+	boolean isDown = false;
+	int startX;
+	int startY;
 
 	private static Dimension frameSize = new Dimension(700, 600);
 
 	static ClientSquare cs;
 
 	public ClientSquare() {
+		shape = new ObjectShape();
 		setFocusable(true);
 		addKeyListener(this);
 		setPreferredSize(frameSize);
@@ -50,7 +57,7 @@ public class ClientSquare extends JPanel implements KeyListener, Serializable {
 		g2.fill(new Ellipse2D.Double(x, y, 50, 50));
 		if (shape != null) {
 			g2.setColor(Color.blue);
-			g2.fill(new Ellipse2D.Double(shape.getX(), shape.getY(), 50, 50));
+			g2.fill(new Rectangle2D.Double(shape.getX(), shape.getY(), length, width));
 		}
 
 	}
@@ -107,45 +114,52 @@ public class ClientSquare extends JPanel implements KeyListener, Serializable {
 
 		Thread thread = new Thread(
 
-				new Runnable() {
-					public void run() {
-						try {
-							socket = new Socket("localhost", port);
-							cs.shape = new ObjectShape();
+		new Runnable() {
+			public void run() {
+				try {
+					socket = new Socket("localhost", port);
+					cs.shape = new ObjectShape();
 
-							while (true) {
-								ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
-								ObjectShape coords = (ObjectShape) cs.receiveData(in);
-								cs.shape.setX(coords.getX());
-								cs.shape.setY(coords.getY());
-								System.out.println("x " + cs.shape.getX() + " " + cs.shape.getY());
-								cs.repaint();
-							}
-						} catch (Exception e) {
-							e.printStackTrace();
-						}
-
+					while (true) {
+						ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
+						ObjectShape coords = (ObjectShape) cs.receiveData(in);
+						cs.shape.setX(coords.getX());
+						cs.shape.setY(coords.getY());
+						System.out.println("x " + cs.shape.getX() + " " + cs.shape.getY());
+						cs.repaint();
 					}
-				});
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+
+			}
+		});
 		thread.start();
+		// cs.sendingDataToServer(cs.shape);
 	}
 
 	@Override
 	public void keyTyped(KeyEvent e) {
-
+		float dx = startX - shape.getX();
+		float dy = startY - shape.getY();
+		isDown = (dx * dx + dy * dy < shape.getRadius() * shape.getRadius());
 	}
 
 	@Override
 	public synchronized void keyPressed(KeyEvent e) {
-		
+
+		int code = e.getKeyCode();
 		int prevX = x;
 		int prevY = y;
-		int code = e.getKeyCode();
+		//boolean ox = true;
+		//boolean oy = true;
+
 		if (code == KeyEvent.VK_UP) {
 			y -= SPEED_INCREMENT;
 		}
 		if (code == KeyEvent.VK_DOWN) {
 			y += SPEED_INCREMENT;
+			//startY = y - prevY;
 		}
 		if (code == KeyEvent.VK_LEFT) {
 			x -= SPEED_INCREMENT;
@@ -153,28 +167,34 @@ public class ClientSquare extends JPanel implements KeyListener, Serializable {
 		if (code == KeyEvent.VK_RIGHT) {
 			x += SPEED_INCREMENT;
 		}
-		
-		float cathetusX = Math.abs(x - shape.getX());
-		float cathetusY = Math.abs(y - shape.getY());
-		
-		float hypotenuse = (float) Math.sqrt(Math.pow(cathetusY, 2) + Math.pow(cathetusX, 2));
-		System.out.println("hypo" + hypotenuse);
-		// check window boundaries
-		if ((x < 0 || x > frameSize.getWidth() - 75) || hypotenuse < 100) {
-			x = prevX;
-		} else if ((y < 0 || y > frameSize.getHeight() - 75 )|| hypotenuse < 100) {
-			y = prevY;
-		}
-		
-		try {
-			// ClientSquare sq = new ClientSquare();
-			// sq.x = x;
-			// sq.y = y;
-			ObjectShape shape = new ObjectShape();
-			shape.setX(x);
-			shape.setY(y);
-			sendingDataToServer(shape);
 
+		//int dx = startX - shape.getX();
+		//int dy = startY - shape.getY();
+		//isDown = (dx * dx + dy * dy < shape.getRadius() * shape.getRadius());
+
+		if (x < 0 || x > frameSize.getWidth() - 75) {
+			x = prevX;
+
+		} else if (y < 0 || y > frameSize.getHeight() - 75) {
+			y = prevY;
+
+		}
+
+		//shape.setX(shape.getX() + dx);
+		//shape.setY(shape.getY() + dy);
+
+		if (collision()) {
+			System.out.println("s-au ciocnit");
+
+		} else {
+			System.out.println("nu s-au ciocnit");
+		}
+
+		try {
+			ObjectShape sq = new ObjectShape();
+			sq.setX(x);
+			sq.setY(y);
+			sendingDataToServer(sq);
 		} catch (Exception e1) {
 			e1.printStackTrace();
 		}
@@ -182,8 +202,31 @@ public class ClientSquare extends JPanel implements KeyListener, Serializable {
 		// }
 
 		cs.repaint();
+	}
+
+	public boolean collision() {
+		float distX = Math.abs(shape.getX() - x - width / 2);
+		float distY = Math.abs(shape.getY() - y - length / 2);
+
+		if (distX > (width / 2 + shape.getRadius())) {
+			return false;
 		}
-	
+		if (distY > (length / 2 + shape.getRadius())) {
+			return false;
+		}
+
+		if (distX <= (width / 2)) {
+			return true;
+		}
+		if (distY <= (length / 2)) {
+			return true;
+		}
+
+		float dx = distX - width / 2;
+		float dy = distY - length / 2;
+		return (dx * dx + dy * dy <= (shape.getRadius() * shape.getRadius()));
+
+	}
 
 	@Override
 	public void keyReleased(KeyEvent e) {
