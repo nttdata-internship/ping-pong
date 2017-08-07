@@ -8,8 +8,8 @@ public class ObjectShape implements Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = -4271784931525424591L;
-	private int x;
-	private int y;
+	protected int x;
+	protected int y;
 	private int radius;
 
 	public int getX() {
@@ -18,7 +18,7 @@ public class ObjectShape implements Serializable {
 
 	public void setX(int x) {
 		this.x = x;
-		
+
 	}
 
 	public int getY() {

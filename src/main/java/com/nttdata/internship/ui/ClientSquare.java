@@ -15,6 +15,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.net.Socket;
+import java.util.ArrayList;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -42,9 +43,11 @@ public class ClientSquare extends JPanel implements KeyListener, Serializable {
 
 	static ClientSquare cs;
 
+	static ObjectInputStream in;
+
 	public ClientSquare() {
 		shape = new ObjectShape();
-		b1 = new Ball();
+
 		setFocusable(true);
 		addKeyListener(this);
 		setPreferredSize(frameSize);
@@ -57,16 +60,14 @@ public class ClientSquare extends JPanel implements KeyListener, Serializable {
 		Graphics2D g2 = (Graphics2D) g;
 		g2.setColor(Color.red);
 		g2.fill(new Ellipse2D.Double(x, y, 50, 50));
+
+		g.setColor(Color.WHITE);
+		System.out.println(" ball x " + b1.getX() + " y=" + b1.getY());
+		g.fillOval(b1.getX(), b1.getY(), 20, 20);
+
 		if (shape != null) {
 			g2.setColor(Color.blue);
-			g2.fill(new Rectangle2D.Double(shape.getX(), shape.getY(), length, width));
-		}
-		if(b1.getX() < -10 || b1.getX() > 610) {
-			g.setColor(Color.red);
-//			g.drawString("Game over", 350, 250);
-			//System.out.println("Collision detected: " + b1.getX() + b1.getY());
-		} else {
-			b1.draw(g);
+			g2.fill(new Rectangle2D.Double(frameSize.getWidth() - 2 * length, 0 + shape.getY(), length, width));
 		}
 
 	}
@@ -81,6 +82,7 @@ public class ClientSquare extends JPanel implements KeyListener, Serializable {
 	}
 
 	public Object receiveData(ObjectInputStream in) throws IOException, ClassNotFoundException {
+
 		return in.readObject();
 
 	}
@@ -119,6 +121,8 @@ public class ClientSquare extends JPanel implements KeyListener, Serializable {
 
 			}
 		});
+
+		b1 = new Ball(frameSize);
 		f.pack();
 
 		Thread thread = new Thread(
@@ -130,11 +134,24 @@ public class ClientSquare extends JPanel implements KeyListener, Serializable {
 					cs.shape = new ObjectShape();
 
 					while (true) {
-						ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
-						ObjectShape coords = (ObjectShape) cs.receiveData(in);
-						cs.shape.setX(coords.getX());
-						cs.shape.setY(coords.getY());
-						System.out.println("x " + cs.shape.getX() + " " + cs.shape.getY());
+						in = new ObjectInputStream(socket.getInputStream());
+						ArrayList<ObjectShape> objects = (ArrayList<ObjectShape>) cs.receiveData(in);
+
+						for (ObjectShape coords : objects) {
+
+							if (coords instanceof Ball) {
+
+								b1.setX(coords.getX());
+								b1.setY(coords.getY());
+								System.out.println("Sending data to server, ball x=" + b1.getX() + " y=" + b1.getY());
+							} else {
+								cs.shape.setX(coords.getX());
+								cs.shape.setY(coords.getY());
+
+							}
+
+						}
+
 						cs.repaint();
 					}
 				} catch (Exception e) {
@@ -144,32 +161,27 @@ public class ClientSquare extends JPanel implements KeyListener, Serializable {
 			}
 		});
 		thread.start();
-		
-		Thread thread2 = new Thread(
-				new Runnable() {
-					public void run() {
-						try {
-						cs.shape = new ObjectShape();	
-						while(true) {
+
+		Thread thread2 = new Thread(new Runnable() {
+			public void run() {
+				try {
+					cs.shape = new ObjectShape();
+					while (true) {
 						b1.move();
 						b1.ballCollision();
 						cs.repaint();
 						Thread.sleep(60);
-						}
 					}
-					catch (Exception e) {
-						e.printStackTrace();
-					}
-					}
-				});
-		thread2.start();
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
 	}
 
 	@Override
 	public void keyTyped(KeyEvent e) {
-		float dx = startX - shape.getX();
-		float dy = startY - shape.getY();
-		isDown = (dx * dx + dy * dy < shape.getRadius() * shape.getRadius());
+
 	}
 
 	@Override
@@ -178,15 +190,15 @@ public class ClientSquare extends JPanel implements KeyListener, Serializable {
 		int code = e.getKeyCode();
 		int prevX = x;
 		int prevY = y;
-		//boolean ox = true;
-		//boolean oy = true;
+		// boolean ox = true;
+		// boolean oy = true;
 
 		if (code == KeyEvent.VK_UP) {
 			y -= SPEED_INCREMENT;
 		}
 		if (code == KeyEvent.VK_DOWN) {
 			y += SPEED_INCREMENT;
-			//startY = y - prevY;
+			// startY = y - prevY;
 		}
 		if (code == KeyEvent.VK_LEFT) {
 			x -= SPEED_INCREMENT;
@@ -195,9 +207,9 @@ public class ClientSquare extends JPanel implements KeyListener, Serializable {
 			x += SPEED_INCREMENT;
 		}
 
-		//int dx = startX - shape.getX();
-		//int dy = startY - shape.getY();
-		//isDown = (dx * dx + dy * dy < shape.getRadius() * shape.getRadius());
+		// int dx = startX - shape.getX();
+		// int dy = startY - shape.getY();
+		// isDown = (dx * dx + dy * dy < shape.getRadius() * shape.getRadius());
 
 		if (x < 0 || x > frameSize.getWidth() - 75) {
 			x = prevX;
@@ -207,8 +219,8 @@ public class ClientSquare extends JPanel implements KeyListener, Serializable {
 
 		}
 
-		//shape.setX(shape.getX() + dx);
-		//shape.setY(shape.getY() + dy);
+		// shape.setX(shape.getX() + dx);
+		// shape.setY(shape.getY() + dy);
 
 		if (collision()) {
 			System.out.println("s-au ciocnit");
