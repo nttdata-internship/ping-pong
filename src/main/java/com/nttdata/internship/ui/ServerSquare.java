@@ -65,7 +65,7 @@ public class ServerSquare extends JPanel implements KeyListener, Serializable {
 			ArrayList<ObjectShape> list = new ArrayList<>();
 			list.add(ss);
 			if (ball != null) {
-				System.out.println("Sending data to server, ball x=" + ball.getX() + " y=" + ball.getY());
+				//System.out.println("Sending data to server, ball x=" + ball.getX() + " y=" + ball.getY());
 				list.add(ball);
 			}
 
@@ -146,7 +146,7 @@ public class ServerSquare extends JPanel implements KeyListener, Serializable {
 						ssquare.shape.setX(coords.getX());
 						ssquare.shape.setY(coords.getY());
 
-						System.out.println(" Sending x " + ssquare.shape.getX() + " y" + ssquare.shape.getY());
+						//System.out.println(" Sending x " + ssquare.shape.getX() + " y" + ssquare.shape.getY());
 
 						ssquare.repaint();
 					}
@@ -177,45 +177,52 @@ public class ServerSquare extends JPanel implements KeyListener, Serializable {
 		int prevY = y;
 
 		if (shape != null) {
-			if (code == KeyEvent.VK_SPACE && ballAnimation == null) {
-				ballAnimation = new Thread(new Runnable() {
-					public void run() {
-						try {
-
-							while (true) {
-								ball.move();
-								ball.ballCollision();
-								ObjectShape currentRect = new ObjectShape();
-								currentRect.setX(x);
-								currentRect.setY(y);
-								sendingDataToClient(currentRect);
-								repaint();
-
-								Thread.sleep(60);
-							}
+				if (code == KeyEvent.VK_SPACE &&  ballAnimation == null) {
+					ballAnimation = new Thread(new Runnable() {
+						public void run() {
+							try {
+	
+								while (true) {
+									ball.move();
+									ball.ballCollision();
+									ObjectShape currentRect = new ObjectShape();
+									currentRect.setX(x);
+									currentRect.setY(y);
+									sendingDataToClient(currentRect);
+									
+									if(collision()){
+										System.out.println("s-au ciocnit");
+									}
+									else
+										System.out.println("nu s-au ciocnit");
+									
+									repaint();
+									Thread.sleep(60);
+									if(ball.speedX == 0){
+										break;
+									}
+										
+	
+								}
 						} catch (Exception e) {
 							e.printStackTrace();
+							}
 						}
-					}
-
-				});
-
-				ballAnimation.start();
+						
+	
+					});
+					ballAnimation.start();
+					
+				}
 			}
-		}
-
+		
 		if (code == KeyEvent.VK_UP) {
 			y -= SPEED_INCREMENT;
 		}
 		if (code == KeyEvent.VK_DOWN) {
 			y += SPEED_INCREMENT;
 		}
-		if (code == KeyEvent.VK_LEFT) {
-			x -= SPEED_INCREMENT;
-		}
-		if (code == KeyEvent.VK_RIGHT) {
-			x += SPEED_INCREMENT;
-		}
+		
 
 		if (x < 0 || x > frameSize.getWidth() - 75) {
 			x = prevX;
@@ -229,27 +236,27 @@ public class ServerSquare extends JPanel implements KeyListener, Serializable {
 	}
 
 	public boolean collision() {
-		// ???? functioneaza ???????????????????????????????
-		float cathetusX = Math.abs(shape.getX() - ball.getX() - width / 2);
-		float cathetusY = Math.abs(shape.getY() - ball.getY() - length / 2);
+		float distX = Math.abs(ball.getX() - x - width / 2);
+		float distY = Math.abs(ball.getY() - y - length / 2);
 
-		if (cathetusX > (width / 2 + shape.getRadius())) {
+		if (distX > (width / 2 + ball.getRadius())) {
 			return false;
 		}
-		if (cathetusY > (length / 2 + shape.getRadius())) {
+		if (distY > (length / 2 + ball.getRadius())) {
 			return false;
 		}
 
-		if (cathetusX <= (width / 2)) {
+		if (distX <= (width / 2)) {
+			ball.speedX = -ball.speedX;
 			return true;
 		}
-		if (cathetusY <= (length / 2)) {
+		if (distY <= (length / 2)) {
 			return true;
 		}
-
-		float dx = cathetusX - width / 2;
-		float dy = cathetusY - length / 2;
-		return (dx * dx + dy * dy <= (shape.getRadius() * shape.getRadius()));
+		
+		float dx = distX - width / 2;
+		float dy = distY - length / 2;
+		return (dx * dx + dy * dy <= (ball.getRadius() * ball.getRadius()));
 
 	}
 

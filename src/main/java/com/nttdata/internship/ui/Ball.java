@@ -28,14 +28,17 @@ public class Ball extends ObjectShape {
 	}
 
 	public void ballCollision() {
-		if (x < -1 || x > frameSize.getWidth() - 40) {
+		if (x < -1 ){
+			speedX = 0;
+			
+		}
+		if(x > frameSize.getWidth() - 40) {
 			speedX = -speedX;
 		}
-
 		if (y < -1 || y + 60 >= frameSize.getHeight()) {
 			speedY = -speedY;
 		}
-
+		
 	}
 
 	public void move() {

@@ -27,7 +27,7 @@ public class ClientSquare extends JPanel implements KeyListener, Serializable {
 	static Socket socket = null;
 	static int port = 2222;
 
-	private static Ball b1;
+	private static Ball ball;
 	private int x = 0;
 	private int y = 0;
 	private int length = 50;
@@ -62,8 +62,8 @@ public class ClientSquare extends JPanel implements KeyListener, Serializable {
 		g2.fill(new Ellipse2D.Double(x, y, 50, 50));
 
 		g.setColor(Color.WHITE);
-		System.out.println(" ball x " + b1.getX() + " y=" + b1.getY());
-		g.fillOval(b1.getX(), b1.getY(), 20, 20);
+		//System.out.println(" ball x " + ball.getX() + " y=" + ball.getY());
+		g.fillOval(ball.getX(), ball.getY(), 20, 20);
 
 		if (shape != null) {
 			g2.setColor(Color.blue);
@@ -122,7 +122,7 @@ public class ClientSquare extends JPanel implements KeyListener, Serializable {
 			}
 		});
 
-		b1 = new Ball(frameSize);
+		ball = new Ball(frameSize);
 		f.pack();
 
 		Thread thread = new Thread(
@@ -141,9 +141,9 @@ public class ClientSquare extends JPanel implements KeyListener, Serializable {
 
 							if (coords instanceof Ball) {
 
-								b1.setX(coords.getX());
-								b1.setY(coords.getY());
-								System.out.println("Sending data to server, ball x=" + b1.getX() + " y=" + b1.getY());
+								ball.setX(coords.getX());
+								ball.setY(coords.getY());
+								//System.out.println("Sending data to server, ball x=" + ball.getX() + " y=" + ball.getY());
 							} else {
 								cs.shape.setX(coords.getX());
 								cs.shape.setY(coords.getY());
@@ -167,8 +167,8 @@ public class ClientSquare extends JPanel implements KeyListener, Serializable {
 				try {
 					cs.shape = new ObjectShape();
 					while (true) {
-						b1.move();
-						b1.ballCollision();
+						ball.move();
+						ball.ballCollision();
 						cs.repaint();
 						Thread.sleep(60);
 					}
@@ -177,6 +177,7 @@ public class ClientSquare extends JPanel implements KeyListener, Serializable {
 				}
 			}
 		});
+		thread2.start();
 	}
 
 	@Override
@@ -244,17 +245,18 @@ public class ClientSquare extends JPanel implements KeyListener, Serializable {
 	}
 
 	public boolean collision() {
-		float distX = Math.abs(shape.getX() - x - width / 2);
-		float distY = Math.abs(shape.getY() - y - length / 2);
+		float distX = Math.abs(ball.getX() - x - width / 2);
+		float distY = Math.abs(ball.getY() - y - length / 2);
 
-		if (distX > (width / 2 + shape.getRadius())) {
+		if (distX > (width / 2 + ball.getRadius())) {
 			return false;
 		}
-		if (distY > (length / 2 + shape.getRadius())) {
+		if (distY > (length / 2 + ball.getRadius())) {
 			return false;
 		}
 
 		if (distX <= (width / 2)) {
+		
 			return true;
 		}
 		if (distY <= (length / 2)) {
@@ -263,7 +265,7 @@ public class ClientSquare extends JPanel implements KeyListener, Serializable {
 
 		float dx = distX - width / 2;
 		float dy = distY - length / 2;
-		return (dx * dx + dy * dy <= (shape.getRadius() * shape.getRadius()));
+		return (dx * dx + dy * dy <= (ball.getRadius() * ball.getRadius()));
 
 	}
 
