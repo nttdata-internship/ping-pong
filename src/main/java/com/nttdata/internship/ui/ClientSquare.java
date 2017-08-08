@@ -33,7 +33,7 @@ public class ClientSquare extends JPanel implements KeyListener, Serializable {
 	private int length = 50;
 	private int width = 50;
 
-	private ObjectShape shape;
+	private static ObjectShape shape;
 
 	boolean isDown = false;
 	int startX;
@@ -62,8 +62,10 @@ public class ClientSquare extends JPanel implements KeyListener, Serializable {
 		g2.fill(new Ellipse2D.Double(x, y, 50, 50));
 
 		g.setColor(Color.WHITE);
-		//System.out.println(" ball x " + ball.getX() + " y=" + ball.getY());
-		g.fillOval(ball.getX(), ball.getY(), 20, 20);
+		System.out.println(" ball x " + ball.getX() + " y=" + ball.getY());
+		// g.fillOval(ball.getX(), ball.getY(), 20, 20);
+
+		ball.draw(g);
 
 		if (shape != null) {
 			g2.setColor(Color.blue);
@@ -127,57 +129,43 @@ public class ClientSquare extends JPanel implements KeyListener, Serializable {
 
 		Thread thread = new Thread(
 
-		new Runnable() {
-			public void run() {
-				try {
-					socket = new Socket("localhost", port);
-					cs.shape = new ObjectShape();
+				new Runnable() {
+					public void run() {
+						try {
+							socket = new Socket("localhost", port);
+							cs.shape = new ObjectShape();
 
-					while (true) {
-						in = new ObjectInputStream(socket.getInputStream());
-						ArrayList<ObjectShape> objects = (ArrayList<ObjectShape>) cs.receiveData(in);
+							while (true) {
+								in = new ObjectInputStream(socket.getInputStream());
+								ArrayList<ObjectShape> objects = (ArrayList<ObjectShape>) cs.receiveData(in);
 
-						for (ObjectShape coords : objects) {
+								for (ObjectShape coords : objects) {
 
-							if (coords instanceof Ball) {
+									if (coords instanceof Ball) {
 
-								ball.setX(coords.getX());
-								ball.setY(coords.getY());
-								//System.out.println("Sending data to server, ball x=" + ball.getX() + " y=" + ball.getY());
-							} else {
-								cs.shape.setX(coords.getX());
-								cs.shape.setY(coords.getY());
+										ball.setX(coords.getX());
+										ball.setY(coords.getY());
+										System.out.println(
+												"Sending data to server, ball x=" + ball.getX() + " y=" + ball.getY());
+									} else {
+										cs.shape.setX(coords.getX());
+										cs.shape.setY(coords.getY());
 
+									}
+
+								}
+
+								cs.repaint();
 							}
-
+						} catch (Exception e) {
+							e.printStackTrace();
 						}
 
-						cs.repaint();
 					}
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-
-			}
-		});
+				});
 		thread.start();
 
-		Thread thread2 = new Thread(new Runnable() {
-			public void run() {
-				try {
-					cs.shape = new ObjectShape();
-					while (true) {
-						ball.move();
-						ball.ballCollision();
-						cs.repaint();
-						Thread.sleep(60);
-					}
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-		thread2.start();
+		
 	}
 
 	@Override
@@ -256,7 +244,6 @@ public class ClientSquare extends JPanel implements KeyListener, Serializable {
 		}
 
 		if (distX <= (width / 2)) {
-		
 			return true;
 		}
 		if (distY <= (length / 2)) {
