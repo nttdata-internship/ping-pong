@@ -3,6 +3,7 @@ package com.nttdata.internship.ui;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Paint;
 import java.awt.PaintContext;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Rectangle2D;
@@ -66,20 +67,20 @@ public class ServerSquare extends JPanel {
 		Thread thread = new Thread(() -> {
 			
 			try {
+		
 				socket = server.accept();
 				DataInputStream in = new DataInputStream(new BufferedInputStream(socket.getInputStream()));
 				// ->
 				String coords[] = ssquare.receiveData(in);
-				
-					ssquare.x = Integer.valueOf(coords[0]);
-					ssquare.y = Integer.valueOf(coords[1]);
-				///desenez cu x si y cercul
-				
-					
+				for(int i = 0; i < coords.length; i += 2){
+					ssquare.x = Integer.valueOf(coords[i]);
+					ssquare.y = Integer.valueOf(coords[i]);
 					
 				System.out.println("x " + ssquare.x + " " + ssquare.y);
-				ssquare.repaint();
-				ssquare.repaint(ssquare.x, ssquare.y, 50, 50);
+				ssquare.paintImmediately(ssquare.x, ssquare.y, 50, 50);
+				
+				}
+					
 
 			} catch (Exception e) {
 
