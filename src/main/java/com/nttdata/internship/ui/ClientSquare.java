@@ -27,13 +27,13 @@ public class ClientSquare extends JPanel implements KeyListener, Serializable {
 	static Socket socket = null;
 	static int port = 2222;
 
-	private static Ball b1;
+	private static Ball ball;
 	private int x = 0;
 	private int y = 0;
 	private int length = 50;
 	private int width = 50;
 
-	private ObjectShape shape;
+	private static ObjectShape shape;
 
 	boolean isDown = false;
 	int startX;
@@ -62,8 +62,10 @@ public class ClientSquare extends JPanel implements KeyListener, Serializable {
 		g2.fill(new Ellipse2D.Double(x, y, 50, 50));
 
 		g.setColor(Color.WHITE);
-		System.out.println(" ball x " + b1.getX() + " y=" + b1.getY());
-		g.fillOval(b1.getX(), b1.getY(), 20, 20);
+		System.out.println(" ball x " + ball.getX() + " y=" + ball.getY());
+		// g.fillOval(ball.getX(), ball.getY(), 20, 20);
+
+		ball.draw(g);
 
 		if (shape != null) {
 			g2.setColor(Color.blue);
@@ -122,61 +124,48 @@ public class ClientSquare extends JPanel implements KeyListener, Serializable {
 			}
 		});
 
-		b1 = new Ball(frameSize);
+		ball = new Ball(frameSize);
 		f.pack();
 
 		Thread thread = new Thread(
 
-		new Runnable() {
-			public void run() {
-				try {
-					socket = new Socket("localhost", port);
-					cs.shape = new ObjectShape();
+				new Runnable() {
+					public void run() {
+						try {
+							socket = new Socket("localhost", port);
+							cs.shape = new ObjectShape();
 
-					while (true) {
-						in = new ObjectInputStream(socket.getInputStream());
-						ArrayList<ObjectShape> objects = (ArrayList<ObjectShape>) cs.receiveData(in);
+							while (true) {
+								in = new ObjectInputStream(socket.getInputStream());
+								ArrayList<ObjectShape> objects = (ArrayList<ObjectShape>) cs.receiveData(in);
 
-						for (ObjectShape coords : objects) {
+								for (ObjectShape coords : objects) {
 
-							if (coords instanceof Ball) {
+									if (coords instanceof Ball) {
 
-								b1.setX(coords.getX());
-								b1.setY(coords.getY());
-								System.out.println("Sending data to server, ball x=" + b1.getX() + " y=" + b1.getY());
-							} else {
-								cs.shape.setX(coords.getX());
-								cs.shape.setY(coords.getY());
+										ball.setX(coords.getX());
+										ball.setY(coords.getY());
+										System.out.println(
+												"Sending data to server, ball x=" + ball.getX() + " y=" + ball.getY());
+									} else {
+										cs.shape.setX(coords.getX());
+										cs.shape.setY(coords.getY());
 
+									}
+
+								}
+
+								cs.repaint();
 							}
-
+						} catch (Exception e) {
+							e.printStackTrace();
 						}
 
-						cs.repaint();
 					}
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-
-			}
-		});
+				});
 		thread.start();
 
-		Thread thread2 = new Thread(new Runnable() {
-			public void run() {
-				try {
-					cs.shape = new ObjectShape();
-					while (true) {
-						b1.move();
-						b1.ballCollision();
-						cs.repaint();
-						Thread.sleep(60);
-					}
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
+		
 	}
 
 	@Override
@@ -244,13 +233,13 @@ public class ClientSquare extends JPanel implements KeyListener, Serializable {
 	}
 
 	public boolean collision() {
-		float distX = Math.abs(shape.getX() - x - width / 2);
-		float distY = Math.abs(shape.getY() - y - length / 2);
+		float distX = Math.abs(ball.getX() - x - width / 2);
+		float distY = Math.abs(ball.getY() - y - length / 2);
 
-		if (distX > (width / 2 + shape.getRadius())) {
+		if (distX > (width / 2 + ball.getRadius())) {
 			return false;
 		}
-		if (distY > (length / 2 + shape.getRadius())) {
+		if (distY > (length / 2 + ball.getRadius())) {
 			return false;
 		}
 
@@ -263,7 +252,7 @@ public class ClientSquare extends JPanel implements KeyListener, Serializable {
 
 		float dx = distX - width / 2;
 		float dy = distY - length / 2;
-		return (dx * dx + dy * dy <= (shape.getRadius() * shape.getRadius()));
+		return (dx * dx + dy * dy <= (ball.getRadius() * ball.getRadius()));
 
 	}
 

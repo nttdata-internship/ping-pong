@@ -1,4 +1,4 @@
-package com.nttdata.internship.ui;
+package com.nttdata.internship.chatapp;
 
 import javax.swing.*;
 import java.awt.*;

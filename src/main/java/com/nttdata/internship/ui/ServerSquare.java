@@ -34,6 +34,7 @@ public class ServerSquare extends JPanel implements KeyListener, Serializable {
 	private int y = 0;
 	private int length = 50;
 	private int width = 50;
+	private boolean gameStarted = false;
 
 	private ObjectShape shape;
 	private static Ball ball;
@@ -65,7 +66,6 @@ public class ServerSquare extends JPanel implements KeyListener, Serializable {
 			ArrayList<ObjectShape> list = new ArrayList<>();
 			list.add(ss);
 			if (ball != null) {
-				System.out.println("Sending data to server, ball x=" + ball.getX() + " y=" + ball.getY());
 				list.add(ball);
 			}
 
@@ -79,6 +79,10 @@ public class ServerSquare extends JPanel implements KeyListener, Serializable {
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		setBackground(Color.pink);
+		if (!gameStarted) {
+			g.setColor(Color.RED);
+			g.drawString("Press SPACE to play", 250, 200);
+		}
 		Graphics2D g2 = (Graphics2D) g;
 		g2.setColor(Color.blue);
 		g2.fill(new Rectangle2D.Double(x, y, 50, 50));
@@ -146,8 +150,6 @@ public class ServerSquare extends JPanel implements KeyListener, Serializable {
 						ssquare.shape.setX(coords.getX());
 						ssquare.shape.setY(coords.getY());
 
-						System.out.println(" Sending x " + ssquare.shape.getX() + " y" + ssquare.shape.getY());
-
 						ssquare.repaint();
 					}
 
@@ -177,21 +179,22 @@ public class ServerSquare extends JPanel implements KeyListener, Serializable {
 		int prevY = y;
 
 		if (shape != null) {
-			if (code == KeyEvent.VK_SPACE && ballAnimation == null) {
+			if (code == KeyEvent.VK_SPACE ) {
 				ballAnimation = new Thread(new Runnable() {
 					public void run() {
 						try {
 
-							while (true) {
+							while (gameStarted) {
 								ball.move();
 								ball.ballCollision();
+								ball.checkObjectCollision(x, y);
 								ObjectShape currentRect = new ObjectShape();
 								currentRect.setX(x);
 								currentRect.setY(y);
 								sendingDataToClient(currentRect);
 								repaint();
-
 								Thread.sleep(60);
+
 							}
 						} catch (Exception e) {
 							e.printStackTrace();
@@ -217,6 +220,10 @@ public class ServerSquare extends JPanel implements KeyListener, Serializable {
 			x += SPEED_INCREMENT;
 		}
 
+		if (code == KeyEvent.VK_SPACE) {
+			gameStarted = !gameStarted;
+		}
+
 		if (x < 0 || x > frameSize.getWidth() - 75) {
 			x = prevX;
 
@@ -229,27 +236,26 @@ public class ServerSquare extends JPanel implements KeyListener, Serializable {
 	}
 
 	public boolean collision() {
-		// ???? functioneaza ???????????????????????????????
-		float cathetusX = Math.abs(shape.getX() - ball.getX() - width / 2);
-		float cathetusY = Math.abs(shape.getY() - ball.getY() - length / 2);
+		float distX = Math.abs(ball.getX() - x - width / 2);
+		float distY = Math.abs(ball.getY() - y - length / 2);
 
-		if (cathetusX > (width / 2 + shape.getRadius())) {
+		if (distX > (width / 2 + ball.getRadius()) ) {
 			return false;
 		}
-		if (cathetusY > (length / 2 + shape.getRadius())) {
+		if (distY > (length / 2 + ball.getRadius())) {
 			return false;
 		}
 
-		if (cathetusX <= (width / 2)) {
+		if (distX <= (width / 2)) {
 			return true;
 		}
-		if (cathetusY <= (length / 2)) {
+		if (distY <= (length / 2)) {
 			return true;
 		}
 
-		float dx = cathetusX - width / 2;
-		float dy = cathetusY - length / 2;
-		return (dx * dx + dy * dy <= (shape.getRadius() * shape.getRadius()));
+		float dx = distX - width / 2;
+		float dy = distY - length / 2;
+		return (dx * dx + dy * dy <= (ball.getRadius() * ball.getRadius()));
 
 	}
 
