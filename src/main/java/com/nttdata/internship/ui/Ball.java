@@ -13,8 +13,6 @@ public class Ball extends ObjectShape {
 	public int speedX = 20;
 	public int speedY = 20;
 
-	public Ball() {
-	}
 
 	public Ball(Dimension frameSize) {
 		x = 340;
