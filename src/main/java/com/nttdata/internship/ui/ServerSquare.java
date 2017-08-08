@@ -1,98 +1,125 @@
 package com.nttdata.internship.ui;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.Paint;
-import java.awt.PaintContext;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Rectangle2D;
-import java.io.BufferedInputStream;
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.net.InetSocketAddress;
-import java.net.ServerSocket;
-import java.net.Socket;
+import java.io.Serializable;
+
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
-public class ServerSquare extends JPanel {
+public class ServerSquare extends JPanel implements  Serializable {
 
-	static ServerSocket server;
-	static Socket socket;
-	static int port = 2222;
+	
+	private static final long serialVersionUID = 1L;
 
-	private static Graphics g;
 	private int x = 0;
 	private int y = 0;
+	private int length = 50;
+	private int width = 50;
+	private boolean gameStarted = false;
+
+	private ObjectShape shape;
+	private Ball ball;
+
+	static Dimension frameSize = new Dimension(640, 560);
 
 	public ServerSquare() {
-		
+
 		setFocusable(true);
+		
 		setFocusTraversalKeysEnabled(false);
-
-	}
-
-	public String[] receiveData(DataInputStream in) throws IOException {
-
-		return in.readUTF().trim().split(",");
-
-	}
-	
-
-	@Override
-	public void paintComponent(Graphics g) {
-		
-		super.paintComponent(g);
-		setBackground(Color.pink);
-		Graphics2D g2 = (Graphics2D) g;
-		g2.setColor(Color.red);
-		g2.fill(new Rectangle2D.Double(x, y, 50, 50));
-		
-
-	}
-
-	public static void main(String[] args) throws IOException {
-
+		setPreferredSize(frameSize);
 		JFrame f = new JFrame();
-		ServerSquare ssquare = new ServerSquare();
-		f.add(ssquare);
+		f.setTitle("SERVER");
+		f.add(this);
 		f.setVisible(true);
+		ball = new Ball(frameSize);
 		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		f.setSize(700, 600);
-		server = new ServerSocket();
-		server.bind(new InetSocketAddress("localhost", port));
 
-		Thread thread = new Thread(() -> {
-			
-			try {
-		
-				socket = server.accept();
-				DataInputStream in = new DataInputStream(new BufferedInputStream(socket.getInputStream()));
-				// ->
-				String coords[] = ssquare.receiveData(in);
-				for(int i = 0; i < coords.length; i += 2){
-					ssquare.x = Integer.valueOf(coords[i]);
-					ssquare.y = Integer.valueOf(coords[i]);
-					
-				System.out.println("x " + ssquare.x + " " + ssquare.y);
-				ssquare.paintImmediately(ssquare.x, ssquare.y, 50, 50);
-				
-				}
-					
+		f.addComponentListener(new ComponentListener() {
 
-			} catch (Exception e) {
+			@Override
+			public void componentShown(ComponentEvent e) {
 
-				e.printStackTrace();
 			}
 
-			System.out.println("merge");
-		}
+			@Override
+			public void componentResized(ComponentEvent e) {
+				frameSize = e.getComponent().getSize();
+				ball.setFrameSize(frameSize);
 
-		);
-		thread.start();
+			}
+
+			@Override
+			public void componentMoved(ComponentEvent e) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void componentHidden(ComponentEvent e) {
+				// TODO Auto-generated method stub
+
+			}
+		});
+
+		f.pack();
 
 	}
 
+	
+	@Override
+	public void paintComponent(Graphics g) {
+		super.paintComponent(g);
+		setBackground(Color.pink);
+		if (!gameStarted) {
+			g.setColor(Color.RED);
+			g.drawString("Press SPACE to play", 250, 200);
+		}
+		Graphics2D g2 = (Graphics2D) g;
+		g2.setColor(Color.blue);
+		g2.fill(new Rectangle2D.Double(x, y, 50, 50));
+		//TODO rezolva NPE de dedesubt
+		if (shape != null) {
+			g2.setColor(Color.BLACK);
+			g2.fill(new Ellipse2D.Double(frameSize.getWidth() - 2 * length, 0 + shape.getY(), length, width));
+
+		}
+
+		ball.draw(g);
+
+	}
+
+
+	public boolean collision() {
+		float distX = Math.abs(ball.getX() - x - width / 2);
+		float distY = Math.abs(ball.getY() - y - length / 2);
+
+		if (distX > (width / 2 + ball.getRadius()) ) {
+			return false;
+		}
+		if (distY > (length / 2 + ball.getRadius())) {
+			return false;
+		}
+
+		if (distX <= (width / 2)) {
+			return true;
+		}
+		if (distY <= (length / 2)) {
+			return true;
+		}
+
+		float dx = distX - width / 2;
+		float dy = distY - length / 2;
+		return (dx * dx + dy * dy <= (ball.getRadius() * ball.getRadius()));
+
+	}
+
+	
 }
