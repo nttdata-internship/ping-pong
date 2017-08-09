@@ -11,35 +11,33 @@ import java.util.ArrayList;
 public class Data {
 
 	static ServerSocket server;
-	static Socket socket = null;
+	Socket socket = null;
 	static int port = 2222;
 	private ObjectOutputStream out;
 	private Ball ball;
 	ObjectShape shape;
 	private ServerSquare square;
-	
+
 	public Object receiveData(ObjectInputStream in) throws IOException, ClassNotFoundException {
 		return in.readObject();
 
 	}
 
-	public void sendingDataToClient(ObjectShape ss) throws IOException {
-		if (socket != null) {
-			out = new ObjectOutputStream(socket.getOutputStream());
+	public void sendingDataToClient(ArrayList<ObjectShape> list) throws IOException {
+		// if (socket != null) {
+		out = new ObjectOutputStream(socket.getOutputStream());
 
-			ArrayList<ObjectShape> list = new ArrayList<>();
-			list.add(ss);
-			if (ball != null) {
-				list.add(ball);
-			}
+		// ArrayList<ObjectShape> list = new ArrayList<>();
+		// list.add(ss);
+		// if (ball != null) {
+		// list.add(ball);
+		// }
 
-			out.writeObject(list);
-			out.flush();
-		}
-
+		out.writeObject(list);
+		out.flush();
 	}
-	public void listenForConnection()
-	{
+
+	public void listenForConnection() {
 		Thread clientReceiverThread = new Thread(new Runnable() {
 			public void run() {
 				try {

@@ -9,10 +9,9 @@ public class Ball extends ObjectShape {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	public Dimension frameSize;
+	public transient Dimension frameSize;
 	public int speedX = 20;
 	public int speedY = 20;
-
 
 	public Ball(Dimension frameSize) {
 		x = 340;
@@ -27,17 +26,17 @@ public class Ball extends ObjectShape {
 	}
 
 	public void ballCollision() {
-		if (x < -1 ){
-			speedX = 0;
-			
+		if (x < -1) {
+			speedX = -speedX;
+
 		}
-		if(x > frameSize.getWidth() - 40) {
+		if (x > frameSize.getWidth() - 40) {
 			speedX = -speedX;
 		}
 		if (y < -1 || y + 60 >= frameSize.getHeight()) {
 			// speedY = -speedY;
 		}
-		
+
 	}
 
 	public void checkObjectCollision(/* shape ?? */int objX, int objy) throws InterruptedException {
@@ -52,11 +51,11 @@ public class Ball extends ObjectShape {
 					System.out.println("shape x=" + objX + " y= " + objy);
 					x = 340;
 					y = 275;
-					
+
 					// stop game
 					// send i.e 0-my_score - 1 to oponent & stop game
 					// play space to start again.
-					
+
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
@@ -76,8 +75,8 @@ public class Ball extends ObjectShape {
 	}
 
 	public void move() {
-		setX(getX() + speedX);
-		setY(getY() + speedY);
+		x += speedX;
+		y += speedY;
 	}
 
 	public void setFrameSize(Dimension frameSize) {

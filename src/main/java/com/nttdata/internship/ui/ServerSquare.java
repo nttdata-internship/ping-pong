@@ -13,9 +13,8 @@ import java.io.Serializable;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
-public class ServerSquare extends JPanel implements  Serializable {
+public class ServerSquare extends JPanel implements Serializable {
 
-	
 	private static final long serialVersionUID = 1L;
 
 	private int x = 0;
@@ -32,7 +31,7 @@ public class ServerSquare extends JPanel implements  Serializable {
 	public ServerSquare() {
 
 		setFocusable(true);
-		
+
 		setFocusTraversalKeysEnabled(false);
 		setPreferredSize(frameSize);
 		JFrame f = new JFrame();
@@ -73,7 +72,6 @@ public class ServerSquare extends JPanel implements  Serializable {
 
 	}
 
-	
 	@Override
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
@@ -85,7 +83,7 @@ public class ServerSquare extends JPanel implements  Serializable {
 		Graphics2D g2 = (Graphics2D) g;
 		g2.setColor(Color.blue);
 		g2.fill(new Rectangle2D.Double(x, y, 50, 50));
-		//TODO rezolva NPE de dedesubt
+		// TODO rezolva NPE de dedesubt
 		if (shape != null) {
 			g2.setColor(Color.BLACK);
 			g2.fill(new Ellipse2D.Double(frameSize.getWidth() - 2 * length, 0 + shape.getY(), length, width));
@@ -96,12 +94,11 @@ public class ServerSquare extends JPanel implements  Serializable {
 
 	}
 
-
 	public boolean collision() {
 		float distX = Math.abs(ball.getX() - x - width / 2);
 		float distY = Math.abs(ball.getY() - y - length / 2);
 
-		if (distX > (width / 2 + ball.getRadius()) ) {
+		if (distX > (width / 2 + ball.getRadius())) {
 			return false;
 		}
 		if (distY > (length / 2 + ball.getRadius())) {
@@ -121,5 +118,8 @@ public class ServerSquare extends JPanel implements  Serializable {
 
 	}
 
-	
+	public Ball getBall() {
+		return ball;
+	}
+
 }

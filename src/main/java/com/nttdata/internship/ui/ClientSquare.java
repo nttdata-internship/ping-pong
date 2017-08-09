@@ -13,6 +13,7 @@ import java.awt.geom.Rectangle2D;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.OutputStream;
 import java.io.Serializable;
 import java.net.Socket;
 import java.util.ArrayList;
@@ -33,15 +34,13 @@ public class ClientSquare extends JPanel implements KeyListener, Serializable {
 	private int length = 50;
 	private int width = 50;
 
-	private static ObjectShape shape;
+	protected ObjectShape shape;
 
 	boolean isDown = false;
 	int startX;
 	int startY;
 
 	private static Dimension frameSize = new Dimension(700, 600);
-
-	static ClientSquare cs;
 
 	static ObjectInputStream in;
 
@@ -74,98 +73,15 @@ public class ClientSquare extends JPanel implements KeyListener, Serializable {
 
 	}
 
-	public void sendingDataToServer(ObjectShape ss) throws IOException {
-		if (socket != null) {
-			ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
-			out.writeObject(ss);
-			out.flush();
-		}
-
-	}
-
-	public Object receiveData(ObjectInputStream in) throws IOException, ClassNotFoundException {
-
-		return in.readObject();
-
-	}
+	
 
 	public static void main(String[] args) throws IOException {
-		JFrame f = new JFrame();
-		f.setTitle("CLIENT");
-		cs = new ClientSquare();
-		f.add(cs);
-		f.setVisible(true);
-		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-		f.addComponentListener(new ComponentListener() {
-
-			@Override
-			public void componentShown(ComponentEvent e) {
-				// TODO Auto-generated method stub
-
-			}
-
-			@Override
-			public void componentResized(ComponentEvent e) {
-				frameSize = e.getComponent().getSize();
-
-			}
-
-			@Override
-			public void componentMoved(ComponentEvent e) {
-				// TODO Auto-generated method stub
-
-			}
-
-			@Override
-			public void componentHidden(ComponentEvent e) {
-				// TODO Auto-generated method stub
-
-			}
-		});
-
+		ClientSquare cs = new ClientSquare();
+		cs.clientFrame();
 		ball = new Ball(frameSize);
-		f.pack();
+		ClientConnection caca = new ClientConnection(ball, cs);
+		caca.start();
 
-		Thread thread = new Thread(
-
-				new Runnable() {
-					public void run() {
-						try {
-							socket = new Socket("localhost", port);
-							cs.shape = new ObjectShape();
-
-							while (true) {
-								in = new ObjectInputStream(socket.getInputStream());
-								ArrayList<ObjectShape> objects = (ArrayList<ObjectShape>) cs.receiveData(in);
-
-								for (ObjectShape coords : objects) {
-
-									if (coords instanceof Ball) {
-
-										ball.setX(coords.getX());
-										ball.setY(coords.getY());
-										System.out.println(
-												"Sending data to server, ball x=" + ball.getX() + " y=" + ball.getY());
-									} else {
-										cs.shape.setX(coords.getX());
-										cs.shape.setY(coords.getY());
-
-									}
-
-								}
-
-								cs.repaint();
-							}
-						} catch (Exception e) {
-							e.printStackTrace();
-						}
-
-					}
-				});
-		thread.start();
-
-		
 	}
 
 	@Override
@@ -222,14 +138,14 @@ public class ClientSquare extends JPanel implements KeyListener, Serializable {
 			ObjectShape sq = new ObjectShape();
 			sq.setX(x);
 			sq.setY(y);
-			sendingDataToServer(sq);
+			SocketUtil.sendDataToServer(socket.getOutputStream(), sq);
 		} catch (Exception e1) {
 			e1.printStackTrace();
 		}
 
 		// }
 
-		cs.repaint();
+		repaint();
 	}
 
 	public boolean collision() {
@@ -259,5 +175,42 @@ public class ClientSquare extends JPanel implements KeyListener, Serializable {
 	@Override
 	public void keyReleased(KeyEvent e) {
 
+	}
+
+	public void clientFrame() {
+		JFrame f = new JFrame();
+		f.setTitle("CLIENT");
+		f.add(this);
+		f.setVisible(true);
+		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+		f.addComponentListener(new ComponentListener() {
+
+			@Override
+			public void componentShown(ComponentEvent e) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void componentResized(ComponentEvent e) {
+				frameSize = e.getComponent().getSize();
+
+			}
+
+			@Override
+			public void componentMoved(ComponentEvent e) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void componentHidden(ComponentEvent e) {
+				// TODO Auto-generated method stub
+
+			}
+		});
+
+		f.pack();
 	}
 }
