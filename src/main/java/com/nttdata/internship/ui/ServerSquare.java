@@ -17,21 +17,18 @@ public class ServerSquare extends JPanel implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	private int x = 0;
-	private int y = 0;
 	private int length = 50;
 	private int width = 50;
 	private boolean gameStarted = false;
-
 	private ObjectShape shape;
 	private Ball ball;
+	private ObjectShape paddle;
 
 	static Dimension frameSize = new Dimension(640, 560);
 
 	public ServerSquare() {
 
 		setFocusable(true);
-
 		setFocusTraversalKeysEnabled(false);
 		setPreferredSize(frameSize);
 		JFrame f = new JFrame();
@@ -40,6 +37,7 @@ public class ServerSquare extends JPanel implements Serializable {
 		f.setVisible(true);
 		ball = new Ball(frameSize);
 		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		this.paddle = new ObjectShape();
 
 		f.addComponentListener(new ComponentListener() {
 
@@ -82,7 +80,7 @@ public class ServerSquare extends JPanel implements Serializable {
 		}
 		Graphics2D g2 = (Graphics2D) g;
 		g2.setColor(Color.blue);
-		g2.fill(new Rectangle2D.Double(x, y, 50, 50));
+		g2.fill(new Rectangle2D.Double(paddle.getX(), paddle.getY(), 50, 50));
 		// TODO rezolva NPE de dedesubt
 		if (shape != null) {
 			g2.setColor(Color.BLACK);
@@ -91,35 +89,38 @@ public class ServerSquare extends JPanel implements Serializable {
 		}
 
 		ball.draw(g);
-
 	}
 
-	public boolean collision() {
-		float distX = Math.abs(ball.getX() - x - width / 2);
-		float distY = Math.abs(ball.getY() - y - length / 2);
-
-		if (distX > (width / 2 + ball.getRadius())) {
-			return false;
-		}
-		if (distY > (length / 2 + ball.getRadius())) {
-			return false;
-		}
-
-		if (distX <= (width / 2)) {
-			return true;
-		}
-		if (distY <= (length / 2)) {
-			return true;
-		}
-
-		float dx = distX - width / 2;
-		float dy = distY - length / 2;
-		return (dx * dx + dy * dy <= (ball.getRadius() * ball.getRadius()));
-
-	}
+	// public boolean collision() {
+	// float distX = Math.abs(ball.getX() - x - width / 2);
+	// float distY = Math.abs(ball.getY() - y - length / 2);
+	//
+	// if (distX > (width / 2 + ball.getRadius())) {
+	// return false;
+	// }
+	// if (distY > (length / 2 + ball.getRadius())) {
+	// return false;
+	// }
+	//
+	// if (distX <= (width / 2)) {
+	// return true;
+	// }
+	// if (distY <= (length / 2)) {
+	// return true;
+	// }
+	//
+	// float dx = distX - width / 2;
+	// float dy = distY - length / 2;
+	// return (dx * dx + dy * dy <= (ball.getRadius() * ball.getRadius()));
+	//
+	// }
 
 	public Ball getBall() {
 		return ball;
+	}
+
+	public ObjectShape getPaddle() {
+		return this.paddle;
 	}
 
 }

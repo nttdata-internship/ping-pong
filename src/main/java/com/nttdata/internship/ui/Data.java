@@ -11,11 +11,11 @@ import java.util.ArrayList;
 public class Data {
 
 	static ServerSocket server;
-	Socket socket = null;
+	protected Socket socket = null;
 	static int port = 2222;
 	private ObjectOutputStream out;
 	private Ball ball;
-	ObjectShape shape;
+	protected ObjectShape shape;
 	private ServerSquare square;
 
 	public Object receiveData(ObjectInputStream in) throws IOException, ClassNotFoundException {

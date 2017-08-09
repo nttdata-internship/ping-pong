@@ -1,9 +1,8 @@
 package com.nttdata.internship.ui;
 
-import java.awt.Dimension;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.util.ArrayList;
+import java.io.ObjectInputStream;
 
 public class KeysAction implements KeyListener {
 
@@ -13,9 +12,10 @@ public class KeysAction implements KeyListener {
 	private static final int SPEED_INCREMENT = 10;
 	private boolean gameStarted = false;
 	private Data connection;
+	private ObjectInputStream in;
 
 	public KeysAction(Data connection, ServerSquare server) {
-		this.paddle = new ObjectShape();
+		this.paddle = server.getPaddle();
 		this.connection = connection;
 		this.server = server;
 		this.ball = server.getBall();
@@ -23,7 +23,6 @@ public class KeysAction implements KeyListener {
 
 	@Override
 	public void keyTyped(KeyEvent e) {
-		// TODO Auto-generated method stub
 
 	}
 
@@ -61,10 +60,10 @@ public class KeysAction implements KeyListener {
 			gameStarted = !gameStarted;
 		}
 
-		if (paddle.getX() < 0 || paddle.getX() > ServerSquare.frameSize.getWidth() - 75) {
+		if (paddle.getX() < 0 || paddle.getX() > ServerSquare.frameSize.getWidth() - 60) {
 			paddle.setX(prevX);
 
-		} else if (paddle.getY() < 0 || paddle.getY() > ServerSquare.frameSize.getHeight() - 75) {
+		} else if (paddle.getY() < 0 || paddle.getY() > ServerSquare.frameSize.getHeight() - 90) {
 			paddle.setY(prevY);
 		}
 
@@ -74,8 +73,6 @@ public class KeysAction implements KeyListener {
 
 	@Override
 	public void keyReleased(KeyEvent e) {
-		// TODO Auto-generated method stub
-
 	}
 
 }

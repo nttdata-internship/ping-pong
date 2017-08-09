@@ -11,18 +11,19 @@ public final class SocketUtil {
 
 	}
 
-	public static void sendDataToServer(OutputStream os, ObjectShape ss) throws IOException {
+	public static void sendDataToServer(OutputStream os, ClientSquare clientSquare) throws IOException {
 		// if (socket != null) {
 		ObjectOutputStream out = new ObjectOutputStream(os);
-		out.writeObject(ss);
+		out.writeObject(clientSquare);
 		out.flush();
 		// }
 
 	}
 
 	public static Object readData(ObjectInputStream in) throws IOException, ClassNotFoundException {
-
-		return in.readObject();
+		if (in != null)
+			return in.readObject();
+		return null;
 
 	}
 

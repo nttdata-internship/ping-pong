@@ -35,6 +35,7 @@ public class ClientSquare extends JPanel implements KeyListener, Serializable {
 	private int width = 50;
 
 	protected ObjectShape shape;
+	protected ObjectShape paddle;
 
 	boolean isDown = false;
 	int startX;
@@ -46,6 +47,7 @@ public class ClientSquare extends JPanel implements KeyListener, Serializable {
 
 	public ClientSquare() {
 		shape = new ObjectShape();
+		this.paddle = new ObjectShape();
 
 		setFocusable(true);
 		addKeyListener(this);
@@ -72,8 +74,6 @@ public class ClientSquare extends JPanel implements KeyListener, Serializable {
 		}
 
 	}
-
-	
 
 	public static void main(String[] args) throws IOException {
 		ClientSquare cs = new ClientSquare();
@@ -116,12 +116,11 @@ public class ClientSquare extends JPanel implements KeyListener, Serializable {
 		// int dy = startY - shape.getY();
 		// isDown = (dx * dx + dy * dy < shape.getRadius() * shape.getRadius());
 
-		if (x < 0 || x > frameSize.getWidth() - 75) {
-			x = prevX;
+		if (paddle.getX() < 0 || paddle.getX() > ServerSquare.frameSize.getWidth() - 60) {
+			paddle.setX(prevX);
 
-		} else if (y < 0 || y > frameSize.getHeight() - 75) {
-			y = prevY;
-
+		} else if (paddle.getY() < 0 || paddle.getY() > ServerSquare.frameSize.getHeight() - 90) {
+			paddle.setY(prevY);
 		}
 
 		// shape.setX(shape.getX() + dx);
@@ -135,10 +134,11 @@ public class ClientSquare extends JPanel implements KeyListener, Serializable {
 		}
 
 		try {
-			ObjectShape sq = new ObjectShape();
-			sq.setX(x);
-			sq.setY(y);
-			SocketUtil.sendDataToServer(socket.getOutputStream(), sq);
+			this.paddle = new ObjectShape();
+			paddle.setX(prevX);
+			paddle.setY(prevY);
+			if (socket != null)
+				SocketUtil.sendDataToServer(socket.getOutputStream(), this);
 		} catch (Exception e1) {
 			e1.printStackTrace();
 		}
