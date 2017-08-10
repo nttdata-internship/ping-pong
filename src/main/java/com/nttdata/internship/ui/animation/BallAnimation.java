@@ -1,18 +1,17 @@
-package com.nttdata.internship.ui;
+package com.nttdata.internship.ui.animation;
 
 import java.util.ArrayList;
 
-import javax.swing.JPanel;
+import com.nttdata.internship.ui.network.SocketUtil;
+import com.nttdata.internship.ui.panel.GamePanel;
 
 public class BallAnimation extends Thread {
 
 	private Ball ball;
-	private Data data;
-	private JPanel panel;
+	private GamePanel panel;
 
-	public BallAnimation(Ball ball, Data data, ObjectShape shape, JPanel panel) {
-		this.ball = ball;
-		this.data = data;
+	public BallAnimation(GamePanel panel) {
+		this.ball = panel.getBall();
 		this.panel = panel;
 	}
 
@@ -34,7 +33,10 @@ public class BallAnimation extends Thread {
 				ArrayList<ObjectShape> objectsToSend = new ArrayList<>();
 				objectsToSend.add(paddle);
 				objectsToSend.add(ballShape);
-				data.sendingDataToClient(objectsToSend);
+
+				SocketUtil.sendDataToServer(panel.getOutputStream(), objectsToSend);
+				// data.sendDataToClient(objectsToSend);
+
 				//
 				// if (server.collision()) {
 				// System.out.println("s-au ciocnit");
