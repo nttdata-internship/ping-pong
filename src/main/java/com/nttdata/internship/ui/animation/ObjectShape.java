@@ -1,4 +1,4 @@
-package com.nttdata.internship.ui;
+package com.nttdata.internship.ui.animation;
 
 import java.io.Serializable;
 

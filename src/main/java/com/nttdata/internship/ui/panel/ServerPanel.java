@@ -1,33 +1,25 @@
-package com.nttdata.internship.ui;
+package com.nttdata.internship.ui.panel;
 
-import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
-import java.awt.geom.Ellipse2D;
-import java.awt.geom.Rectangle2D;
 import java.io.Serializable;
 
 import javax.swing.JFrame;
-import javax.swing.JPanel;
 
-public class ServerSquare extends JPanel implements Serializable {
+import com.nttdata.internship.ui.animation.Ball;
+
+public class ServerPanel extends GamePanel implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
 	private int length = 50;
 	private int width = 50;
 	private boolean gameStarted = false;
-	private ObjectShape shape;
-	private Ball ball;
-	private ObjectShape paddle;
 
-	static Dimension frameSize = new Dimension(640, 560);
+	public static Dimension frameSize = new Dimension(640, 560);
 
-	public ServerSquare() {
-
+	public ServerPanel() {
 		setFocusable(true);
 		setFocusTraversalKeysEnabled(false);
 		setPreferredSize(frameSize);
@@ -35,9 +27,8 @@ public class ServerSquare extends JPanel implements Serializable {
 		f.setTitle("SERVER");
 		f.add(this);
 		f.setVisible(true);
-		ball = new Ball(frameSize);
+		
 		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		this.paddle = new ObjectShape();
 
 		f.addComponentListener(new ComponentListener() {
 
@@ -49,7 +40,7 @@ public class ServerSquare extends JPanel implements Serializable {
 			@Override
 			public void componentResized(ComponentEvent e) {
 				frameSize = e.getComponent().getSize();
-				ball.setFrameSize(frameSize);
+				getBall().setFrameSize(frameSize);
 
 			}
 
@@ -70,26 +61,28 @@ public class ServerSquare extends JPanel implements Serializable {
 
 	}
 
-	@Override
-	public void paintComponent(Graphics g) {
-		super.paintComponent(g);
-		setBackground(Color.pink);
-		if (!gameStarted) {
-			g.setColor(Color.RED);
-			g.drawString("Press SPACE to play", 250, 200);
-		}
-		Graphics2D g2 = (Graphics2D) g;
-		g2.setColor(Color.blue);
-		g2.fill(new Rectangle2D.Double(paddle.getX(), paddle.getY(), 50, 50));
-		// TODO rezolva NPE de dedesubt
-		if (shape != null) {
-			g2.setColor(Color.BLACK);
-			g2.fill(new Ellipse2D.Double(frameSize.getWidth() - 2 * length, 0 + shape.getY(), length, width));
-
-		}
-
-		ball.draw(g);
-	}
+	// @Override
+	// public void paintComponent(Graphics g) {
+	// super.paintComponent(g);
+	// setBackground(Color.pink);
+	// if (!gameStarted) {
+	// g.setColor(Color.RED);
+	// g.drawString("Press SPACE to play", 250, 200);
+	// }
+	// Graphics2D g2 = (Graphics2D) g;
+	// g2.setColor(Color.blue);
+	// g2.fill(new Rectangle2D.Double(paddle.getX(), paddle.getY(), 50, 50));
+	// // TODO rezolva NPE de dedesubt
+	// if (clientPaddle != null) {
+	// g2.setColor(Color.BLACK);
+	// g2.fill(new Ellipse2D.Double(frameSize.getWidth() - 2 * length, 0 +
+	// clientPaddle.getY(), length,
+	// width));
+	//
+	// }
+	//
+	// ball.draw(g);
+	// }
 
 	// public boolean collision() {
 	// float distX = Math.abs(ball.getX() - x - width / 2);
@@ -114,13 +107,5 @@ public class ServerSquare extends JPanel implements Serializable {
 	// return (dx * dx + dy * dy <= (ball.getRadius() * ball.getRadius()));
 	//
 	// }
-
-	public Ball getBall() {
-		return ball;
-	}
-
-	public ObjectShape getPaddle() {
-		return this.paddle;
-	}
 
 }
