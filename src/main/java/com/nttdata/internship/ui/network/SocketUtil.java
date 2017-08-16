@@ -7,6 +7,7 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 
 import com.nttdata.internship.ui.animation.ObjectShape;
+import com.nttdata.internship.ui.network.data.GameData;
 
 public final class SocketUtil {
 
@@ -14,9 +15,9 @@ public final class SocketUtil {
 
 	}
 
-	public static void sendDataToServer(OutputStream os, ArrayList<ObjectShape> objects) throws IOException {
+	public static void sendDataToServer(OutputStream os, GameData gameData) throws IOException {
 		ObjectOutputStream out = new ObjectOutputStream(os);
-		out.writeObject(objects);
+		out.writeObject(gameData);
 		out.flush();
 
 	}

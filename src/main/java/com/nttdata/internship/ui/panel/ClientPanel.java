@@ -17,11 +17,12 @@ import com.nttdata.internship.ui.animation.ObjectShape;
 public class ClientPanel extends GamePanel implements Serializable {
 
 	private static final long serialVersionUID = 1L;
+	private static final int SPEED_INCREMENT = 5;
 	static Socket socket = null;
 	static int port = 2222;
+	private GamePanel gamePanel;
 	protected boolean gameStarted = false;
 	public static Dimension frameSize = new Dimension(640, 560);
-
 
 	protected ObjectShape shape;
 
@@ -80,7 +81,7 @@ public class ClientPanel extends GamePanel implements Serializable {
 		
 			g.setColor(Color.WHITE);
 			g.setFont(new Font("Arial", Font.BOLD, 16));
-			g.drawString("surpriza nu scrie ca la celalalt", 250, 200);
+			g.drawString("Waiting for game to start", 250, 200);
 		
 	}
 

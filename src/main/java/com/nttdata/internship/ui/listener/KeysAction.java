@@ -2,8 +2,11 @@ package com.nttdata.internship.ui.listener;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.io.IOException;
 
 import com.nttdata.internship.ui.animation.BallAnimation;
+import com.nttdata.internship.ui.network.SocketUtil;
+import com.nttdata.internship.ui.network.data.GameData;
 import com.nttdata.internship.ui.panel.GamePanel;
 import com.nttdata.internship.ui.panel.ServerPanel;
 
@@ -25,8 +28,8 @@ public class KeysAction implements KeyListener {
 	}
 
 	@Override
-	public void keyPressed(KeyEvent e) {
-		int code = e.getKeyCode();
+	public void keyPressed(KeyEvent event) {
+		int code = event.getKeyCode();
 		int prevX = gamePanel.getPaddle().getX();
 		int prevY = gamePanel.getPaddle().getY();
 
@@ -43,9 +46,9 @@ public class KeysAction implements KeyListener {
 					try {
 						animationThread.join();
 						animationThread = new BallAnimation(gamePanel);
-					} catch (InterruptedException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
+
+					} catch (InterruptedException e) {
+						e.printStackTrace();
 					}
 
 				}

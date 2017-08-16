@@ -5,33 +5,40 @@ import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.List;
 
 import com.nttdata.internship.ui.animation.Ball;
 import com.nttdata.internship.ui.animation.ObjectShape;
+import com.nttdata.internship.ui.network.data.GameData;
 import com.nttdata.internship.ui.panel.GamePanel;
 
 public class SocketConnection extends Thread {
 
 	static Socket socket = null;
 	static int port = 2222;
-	private GamePanel client;
+	private GamePanel panel;
 	private ObjectInputStream in;
 
 	public SocketConnection(GamePanel panel) {
-		this.client = panel;
+		this.panel = panel;
 	}
 
 	public void run() {
 		try {
 			socket = new Socket("localhost", port);
-			client.setGameStarted(false);
 			while (true) {
 				in = new ObjectInputStream(socket.getInputStream());
 
-				processResponse((ArrayList<ObjectShape>) SocketUtil.readData(in));
+				processResponse((GameData) SocketUtil.readData(in));
 
-				client.repaint();
-				Thread.sleep(60);
+				GameData sentData = new GameData();
+				List<ObjectShape> paddle = new ArrayList<>();
+				paddle.add(panel.getPaddle());
+				sentData.setObjects(paddle);
+
+				SocketUtil.sendDataToServer(socket.getOutputStream(), sentData);
+				panel.repaint();
+				// Thread.sleep(60);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -46,13 +53,15 @@ public class SocketConnection extends Thread {
 					ServerSocket server = new ServerSocket();
 					server.bind(new InetSocketAddress("localhost", port));
 					socket = server.accept();
-					client.setOutputStream(socket.getOutputStream());
+					panel.setOutputStream(socket.getOutputStream());
 					while (true) {
 						ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
-						ObjectShape coords = (ObjectShape) SocketUtil.readData(in);
-						client.setClientPaddle(coords);
+						GameData coords = (GameData) SocketUtil.readData(in);
+						if (coords != null && !coords.getObjects().isEmpty()) {
+							panel.setClientPaddle(coords.getObjects().get(0));
+						}
 
-						client.repaint();
+						panel.repaint();
 					}
 
 				} catch (Exception e) {
@@ -65,22 +74,26 @@ public class SocketConnection extends Thread {
 		clientReceiverThread.start();
 	}
 
-	private void processResponse(ArrayList<ObjectShape> objects) {
-		for (ObjectShape coords : objects) {
+	private void processResponse(GameData gameData) {
+		if (gameData != null) {
+			for (ObjectShape coords : gameData.getObjects()) {
 
-			if (coords instanceof Ball) {
+				if (coords instanceof Ball) {
 
-				client.getBall().setX(coords.getX());
-				client.getBall().setY(coords.getY());
-			} else {
-				ObjectShape clientPaddle = new ObjectShape();
-				clientPaddle.setX(coords.getX());
-				clientPaddle.setY(coords.getY());
-				client.setClientPaddle(clientPaddle);
+					panel.getBall().setX(coords.getX());
+					panel.getBall().setY(coords.getY());
+				} else {
+					ObjectShape clientPaddle = new ObjectShape();
+					clientPaddle.setX(coords.getX());
+					clientPaddle.setY(coords.getY());
+					panel.setClientPaddle(clientPaddle);
+
+				}
 
 			}
-
+			panel.setGameStarted(gameData.isGameRunning());
 		}
+
 	}
 
 }
