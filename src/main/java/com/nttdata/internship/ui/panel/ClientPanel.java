@@ -1,6 +1,9 @@
 package com.nttdata.internship.ui.panel;
 
+import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.Graphics;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.io.ObjectInputStream;
@@ -76,6 +79,15 @@ public class ClientPanel extends GamePanel implements Serializable {
 		});
 
 		f.pack();
+	}
+	
+	@Override
+	protected void paintWelcomeMessage(Graphics g) {
+		
+			g.setColor(Color.WHITE);
+			g.setFont(new Font("Arial", Font.BOLD, 16));
+			g.drawString("surpriza nu scrie ca la celalalt", 250, 200);
+		
 	}
 
 

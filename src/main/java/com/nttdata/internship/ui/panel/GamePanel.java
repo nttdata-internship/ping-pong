@@ -78,9 +78,7 @@ public class GamePanel extends JPanel {
 		}
 
 		if (!gameStarted) {
-			g.setColor(Color.WHITE);
-			g.setFont(new Font("Arial", Font.BOLD, 16));
-			g.drawString("Press SPACE to start", 250, 200);
+			paintWelcomeMessage(g);
 		}
 
 	}
@@ -94,13 +92,21 @@ public class GamePanel extends JPanel {
 
 	}
 
+	
+	
+
+	protected void paintWelcomeMessage(Graphics g) {
+		g.setColor(Color.WHITE);
+		g.setFont(new Font("Arial", Font.BOLD, 16));
+		g.drawString("Press SPACE to start", 250, 200);
+	}
+
 	public boolean isGameStarted() {
 		return gameStarted;
 	}
 
-	public boolean setGameStarted(boolean gameStarted) {
-		return this.gameStarted = gameStarted;
+	public void setGameStarted(boolean gameStarted) {
+		this.gameStarted = gameStarted;
 	}
 
 }
-// casadasdasdasdassdasdasdasdas
