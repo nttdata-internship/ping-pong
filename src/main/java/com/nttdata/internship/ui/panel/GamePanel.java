@@ -15,6 +15,10 @@ import com.nttdata.internship.ui.animation.ObjectShape;
 
 public class GamePanel extends JPanel {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -8592774932261018198L;
 	private Ball ball;
 	private ObjectShape paddle;
 
