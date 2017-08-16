@@ -24,13 +24,14 @@ public class SocketConnection extends Thread {
 	public void run() {
 		try {
 			socket = new Socket("localhost", port);
-
+			client.setGameStarted(false);
 			while (true) {
 				in = new ObjectInputStream(socket.getInputStream());
 
 				processResponse((ArrayList<ObjectShape>) SocketUtil.readData(in));
 
 				client.repaint();
+				Thread.sleep(60);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -50,7 +51,7 @@ public class SocketConnection extends Thread {
 						ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
 						ObjectShape coords = (ObjectShape) SocketUtil.readData(in);
 						client.setClientPaddle(coords);
-						
+
 						client.repaint();
 					}
 

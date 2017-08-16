@@ -18,7 +18,7 @@ public class BallAnimation extends Thread {
 	public void run() {
 		try {
 
-			while (true) {
+			while (panel.isGameStarted()) {
 				ball.move();
 				ball.ballCollision();
 				// ball.checkObjectCollision(shape.getX(),
@@ -34,6 +34,8 @@ public class BallAnimation extends Thread {
 				objectsToSend.add(paddle);
 				objectsToSend.add(ballShape);
 
+				// GameData.gameStatus, objects[],score
+
 				SocketUtil.sendDataToServer(panel.getOutputStream(), objectsToSend);
 				// data.sendDataToClient(objectsToSend);
 
@@ -46,6 +48,7 @@ public class BallAnimation extends Thread {
 				Thread.sleep(60);
 
 			}
+			return;
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

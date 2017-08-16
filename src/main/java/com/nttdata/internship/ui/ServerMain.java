@@ -12,7 +12,6 @@ public class ServerMain {
 		server.addKeyListener(new KeysAction(server));
 		SocketConnection sc = new SocketConnection(server);
 		sc.listenForConnection();
-
 	}
 
 }

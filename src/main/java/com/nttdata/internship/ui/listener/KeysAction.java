@@ -11,10 +11,11 @@ public class KeysAction implements KeyListener {
 
 	private GamePanel gamePanel;
 	private static final int SPEED_INCREMENT = 10;
-	private boolean gameStarted = false;
+	private BallAnimation animationThread;
 
 	public KeysAction(GamePanel server) {
 		this.gamePanel = server;
+		animationThread = new BallAnimation(gamePanel);
 
 	}
 
@@ -29,25 +30,32 @@ public class KeysAction implements KeyListener {
 		int prevX = gamePanel.getPaddle().getX();
 		int prevY = gamePanel.getPaddle().getY();
 
-		if (gamePanel instanceof ServerPanel) {
-			if (code == KeyEvent.VK_SPACE) {
-				if (!gamePanel.isGameStarted()) {
-					gamePanel.setGameStarted(true);
-					new BallAnimation(gamePanel).start();
-				} else {
-					gamePanel.setGameStarted(false);
+		if (code == KeyEvent.VK_SPACE) {
+
+			if (!gamePanel.isGameStarted()) {
+				gamePanel.setGameStarted(true);
+				if (gamePanel instanceof ServerPanel) {
+					animationThread.start();
 				}
-			}
+			} else {
+				gamePanel.setGameStarted(false);
+				if (gamePanel instanceof ServerPanel) {
+					try {
+						animationThread.join();
+						animationThread = new BallAnimation(gamePanel);
+					} catch (InterruptedException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
 
-			else
-
-			{
-
+				}
 			}
 
 		}
 
-		if (code == KeyEvent.VK_UP) {
+		if (code == KeyEvent.VK_UP)
+
+		{
 			gamePanel.getPaddle().setY(gamePanel.getPaddle().getY() - SPEED_INCREMENT);
 		}
 		if (code == KeyEvent.VK_DOWN) {
@@ -58,10 +66,6 @@ public class KeysAction implements KeyListener {
 		}
 		if (code == KeyEvent.VK_RIGHT) {
 			gamePanel.getPaddle().setX(gamePanel.getPaddle().getX() + SPEED_INCREMENT);
-		}
-
-		if (code == KeyEvent.VK_SPACE) {
-			gameStarted = !gameStarted;
 		}
 
 		if (gamePanel.getPaddle().getX() < 0 || gamePanel.getPaddle().getX() > ServerPanel.frameSize.getWidth() - 60) {
