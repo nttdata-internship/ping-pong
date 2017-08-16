@@ -1,6 +1,7 @@
 package com.nttdata.internship.ui.panel;
 
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.geom.Ellipse2D;
@@ -19,6 +20,7 @@ public class GamePanel extends JPanel {
 
 	protected ObjectShape clientPaddle;
 	private OutputStream os;
+	protected boolean gameStarted = false;
 
 	public GamePanel() {
 		this.paddle = new ObjectShape();
@@ -68,7 +70,13 @@ public class GamePanel extends JPanel {
 
 		if (clientPaddle != null) {
 			g2.setColor(Color.blue);
-			g2.fill(new Rectangle2D.Double(ServerPanel.frameSize.getWidth() - 500, 0 + clientPaddle.getY(), 20, 50));
+			g2.fill(new Rectangle2D.Double(ServerPanel.frameSize.getWidth() - 500, 0 + clientPaddle.getY(), 50, 50));
+		}
+		
+		if(!gameStarted) {
+			g.setColor(Color.WHITE);
+			g.setFont(new Font("Arial", Font.BOLD, 16));
+			g.drawString("Press SPACE to start", 250, 200);
 		}
 
 	}
@@ -80,6 +88,14 @@ public class GamePanel extends JPanel {
 	public void setOutputStream(OutputStream outputStream) {
 		this.os = outputStream;
 
+	}
+
+	public boolean isGameStarted() {
+		return gameStarted;
+	}
+
+	public boolean setGameStarted(boolean gameStarted) {
+		return this.gameStarted = gameStarted;
 	}
 
 }

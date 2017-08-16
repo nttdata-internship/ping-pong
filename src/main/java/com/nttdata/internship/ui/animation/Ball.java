@@ -46,7 +46,7 @@ public class Ball extends ObjectShape {
 			if (!(y > objy && y < objy + 50)) {
 
 				try {
-					Thread.sleep(100);
+					Thread.sleep(60);
 					System.out.println("ball x=" + x + " y= " + y);
 					System.out.println("shape x=" + objX + " y= " + objy);
 					x = 340;
