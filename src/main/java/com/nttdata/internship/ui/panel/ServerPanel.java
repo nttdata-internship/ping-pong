@@ -15,8 +15,9 @@ public class ServerPanel extends GamePanel implements Serializable {
 
 	private int length = 50;
 	private int width = 50;
-	private boolean gameStarted = false;
-
+	protected boolean gameStarted = false;
+	private GamePanel gamePanel;
+	
 	public static Dimension frameSize = new Dimension(640, 560);
 
 	public ServerPanel() {

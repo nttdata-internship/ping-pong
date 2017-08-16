@@ -32,11 +32,11 @@ public class KeysAction implements KeyListener {
 
 		if (gamePanel instanceof ServerPanel) {
 			if (code == KeyEvent.VK_SPACE) {
-				if (!gameStarted) {
-					gameStarted = true;
+				if (!gamePanel.isGameStarted()) {
+					gamePanel.setGameStarted(true);
 					new BallAnimation(gamePanel).start();
 				} else {
-					gameStarted = false;
+					gamePanel.setGameStarted(false);
 				}
 			}
 
