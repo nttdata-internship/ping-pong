@@ -24,11 +24,6 @@ public class ClientPanel extends GamePanel implements Serializable {
 	protected boolean gameStarted = false;
 	public static Dimension frameSize = new Dimension(640, 560);
 
-	private int x = 0;
-	private int y = 0;
-	private int length = 50;
-	private int width = 50;
-
 	protected ObjectShape shape;
 
 	boolean isDown = false;
@@ -86,7 +81,7 @@ public class ClientPanel extends GamePanel implements Serializable {
 		
 			g.setColor(Color.WHITE);
 			g.setFont(new Font("Arial", Font.BOLD, 16));
-			g.drawString("surpriza nu scrie ca la celalalt", 250, 200);
+			g.drawString("Waiting for game to start", 250, 200);
 		
 	}
 

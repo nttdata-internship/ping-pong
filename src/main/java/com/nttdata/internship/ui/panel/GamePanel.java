@@ -8,6 +8,7 @@ import java.awt.geom.Ellipse2D;
 import java.awt.geom.Rectangle2D;
 import java.io.OutputStream;
 
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import com.nttdata.internship.ui.animation.Ball;
@@ -74,12 +75,14 @@ public class GamePanel extends JPanel {
 
 		if (clientPaddle != null) {
 			g2.setColor(Color.blue);
-			g2.fill(new Rectangle2D.Double(ServerPanel.frameSize.getWidth() - 500, 0 + clientPaddle.getY(), 50, 50));
+			g2.fill(new Rectangle2D.Double(ServerPanel.frameSize.getWidth() - 100, 0 + clientPaddle.getY(), 50, 50));
 		}
 
 		if (!gameStarted) {
 			paintWelcomeMessage(g);
 		}
+		
+		
 
 	}
 
@@ -92,7 +95,6 @@ public class GamePanel extends JPanel {
 
 	}
 
-	
 	
 
 	protected void paintWelcomeMessage(Graphics g) {
