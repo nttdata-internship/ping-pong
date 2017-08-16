@@ -47,7 +47,7 @@ public class BallAnimation extends Thread {
 			ObjectShape ballShape = new Ball(null);
 			ballShape.setX(ball.getX());
 			ballShape.setY(ball.getY());
-			
+
 			ArrayList<ObjectShape> objectsToSend = new ArrayList<>();
 			objectsToSend.add(ballShape);
 
@@ -61,6 +61,32 @@ public class BallAnimation extends Thread {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+
+	public void checkObjectCollision(int objX, int objy) throws InterruptedException {
+		if (ball.getX() < 50 - 10 / 2 /* radius */) {
+
+			// sus
+			if (!(ball.getY() > objy && ball.getY() < objy + 50)) {
+
+				try {
+					Thread.sleep(60);
+					System.out.println("shape x=" + objX + " y= " + objy);
+					ball.setX(340);
+					ball.setY(275);
+
+					// stop game
+					// send i.e 0-my_score - 1 to oponent & stop game
+					// play space to start again.
+
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+
+			}
+
+		}
+
 	}
 
 }
