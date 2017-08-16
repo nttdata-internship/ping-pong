@@ -1,9 +1,7 @@
 package com.nttdata.internship.ui;
 
-import java.awt.Dimension;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.util.ArrayList;
 
 public class KeysAction implements KeyListener {
 
@@ -14,24 +12,22 @@ public class KeysAction implements KeyListener {
 	private boolean gameStarted = false;
 	private Data connection;
 
-	public KeysAction(Data connection, ServerSquare server) {
+	public KeysAction(Data connection, ServerSquare server, ClientSquare client) {
 		this.paddle = new ObjectShape();
 		this.connection = connection;
 		this.server = server;
-		this.ball = server.getBall();
+		//this.ball = server.getBall();
 	}
 
 	@Override
 	public void keyTyped(KeyEvent e) {
 		// TODO Auto-generated method stub
-
 	}
-
 	@Override
 	public void keyPressed(KeyEvent e) {
 		int code = e.getKeyCode();
-		int prevX = paddle.getX();
-		int prevY = paddle.getY();
+		int prevX = server.x;
+		int prevY = server.y;
 
 		if (connection.shape != null) {
 			if (code == KeyEvent.VK_SPACE) {
@@ -45,31 +41,30 @@ public class KeysAction implements KeyListener {
 		}
 
 		if (code == KeyEvent.VK_UP) {
-			paddle.setY(paddle.getY() - SPEED_INCREMENT);
+			server.y -= SPEED_INCREMENT;
 		}
 		if (code == KeyEvent.VK_DOWN) {
-			paddle.setY(paddle.getY() + SPEED_INCREMENT);
+			server.y += SPEED_INCREMENT;
 		}
 		if (code == KeyEvent.VK_LEFT) {
-			paddle.setX(paddle.getX() - SPEED_INCREMENT);
+			server.x -= SPEED_INCREMENT;
 		}
 		if (code == KeyEvent.VK_RIGHT) {
-			paddle.setX(paddle.getX() + SPEED_INCREMENT);
+			server.x += SPEED_INCREMENT;
 		}
 
 		if (code == KeyEvent.VK_SPACE) {
 			gameStarted = !gameStarted;
 		}
 
-		if (paddle.getX() < 0 || paddle.getX() > ServerSquare.frameSize.getWidth() - 75) {
-			paddle.setX(prevX);
+		if (server.x < 0 || server.x > ServerSquare.frameSize.getWidth() - 75) {
+			server.x = prevX;
 
-		} else if (paddle.getY() < 0 || paddle.getY() > ServerSquare.frameSize.getHeight() - 75) {
-			paddle.setY(prevY);
+		} else if (server.y < 0 || server.y > ServerSquare.frameSize.getHeight() - 75) {
+			server.y = prevY;
 		}
 
 		server.repaint();
-
 	}
 
 	@Override

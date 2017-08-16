@@ -17,13 +17,13 @@ public class ServerSquare extends JPanel implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	private int x = 0;
-	private int y = 0;
+	protected int x = 0;
+	protected int y = 0;
 	private int length = 50;
 	private int width = 50;
 	private boolean gameStarted = false;
 
-	private ObjectShape shape;
+	protected ObjectShape shape;
 	private Ball ball;
 
 	static Dimension frameSize = new Dimension(640, 560);
@@ -31,7 +31,6 @@ public class ServerSquare extends JPanel implements Serializable {
 	public ServerSquare() {
 
 		setFocusable(true);
-
 		setFocusTraversalKeysEnabled(false);
 		setPreferredSize(frameSize);
 		JFrame f = new JFrame();
@@ -118,8 +117,6 @@ public class ServerSquare extends JPanel implements Serializable {
 
 	}
 
-	public Ball getBall() {
-		return ball;
-	}
+	
 
 }

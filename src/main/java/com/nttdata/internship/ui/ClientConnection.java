@@ -6,10 +6,11 @@ import java.util.ArrayList;
 
 public class ClientConnection extends Thread {
 
-	static Socket socket = null;
+	static Socket socket;
 	static int port = 2222;
 	private Ball ball;
 	private ClientSquare client;
+	ObjectShape shape ;
 	private ObjectInputStream in;
 
 	public ClientConnection(Ball ball, ClientSquare client) {
@@ -19,14 +20,12 @@ public class ClientConnection extends Thread {
 
 	public void run() {
 		try {
-			socket = new Socket("localhost", port);
-			client.shape = new ObjectShape();
+			ClientSquare.socket = new Socket("localhost", port);
+			shape = new ObjectShape();
 
 			while (true) {
-				in = new ObjectInputStream(socket.getInputStream());
-
+				in = new ObjectInputStream(ClientSquare.socket.getInputStream());
 				processResponse((ArrayList<ObjectShape>) SocketUtil.readData(in));
-
 				client.repaint();
 			}
 		} catch (Exception e) {
@@ -37,15 +36,13 @@ public class ClientConnection extends Thread {
 
 	private void processResponse(ArrayList<ObjectShape> objects) {
 		for (ObjectShape coords : objects) {
-
 			if (coords instanceof Ball) {
-
 				ball.setX(coords.getX());
 				ball.setY(coords.getY());
 				System.out.println("Sending data to server, ball x=" + ball.getX() + " y=" + ball.getY());
 			} else {
-				client.shape.setX(coords.getX());
-				client.shape.setY(coords.getY());
+				shape.setX(coords.getX());
+				shape.setY(coords.getY());
 
 			}
 

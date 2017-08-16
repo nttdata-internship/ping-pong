@@ -12,11 +12,8 @@ import java.awt.geom.Ellipse2D;
 import java.awt.geom.Rectangle2D;
 import java.io.IOException;
 import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.OutputStream;
 import java.io.Serializable;
 import java.net.Socket;
-import java.util.ArrayList;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -28,17 +25,14 @@ public class ClientSquare extends JPanel implements KeyListener, Serializable {
 	static Socket socket = null;
 	static int port = 2222;
 
-	private static Ball ball;
 	private int x = 0;
 	private int y = 0;
 	private int length = 50;
 	private int width = 50;
 
 	protected ObjectShape shape;
-
+	private static Ball ball;
 	boolean isDown = false;
-	int startX;
-	int startY;
 
 	private static Dimension frameSize = new Dimension(700, 600);
 
@@ -46,7 +40,6 @@ public class ClientSquare extends JPanel implements KeyListener, Serializable {
 
 	public ClientSquare() {
 		shape = new ObjectShape();
-
 		setFocusable(true);
 		addKeyListener(this);
 		setPreferredSize(frameSize);
@@ -59,13 +52,11 @@ public class ClientSquare extends JPanel implements KeyListener, Serializable {
 		Graphics2D g2 = (Graphics2D) g;
 		g2.setColor(Color.red);
 		g2.fill(new Ellipse2D.Double(x, y, 50, 50));
-
 		g.setColor(Color.WHITE);
 		System.out.println(" ball x " + ball.getX() + " y=" + ball.getY());
 		// g.fillOval(ball.getX(), ball.getY(), 20, 20);
-
-		ball.draw(g);
-
+			ball.draw(g);
+		
 		if (shape != null) {
 			g2.setColor(Color.blue);
 			g2.fill(new Rectangle2D.Double(frameSize.getWidth() - 2 * length, 0 + shape.getY(), length, width));
@@ -73,20 +64,16 @@ public class ClientSquare extends JPanel implements KeyListener, Serializable {
 
 	}
 
-	
-
 	public static void main(String[] args) throws IOException {
 		ClientSquare cs = new ClientSquare();
 		cs.clientFrame();
 		ball = new Ball(frameSize);
 		ClientConnection caca = new ClientConnection(ball, cs);
 		caca.start();
-
 	}
 
 	@Override
 	public void keyTyped(KeyEvent e) {
-
 	}
 
 	@Override
@@ -95,8 +82,6 @@ public class ClientSquare extends JPanel implements KeyListener, Serializable {
 		int code = e.getKeyCode();
 		int prevX = x;
 		int prevY = y;
-		// boolean ox = true;
-		// boolean oy = true;
 
 		if (code == KeyEvent.VK_UP) {
 			y -= SPEED_INCREMENT;
@@ -112,20 +97,13 @@ public class ClientSquare extends JPanel implements KeyListener, Serializable {
 			x += SPEED_INCREMENT;
 		}
 
-		// int dx = startX - shape.getX();
-		// int dy = startY - shape.getY();
-		// isDown = (dx * dx + dy * dy < shape.getRadius() * shape.getRadius());
-
 		if (x < 0 || x > frameSize.getWidth() - 75) {
 			x = prevX;
 
 		} else if (y < 0 || y > frameSize.getHeight() - 75) {
 			y = prevY;
 
-		}
-
-		// shape.setX(shape.getX() + dx);
-		// shape.setY(shape.getY() + dy);
+		} 
 
 		if (collision()) {
 			System.out.println("s-au ciocnit");
@@ -142,8 +120,6 @@ public class ClientSquare extends JPanel implements KeyListener, Serializable {
 		} catch (Exception e1) {
 			e1.printStackTrace();
 		}
-
-		// }
 
 		repaint();
 	}
@@ -174,7 +150,6 @@ public class ClientSquare extends JPanel implements KeyListener, Serializable {
 
 	@Override
 	public void keyReleased(KeyEvent e) {
-
 	}
 
 	public void clientFrame() {

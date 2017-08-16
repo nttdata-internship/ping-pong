@@ -14,9 +14,12 @@ public class Data {
 	Socket socket = null;
 	static int port = 2222;
 	private ObjectOutputStream out;
-	private Ball ball;
 	ObjectShape shape;
 	private ServerSquare square;
+	
+	public Data(ServerSquare square){
+		this.square = square;
+	}
 
 	public Object receiveData(ObjectInputStream in) throws IOException, ClassNotFoundException {
 		return in.readObject();
@@ -44,13 +47,13 @@ public class Data {
 					server = new ServerSocket();
 					server.bind(new InetSocketAddress("localhost", port));
 					socket = server.accept();
-					shape = new ObjectShape();
+					square.shape = new ObjectShape();
 
 					while (true) {
 						ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
 						ObjectShape coords = (ObjectShape) receiveData(in);
-						shape.setX(coords.getX());
-						shape.setY(coords.getY());
+						square.shape.setX(coords.getX());
+						square.shape.setY(coords.getY());
 
 						square.repaint();
 					}
@@ -64,5 +67,7 @@ public class Data {
 		);
 		clientReceiverThread.start();
 	}
-
+	public ObjectShape getShape(){
+		return shape;
+	}
 }

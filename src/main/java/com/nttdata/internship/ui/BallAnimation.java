@@ -8,13 +8,11 @@ public class BallAnimation extends Thread {
 
 	private Ball ball;
 	private Data data;
-	private ObjectShape paddle;
 	private JPanel panel;
 
 	public BallAnimation(Ball ball, Data data, ObjectShape shape, JPanel panel) {
 		this.ball = ball;
 		this.data = data;
-		this.paddle = shape;
 		this.panel = panel;
 	}
 

@@ -3,10 +3,6 @@ package com.nttdata.internship.ui;
 import java.io.Serializable;
 
 public class ObjectShape implements Serializable {
-
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -4271784931525424591L;
 	protected int x;
 	protected int y;
