@@ -92,9 +92,6 @@ public class GamePanel extends JPanel {
 
 	}
 
-	
-	
-
 	protected void paintWelcomeMessage(Graphics g) {
 		g.setColor(Color.WHITE);
 		g.setFont(new Font("Arial", Font.BOLD, 16));

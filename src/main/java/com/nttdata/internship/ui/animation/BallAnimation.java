@@ -36,7 +36,7 @@ public class BallAnimation extends Thread {
 
 				// GameData.gameStatus, objects[],score
 
-				SocketUtil.sendDataToServer(panel.getOutputStream(), objectsToSend);
+				SocketUtil.sendDataToServer(panel.getOutputStream(), gameData);
 				// data.sendDataToClient(objectsToSend);
 
 				//
