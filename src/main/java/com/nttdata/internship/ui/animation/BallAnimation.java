@@ -30,7 +30,7 @@ public class BallAnimation extends Thread {
 				ObjectShape paddle = new ObjectShape();
 				paddle.setX(paddle.getX());
 				paddle.setY(paddle.getY());
-				ArrayList<ObjectShape> objectsToSend = new ArrayList<>();
+				ArrayList<ObjectShape> objectsToSend = new ArrayList<>();  
 				objectsToSend.add(paddle);
 				objectsToSend.add(ballShape);
 

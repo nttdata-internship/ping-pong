@@ -7,16 +7,11 @@ import java.io.Serializable;
 
 import javax.swing.JFrame;
 
-import com.nttdata.internship.ui.animation.Ball;
-
 public class ServerPanel extends GamePanel implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	private int length = 50;
-	private int width = 50;
 	protected boolean gameStarted = false;
-	private GamePanel gamePanel;
 	
 	public static Dimension frameSize = new Dimension(640, 560);
 

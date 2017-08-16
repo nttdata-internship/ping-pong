@@ -2,7 +2,6 @@ package com.nttdata.internship.ui.listener;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.io.ObjectInputStream;
 
 import com.nttdata.internship.ui.animation.BallAnimation;
 import com.nttdata.internship.ui.panel.GamePanel;

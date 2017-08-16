@@ -14,17 +14,11 @@ import com.nttdata.internship.ui.animation.ObjectShape;
 public class ClientPanel extends GamePanel implements Serializable {
 
 	private static final long serialVersionUID = 1L;
-	private static final int SPEED_INCREMENT = 5;
 	static Socket socket = null;
 	static int port = 2222;
-	private GamePanel gamePanel;
 	protected boolean gameStarted = false;
 	public static Dimension frameSize = new Dimension(640, 560);
 
-	private int x = 0;
-	private int y = 0;
-	private int length = 50;
-	private int width = 50;
 
 	protected ObjectShape shape;
 
