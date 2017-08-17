@@ -4,14 +4,16 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 
+import com.nttdata.internship.ui.panel.GamePanel.GAME_STATUS;
+
 public class Ball extends ObjectShape {
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 	public transient Dimension frameSize;
-	public int speedX = 20;
-	public int speedY = 2;
+	public double speedX = getRandomSpeed() * getRandomDirection();
+	public double speedY = getRandomSpeed() * getRandomDirection();
 
 	public Ball(Dimension frameSize) {
 		x = 340;
@@ -24,18 +26,48 @@ public class Ball extends ObjectShape {
 		g.fillOval(x, y, 20, 20);
 	}
 
-	public boolean checkObjectCollision(ObjectShape paddle) {
-		if (x <= 40) {
+	public double getRandomSpeed() {
+		return (Math.random() * 12 + 2);
+	}
+
+	public int getRandomDirection() {
+		int rand = (int) (Math.random() * 4);
+		if (rand == 1) {
+			return 1;
+		} else {
+			return -1;
+		}
+	}
+
+	public GAME_STATUS checkObjectCollision(ObjectShape paddle, ObjectShape clientPaddle) {
+		GAME_STATUS status = GAME_STATUS.RUNNING;
+		if (x <= 20) {
 			if (y >= paddle.getY() && y <= paddle.getY() + 80) {
 				speedX = -speedX;
-				return true;
+			} else {
+				status = GAME_STATUS.LOOSE;
 			}
-			else {
-				return false;
-			}
-
 		}
-		return true;
+		if (x >= 600) {
+			if (y >= clientPaddle.getY() && y <= clientPaddle.getY() + 80) {
+				speedX = -speedX;
+			} else {
+				status = GAME_STATUS.WIN;
+			}
+		}
+
+		return status;
+
+		// if (x <= 40 ) {
+		// if (y >= paddle.getY() && y <= paddle.getY() + 80) {
+		// speedX = -speedX;
+		// return true;
+		// } else {
+		// return false;
+		// }
+		//
+		// }
+
 	}
 
 	public void move() {
@@ -50,7 +82,7 @@ public class Ball extends ObjectShape {
 			speedX = -speedX;
 		}
 		if (y < -1 || y + 60 >= frameSize.getHeight()) {
-			// speedY = -speedY;
+			speedY = -speedY;
 		}
 
 	}

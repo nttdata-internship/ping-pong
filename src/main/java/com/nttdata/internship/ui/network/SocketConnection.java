@@ -11,6 +11,7 @@ import com.nttdata.internship.ui.animation.Ball;
 import com.nttdata.internship.ui.animation.ObjectShape;
 import com.nttdata.internship.ui.network.data.GameData;
 import com.nttdata.internship.ui.panel.GamePanel;
+import com.nttdata.internship.ui.panel.GamePanel.GAME_STATUS;
 
 public class SocketConnection extends Thread {
 
@@ -30,16 +31,21 @@ public class SocketConnection extends Thread {
 			while (true) {
 				in = new ObjectInputStream(socket.getInputStream());
 				GameData receivedData = (GameData) SocketUtil.readData(in);
-				processResponse(receivedData);
-				GameData sentData = new GameData();
-				List<ObjectShape> paddle = new ArrayList<>();
-				paddle.add(panel.getPaddle());
-				sentData.setObjects(paddle);
 
-				sentData.setGameRunning(panel.isGameStarted());
+				if (GAME_STATUS.RUNNING == receivedData.getGameStatus()) {
+					processResponse(receivedData);
+					GameData sentData = new GameData();
+					List<ObjectShape> paddle = new ArrayList<>();
+					paddle.add(panel.getPaddle());
+					sentData.setObjects(paddle);
 
-				SocketUtil.sendDataToServer(socket.getOutputStream(), sentData);
-				panel.repaint();
+					sentData.setGameStatus(panel.getGameStatus());
+					SocketUtil.sendDataToServer(socket.getOutputStream(), sentData);
+					
+				}
+				panel.setGameStatus(receivedData.getGameStatus());
+				panel.repaint(); 
+				
 				// Thread.sleep(60);
 			}
 		} catch (Exception e) {
@@ -62,12 +68,12 @@ public class SocketConnection extends Thread {
 						if (gameData != null && !gameData.getObjects().isEmpty()) {
 							panel.setClientPaddle(gameData.getObjects().get(0));
 						}
-						if (panel.isGameStarted() != gameData.isGameRunning()) {
+						if (panel.getGameStatus() != gameData.getGameStatus()) {
 							if (gameData.isGameRunning()) {
 								panel.startGame();
 							}
 
-							panel.setGameStarted(gameData.isGameRunning());
+							panel.setGameStatus(gameData.getGameStatus());
 
 						}
 
@@ -102,7 +108,7 @@ public class SocketConnection extends Thread {
 
 			}
 
-			panel.setGameStarted(gameData.isGameRunning());
+			panel.setGameStatus(gameData.getGameStatus());
 		}
 
 	}

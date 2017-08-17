@@ -3,7 +3,6 @@ package com.nttdata.internship.ui.panel;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.io.OutputStream;
 
 import javax.swing.JPanel;
@@ -22,7 +21,24 @@ public class GamePanel extends JPanel {
 
 	protected ObjectShape clientPaddle;
 	protected OutputStream os;
-	protected boolean gameStarted = false;
+
+	protected GAME_STATUS gameStatus = GAME_STATUS.NEW;
+
+	public static enum GAME_STATUS {
+		RUNNING("Game running"), PAUSED("Game paused"), NEW("New Game, Press space to start"), LOOSE("You loose"), WIN(
+				"You win");
+
+		private String message;
+
+		private GAME_STATUS(String message) {
+			//
+			this.message = message;
+		}
+
+		public String getMessage() {
+			return message;
+		}
+	}
 
 	public GamePanel() {
 		this.paddle = new ObjectShape();
@@ -58,19 +74,14 @@ public class GamePanel extends JPanel {
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		setBackground(Color.pink);
-		Graphics2D g2 = (Graphics2D) g;
-		
-	
 
 		if (ball != null) {
 			g.setColor(Color.WHITE);
 			ball.draw(g);
 		}
 
-		
-
-		if (!gameStarted) {
-			paintWelcomeMessage(g);
+		if (gameStatus != GAME_STATUS.RUNNING) {
+			paintMessage(g, gameStatus.message);
 		}
 
 	}
@@ -84,26 +95,30 @@ public class GamePanel extends JPanel {
 
 	}
 
-	protected void paintWelcomeMessage(Graphics g) {
+	protected void paintMessage(Graphics g, String message) {
 		g.setColor(Color.WHITE);
 		g.setFont(new Font("Arial", Font.BOLD, 16));
-		g.drawString("Press SPACE to start", 250, 200);
+		g.drawString(message, 250, 200);
 	}
 
 	public boolean isGameStarted() {
-		return gameStarted;
+		return gameStatus == GAME_STATUS.RUNNING;
 	}
 
-	public void setGameStarted(boolean gameStarted) {
-		this.gameStarted = gameStarted;
+	public GAME_STATUS getGameStatus() {
+		return gameStatus;
+	}
+
+	public void setGameStatus(GAME_STATUS gameStarted) {
+		this.gameStatus = gameStarted;
 	}
 
 	public void stopGame() {
-		this.gameStarted = false;
+		this.gameStatus = GAME_STATUS.PAUSED;
 	}
 
 	public void startGame() {
-		this.gameStarted = true;
+		this.gameStatus = GAME_STATUS.RUNNING;
 
 	}
 

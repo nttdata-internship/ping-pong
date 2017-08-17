@@ -96,7 +96,7 @@ public class ServerPanel extends GamePanel implements Serializable {
 		}
 		if (clientPaddle != null) {
 			g2.setColor(Color.blue);
-			g2.fill(new Rectangle2D.Double(ServerPanel.frameSize.getWidth() - 100, 0 + clientPaddle.getY(), 20, 80));
+			g2.fill(new Rectangle2D.Double(ServerPanel.frameSize.getWidth() - 35, 0 + clientPaddle.getY(), 20, 80));
 		}
 	}
 

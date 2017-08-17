@@ -2,12 +2,10 @@ package com.nttdata.internship.ui.panel;
 
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
-import java.awt.geom.Ellipse2D;
 import java.awt.geom.Rectangle2D;
 import java.io.IOException;
 import java.io.Serializable;
@@ -32,7 +30,7 @@ public class ClientPanel extends GamePanel implements Serializable {
 
 	public ClientPanel() {
 		setFocusable(true);
-		gameStarted = true;
+		gameStatus = GAME_STATUS.RUNNING;
 		setPreferredSize(ServerPanel.frameSize);
 	}
 
@@ -74,14 +72,6 @@ public class ClientPanel extends GamePanel implements Serializable {
 		f.pack();
 	}
 
-	@Override
-	protected void paintWelcomeMessage(Graphics g) {
-
-		g.setColor(Color.WHITE);
-		g.setFont(new Font("Arial", Font.BOLD, 16));
-		g.drawString("Waiting for game to start", 250, 200);
-
-	}
 
 	@Override
 	public void startGame() {
@@ -89,13 +79,13 @@ public class ClientPanel extends GamePanel implements Serializable {
 		super.startGame();
 
 		super.stopGame();
-		this.gameStarted = false;
+		this.gameStatus = GAME_STATUS.PAUSED;
 		try {
 			GameData data = new GameData();
 			List<ObjectShape> paddle = new ArrayList<>();
 			paddle.add(getPaddle());
 			data.setObjects(paddle);
-			data.setGameRunning(true);
+			data.setGameStatus(GAME_STATUS.RUNNING);
 			SocketUtil.sendDataToServer(os, data);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -106,13 +96,13 @@ public class ClientPanel extends GamePanel implements Serializable {
 	@Override
 	public void stopGame() {
 		super.stopGame();
-		this.gameStarted = false;
+		this.gameStatus = GAME_STATUS.PAUSED;
 		try {
 			GameData data = new GameData();
 			List<ObjectShape> paddle = new ArrayList<>();
 			paddle.add(getPaddle());
 			data.setObjects(paddle);
-			data.setGameRunning(false);
+			data.setGameStatus(GAME_STATUS.PAUSED);
 			SocketUtil.sendDataToServer(os, data);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -120,7 +110,7 @@ public class ClientPanel extends GamePanel implements Serializable {
 		}
 
 	}
-	
+
 	@Override
 	public void paintComponent(Graphics g) {
 		// TODO Auto-generated method stub
@@ -132,7 +122,7 @@ public class ClientPanel extends GamePanel implements Serializable {
 		}
 		if (paddle != null) {
 			g2.setColor(Color.blue);
-			g2.fill(new Rectangle2D.Double(ServerPanel.frameSize.getWidth() - 10, 0 + paddle.getY(), 20, 80));
+			g2.fill(new Rectangle2D.Double(ServerPanel.frameSize.getWidth() - 35, 0 + paddle.getY(), 20, 80));
 		}
 	}
 
