@@ -2,11 +2,7 @@ package com.nttdata.internship.ui.listener;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.io.IOException;
 
-import com.nttdata.internship.ui.animation.BallAnimation;
-import com.nttdata.internship.ui.network.SocketUtil;
-import com.nttdata.internship.ui.network.data.GameData;
 import com.nttdata.internship.ui.panel.GamePanel;
 import com.nttdata.internship.ui.panel.ServerPanel;
 
@@ -14,11 +10,9 @@ public class KeysAction implements KeyListener {
 
 	private GamePanel gamePanel;
 	private static final int SPEED_INCREMENT = 10;
-	private BallAnimation animationThread;
 
 	public KeysAction(GamePanel server) {
 		this.gamePanel = server;
-		animationThread = new BallAnimation(gamePanel);
 
 	}
 
@@ -34,31 +28,39 @@ public class KeysAction implements KeyListener {
 		int prevY = gamePanel.getPaddle().getY();
 
 		if (code == KeyEvent.VK_SPACE) {
-
 			if (!gamePanel.isGameStarted()) {
-				gamePanel.setGameStarted(true);
-				if (gamePanel instanceof ServerPanel) {
-					animationThread.start();
-				}
+				gamePanel.startGame();
+				
 			} else {
-				gamePanel.setGameStarted(false);
-				if (gamePanel instanceof ServerPanel) {
-					try {
-						animationThread.join();
-						animationThread = new BallAnimation(gamePanel);
+				gamePanel.stopGame();
+			} 
+		
+			
 
-					} catch (InterruptedException e) {
-						e.printStackTrace();
-					}
-
-				}
-			}
+			// // ------
+			// if (!gamePanel.isGameStarted()) {
+			// gamePanel.setGameStarted(true);
+			// if (gamePanel instanceof ServerPanel) {
+			// animationThread.start();
+			// }
+			// } else {
+			// gamePanel.setGameStarted(false);
+			// if (gamePanel instanceof ServerPanel) {
+			// try {
+			// animationThread.join();
+			// animationThread = new BallAnimation(gamePanel);
+			//
+			// } catch (InterruptedException e) {
+			// e.printStackTrace();
+			// }
+			//
+			// }
+			// }
+			// ---------
 
 		}
 
-		if (code == KeyEvent.VK_UP)
-
-		{
+		if (code == KeyEvent.VK_UP) {
 			gamePanel.getPaddle().setY(gamePanel.getPaddle().getY() - SPEED_INCREMENT);
 		}
 		if (code == KeyEvent.VK_DOWN) {

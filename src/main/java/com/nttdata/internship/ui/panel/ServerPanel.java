@@ -1,18 +1,25 @@
 package com.nttdata.internship.ui.panel;
 
+import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
+import java.awt.geom.Ellipse2D;
+import java.awt.geom.Rectangle2D;
 import java.io.Serializable;
 
 import javax.swing.JFrame;
+
+import com.nttdata.internship.ui.animation.BallAnimation;
 
 public class ServerPanel extends GamePanel implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	protected boolean gameStarted = false;
-	
+	private BallAnimation animationThread;
+
 	public static Dimension frameSize = new Dimension(640, 560);
 
 	public ServerPanel() {
@@ -23,7 +30,7 @@ public class ServerPanel extends GamePanel implements Serializable {
 		f.setTitle("SERVER");
 		f.add(this);
 		f.setVisible(true);
-		
+
 		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 		f.addComponentListener(new ComponentListener() {
@@ -57,51 +64,40 @@ public class ServerPanel extends GamePanel implements Serializable {
 
 	}
 
-	// @Override
-	// public void paintComponent(Graphics g) {
-	// super.paintComponent(g);
-	// setBackground(Color.pink);
-	// if (!gameStarted) {
-	// g.setColor(Color.RED);
-	// g.drawString("Press SPACE to play", 250, 200);
-	// }
-	// Graphics2D g2 = (Graphics2D) g;
-	// g2.setColor(Color.blue);
-	// g2.fill(new Rectangle2D.Double(paddle.getX(), paddle.getY(), 50, 50));
-	// // TODO rezolva NPE de dedesubt
-	// if (clientPaddle != null) {
-	// g2.setColor(Color.BLACK);
-	// g2.fill(new Ellipse2D.Double(frameSize.getWidth() - 2 * length, 0 +
-	// clientPaddle.getY(), length,
-	// width));
-	//
-	// }
-	//
-	// ball.draw(g);
-	// }
 
-	// public boolean collision() {
-	// float distX = Math.abs(ball.getX() - x - width / 2);
-	// float distY = Math.abs(ball.getY() - y - length / 2);
-	//
-	// if (distX > (width / 2 + ball.getRadius())) {
-	// return false;
-	// }
-	// if (distY > (length / 2 + ball.getRadius())) {
-	// return false;
-	// }
-	//
-	// if (distX <= (width / 2)) {
-	// return true;
-	// }
-	// if (distY <= (length / 2)) {
-	// return true;
-	// }
-	//
-	// float dx = distX - width / 2;
-	// float dy = distY - length / 2;
-	// return (dx * dx + dy * dy <= (ball.getRadius() * ball.getRadius()));
-	//
-	// }
+	@Override
+	public void startGame() {
+		super.startGame();
+		animationThread = new BallAnimation(this);
+		animationThread.start();
+
+	}
+
+	public void stopGame() {
+		super.stopGame();
+		try {
+			animationThread.join();
+			
+
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+
+	}
+	
+	@Override
+	public void paintComponent(Graphics g) {
+		// TODO Auto-generated method stub
+		super.paintComponent(g);
+		Graphics2D g2 = (Graphics2D) g;
+		if (paddle != null) {
+			g2.setColor(Color.red);
+			g2.fill(new Rectangle2D.Double(paddle.getX(), paddle.getY(), 20, 80));
+		}
+		if (clientPaddle != null) {
+			g2.setColor(Color.blue);
+			g2.fill(new Rectangle2D.Double(ServerPanel.frameSize.getWidth() - 100, 0 + clientPaddle.getY(), 20, 80));
+		}
+	}
 
 }

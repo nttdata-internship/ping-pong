@@ -19,27 +19,33 @@ public class BallAnimation extends Thread {
 	public void run() {
 		try {
 
-			while (panel.isGameStarted()) {
+   			while (panel.isGameStarted()) {
 				ball.move();
-				ball.ballCollision();
+				if (ball.checkObjectCollision(panel.getPaddle())) {
+					
+					ObjectShape ballShape = new Ball(null);
+					ballShape.setX(ball.getX());
+					ballShape.setY(ball.getY());
+					ObjectShape paddle = new ObjectShape();
+					paddle.setX(panel.getPaddle().getX());
+					paddle.setY(panel.getPaddle().getY());
+					ArrayList<ObjectShape> objectsToSend = new ArrayList<>();
+					objectsToSend.add(paddle);
+					objectsToSend.add(ballShape);
 
-				ObjectShape ballShape = new Ball(null);
-				ballShape.setX(ball.getX());
-				ballShape.setY(ball.getY());
-				ObjectShape paddle = new ObjectShape();
-				paddle.setX(panel.getPaddle().getX());
-				paddle.setY(panel.getPaddle().getY());
-				ArrayList<ObjectShape> objectsToSend = new ArrayList<>();
-				objectsToSend.add(paddle);
-				objectsToSend.add(ballShape);
+					// GameData.gameStatus, objects[],score 
+					GameData gameData = new GameData();
+					gameData.setObjects(objectsToSend);
+					gameData.setGameRunning(panel.isGameStarted());
 
-				// GameData.gameStatus, objects[],score
-				GameData gameData = new GameData();
-				gameData.setObjects(objectsToSend);
-				gameData.setGameRunning(panel.isGameStarted());
-
-				SocketUtil.sendDataToServer(panel.getOutputStream(), gameData);
-				panel.repaint();
+					SocketUtil.sendDataToServer(panel.getOutputStream(), gameData);
+					panel.repaint();
+				} else {
+					ball.setX(280);
+					ball.setY(280);
+//					Thread.yield();
+					break;
+				}
 				Thread.sleep(60);
 
 			}
@@ -87,6 +93,19 @@ public class BallAnimation extends Thread {
 
 		}
 
+	}
+
+	public void checkObjectCollision(ObjectShape paddle, ObjectShape clientPaddle) {
+		if (ball.x <= 50) {
+			if (ball.y >= paddle.getY() && ball.y <= paddle.getY() + 80) {
+				ball.speedX = -ball.speedX;
+			} else if (ball.x >= 650) {
+				if (ball.y >= clientPaddle.getY() && ball.y <= clientPaddle.getY() + 80) {
+					ball.speedX = -ball.speedX;
+				}
+
+			}
+		}
 	}
 
 }

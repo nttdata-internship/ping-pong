@@ -4,11 +4,8 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.geom.Ellipse2D;
-import java.awt.geom.Rectangle2D;
 import java.io.OutputStream;
 
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import com.nttdata.internship.ui.animation.Ball;
@@ -21,10 +18,10 @@ public class GamePanel extends JPanel {
 	 */
 	private static final long serialVersionUID = -8592774932261018198L;
 	private Ball ball;
-	private ObjectShape paddle;
+	protected ObjectShape paddle;
 
 	protected ObjectShape clientPaddle;
-	private OutputStream os;
+	protected OutputStream os;
 	protected boolean gameStarted = false;
 
 	public GamePanel() {
@@ -62,27 +59,19 @@ public class GamePanel extends JPanel {
 		super.paintComponent(g);
 		setBackground(Color.pink);
 		Graphics2D g2 = (Graphics2D) g;
-		if (paddle != null) {
-			g2.setColor(Color.red);
-
-			g2.fill(new Ellipse2D.Double(paddle.getX(), paddle.getY(), 50, 50));
-		}
+		
+	
 
 		if (ball != null) {
 			g.setColor(Color.WHITE);
 			ball.draw(g);
 		}
 
-		if (clientPaddle != null) {
-			g2.setColor(Color.blue);
-			g2.fill(new Rectangle2D.Double(ServerPanel.frameSize.getWidth() - 100, 0 + clientPaddle.getY(), 50, 50));
-		}
+		
 
 		if (!gameStarted) {
 			paintWelcomeMessage(g);
 		}
-		
-		
 
 	}
 
@@ -94,8 +83,6 @@ public class GamePanel extends JPanel {
 		this.os = outputStream;
 
 	}
-
-	
 
 	protected void paintWelcomeMessage(Graphics g) {
 		g.setColor(Color.WHITE);
@@ -109,6 +96,15 @@ public class GamePanel extends JPanel {
 
 	public void setGameStarted(boolean gameStarted) {
 		this.gameStarted = gameStarted;
+	}
+
+	public void stopGame() {
+		this.gameStarted = false;
+	}
+
+	public void startGame() {
+		this.gameStarted = true;
+
 	}
 
 }

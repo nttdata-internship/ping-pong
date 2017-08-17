@@ -4,9 +4,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
-import java.util.ArrayList;
 
-import com.nttdata.internship.ui.animation.ObjectShape;
 import com.nttdata.internship.ui.network.data.GameData;
 
 public final class SocketUtil {

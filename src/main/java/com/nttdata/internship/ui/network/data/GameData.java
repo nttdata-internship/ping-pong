@@ -7,9 +7,12 @@ import java.util.List;
 import com.nttdata.internship.ui.animation.ObjectShape;
 
 public class GameData implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private boolean gameRunning = false;
 	private List<ObjectShape> objects;
-	private int score = 0;
 
 	public GameData() {
 		this.objects = new ArrayList<>();

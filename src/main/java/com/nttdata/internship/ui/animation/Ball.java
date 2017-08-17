@@ -11,7 +11,7 @@ public class Ball extends ObjectShape {
 	private static final long serialVersionUID = 1L;
 	public transient Dimension frameSize;
 	public int speedX = 20;
-	public int speedY = 20;
+	public int speedY = 2;
 
 	public Ball(Dimension frameSize) {
 		x = 340;
@@ -21,11 +21,27 @@ public class Ball extends ObjectShape {
 
 	public void draw(Graphics g) {
 		g.setColor(Color.WHITE);
-		y = 0;
-		g.fillOval(x, 100, 20, 20);
+		g.fillOval(x, y, 20, 20);
 	}
 
-	public void ballCollision() {
+	public boolean checkObjectCollision(ObjectShape paddle) {
+		if (x <= 40) {
+			if (y >= paddle.getY() && y <= paddle.getY() + 80) {
+				speedX = -speedX;
+				return true;
+			}
+			else {
+				return false;
+			}
+
+		}
+		return true;
+	}
+
+	public void move() {
+		x += speedX;
+		y += speedY;
+
 		if (x < -1) {
 			speedX = -speedX;
 
@@ -37,46 +53,6 @@ public class Ball extends ObjectShape {
 			// speedY = -speedY;
 		}
 
-	}
-
-	public void checkObjectCollision(/* shape ?? */int objX, int objy) throws InterruptedException {
-		if (x < 50 - 10 / 2 /* radius */) {
-
-			// sus
-			if (!(y > objy && y < objy + 50)) {
-
-				try {
-					Thread.sleep(60);
-					System.out.println("ball x=" + x + " y= " + y);
-					System.out.println("shape x=" + objX + " y= " + objy);
-					x = 340;
-					y = 275;
-
-					// stop game
-					// send i.e 0-my_score - 1 to oponent & stop game
-					// play space to start again.
-
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-
-			}
-
-		}
-
-		// } else if (x >= 640 - 50) {
-		// if (y >= shape.getY() && y <= shape.getY()) {
-		// speedX = -speedX;
-		// x = 340;
-		// y = 275;
-		// Thread.sleep(100);
-		// }
-		// }
-	}
-
-	public void move() {
-		x += speedX;
-		y += speedY;
 	}
 
 	public void setFrameSize(Dimension frameSize) {
