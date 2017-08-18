@@ -25,11 +25,12 @@ public class GamePanel extends JPanel {
 	protected GAME_STATUS gameStatus = GAME_STATUS.NEW;
 
 	public static enum GAME_STATUS {
+		
 		RUNNING("Game running"), PAUSED("Game paused"), NEW("New Game, Press space to start"), LOOSE("You loose"), WIN(
 				"You win");
 
 		private String message;
-
+		
 		private GAME_STATUS(String message) {
 			//
 			this.message = message;

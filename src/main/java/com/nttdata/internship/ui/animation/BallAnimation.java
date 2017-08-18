@@ -48,7 +48,7 @@ public class BallAnimation extends Thread {
 					ball.setY(280);
 					break;
 				}
-				Thread.sleep(60);
+				Thread.sleep(20);
 
 			}
 

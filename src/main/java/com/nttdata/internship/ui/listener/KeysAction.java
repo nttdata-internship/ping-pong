@@ -9,7 +9,7 @@ import com.nttdata.internship.ui.panel.ServerPanel;
 public class KeysAction implements KeyListener {
 
 	private GamePanel gamePanel;
-	private static final int SPEED_INCREMENT = 10;
+	private static final int SPEED_INCREMENT = 15;
 
 	public KeysAction(GamePanel server) {
 		this.gamePanel = server;
