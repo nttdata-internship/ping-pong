@@ -22,7 +22,7 @@ public class GamePanel extends JPanel {
 	protected ObjectShape clientPaddle;
 	protected OutputStream os;
 	private long gameScore;
-	int ok=0;
+	int ok = 0;
 	protected GAME_STATUS gameStatus = GAME_STATUS.NEW;
 
 	public static enum GAME_STATUS {
@@ -86,18 +86,18 @@ public class GamePanel extends JPanel {
 			paintMessage(g, gameStatus.message);
 		}
 
-		if (gameStatus == GAME_STATUS.WIN && ok==0) {
+		if (gameStatus == GAME_STATUS.WIN && ok == 0) {
 			++gameScore;
 			ok = 1;
 			paintScore(g, gameStatus.message);
 		}
 
-		if (gameStatus == GAME_STATUS.LOOSE && ok==0) {
+		if (gameStatus == GAME_STATUS.LOOSE && ok == 0) {
 			paintScore(g, gameStatus.message);
-			ok =1;
+			ok = 1;
 		}
-		if(ok==1)
-			ok=0;
+		if (ok == 1)
+			ok = 0;
 	}
 
 	public OutputStream getOutputStream() {
