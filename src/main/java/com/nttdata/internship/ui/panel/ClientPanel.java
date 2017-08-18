@@ -72,7 +72,6 @@ public class ClientPanel extends GamePanel implements Serializable {
 		f.pack();
 	}
 
-
 	@Override
 	public void startGame() {
 		// TODO Auto-generated method stub

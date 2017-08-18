@@ -41,11 +41,11 @@ public class SocketConnection extends Thread {
 
 					sentData.setGameStatus(panel.getGameStatus());
 					SocketUtil.sendDataToServer(socket.getOutputStream(), sentData);
-					
+
 				}
-				
-				panel.repaint(); 
-				
+
+				panel.repaint();
+
 				// Thread.sleep(60);
 			}
 		} catch (Exception e) {

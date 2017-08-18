@@ -30,10 +30,10 @@ public class KeysAction implements KeyListener {
 		if (code == KeyEvent.VK_SPACE) {
 			if (!gamePanel.isGameStarted()) {
 				gamePanel.startGame();
-				
+
 			} else {
 				gamePanel.stopGame();
-			} 
+			}
 		}
 
 		if (code == KeyEvent.VK_UP) {
@@ -41,12 +41,6 @@ public class KeysAction implements KeyListener {
 		}
 		if (code == KeyEvent.VK_DOWN) {
 			gamePanel.getPaddle().setY(gamePanel.getPaddle().getY() + SPEED_INCREMENT);
-		}
-		if (code == KeyEvent.VK_LEFT) {
-			gamePanel.getPaddle().setX(gamePanel.getPaddle().getX() - SPEED_INCREMENT);
-		}
-		if (code == KeyEvent.VK_RIGHT) {
-			gamePanel.getPaddle().setX(gamePanel.getPaddle().getX() + SPEED_INCREMENT);
 		}
 
 		if (gamePanel.getPaddle().getX() < 0 || gamePanel.getPaddle().getX() > ServerPanel.frameSize.getWidth() - 60) {
@@ -56,6 +50,11 @@ public class KeysAction implements KeyListener {
 				|| gamePanel.getPaddle().getY() > ServerPanel.frameSize.getHeight() - 90) {
 			gamePanel.getPaddle().setY(prevY);
 		}
+
+		if (gamePanel.getPaddle().getY() < 0)
+			gamePanel.getPaddle().setY(0);
+		if (gamePanel.getPaddle().getY() > 480)
+			gamePanel.getPaddle().setY(480);
 
 		gamePanel.repaint();
 
