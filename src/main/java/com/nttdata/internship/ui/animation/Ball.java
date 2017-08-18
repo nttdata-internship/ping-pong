@@ -4,6 +4,9 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
 import com.nttdata.internship.ui.panel.GamePanel.GAME_STATUS;
 
 public class Ball extends ObjectShape {
@@ -59,16 +62,6 @@ public class Ball extends ObjectShape {
 		}
 
 		return status;
-
-		// if (x <= 40 ) {
-		// if (y >= paddle.getY() && y <= paddle.getY() + 80) {
-		// speedX = -speedX;
-		// return true;
-		// } else {
-		// return false;
-		// }
-		//
-		// }
 
 	}
 

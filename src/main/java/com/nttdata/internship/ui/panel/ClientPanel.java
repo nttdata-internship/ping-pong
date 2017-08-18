@@ -117,11 +117,11 @@ public class ClientPanel extends GamePanel implements Serializable {
 		super.paintComponent(g);
 		Graphics2D g2 = (Graphics2D) g;
 		if (clientPaddle != null) {
-			g2.setColor(Color.red);
+			g2.setColor(Color.GREEN);
 			g2.fill(new Rectangle2D.Double(clientPaddle.getX(), clientPaddle.getY(), 20, 80));
 		}
 		if (paddle != null) {
-			g2.setColor(Color.blue);
+			g2.setColor(Color.ORANGE);
 			g2.fill(new Rectangle2D.Double(ServerPanel.frameSize.getWidth() - 35, 0 + paddle.getY(), 20, 80));
 		}
 	}
