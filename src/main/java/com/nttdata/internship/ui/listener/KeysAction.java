@@ -51,6 +51,11 @@ public class KeysAction implements KeyListener {
 			gamePanel.getPaddle().setY(prevY);
 		}
 
+		if (gamePanel.getPaddle().getY() < 0)
+			gamePanel.getPaddle().setY(0);
+		if (gamePanel.getPaddle().getY() > 480)
+			gamePanel.getPaddle().setY(480);
+
 		gamePanel.repaint();
 
 	}

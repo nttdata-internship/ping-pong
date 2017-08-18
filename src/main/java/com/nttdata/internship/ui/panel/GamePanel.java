@@ -86,8 +86,8 @@ public class GamePanel extends JPanel {
 		}
 
 		if (gameStatus == GAME_STATUS.WIN) {
+			++gameScore;
 			paintScore(g, gameStatus.message);
-			gameScore++;
 		}
 
 		if (gameStatus == GAME_STATUS.LOOSE) {
