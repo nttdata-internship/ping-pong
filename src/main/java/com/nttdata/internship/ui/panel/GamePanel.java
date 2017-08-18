@@ -16,17 +16,17 @@ public class GamePanel extends JPanel {
 	 * 
 	 */
 	private static final long serialVersionUID = -8592774932261018198L;
-	private Ball ball;
+	protected Ball ball;
 	protected ObjectShape paddle;
 
 	protected ObjectShape clientPaddle;
 	protected OutputStream os;
-
+	private long gameScore;
 	protected GAME_STATUS gameStatus = GAME_STATUS.NEW;
 
 	public static enum GAME_STATUS {
-		RUNNING("Game running"), PAUSED("Game paused"), NEW("New Game, Press space to start"), LOOSE("You loose"), WIN(
-				"You win");
+		RUNNING("Game running..."), PAUSED("Game paused."), NEW("Press SPACE to start"), LOOSE("You've lost!"), WIN(
+				"You won!");
 
 		private String message;
 
@@ -43,6 +43,7 @@ public class GamePanel extends JPanel {
 	public GamePanel() {
 		this.paddle = new ObjectShape();
 		this.ball = new Ball(ServerPanel.frameSize);
+		this.gameScore = 0;
 	}
 
 	public Ball getBall() {
@@ -73,7 +74,8 @@ public class GamePanel extends JPanel {
 	@Override
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
-		setBackground(Color.pink);
+		setBackground(Color.BLACK);
+		
 
 		if (ball != null) {
 			g.setColor(Color.WHITE);
@@ -82,6 +84,15 @@ public class GamePanel extends JPanel {
 
 		if (gameStatus != GAME_STATUS.RUNNING) {
 			paintMessage(g, gameStatus.message);
+		}
+		
+		if(gameStatus == GAME_STATUS.WIN) {
+			paintScore(g, gameStatus.message);
+			gameScore++;
+		}
+		
+		if (gameStatus == GAME_STATUS.LOOSE) {
+			paintScore(g, gameStatus.message);
 		}
 
 	}
@@ -99,6 +110,12 @@ public class GamePanel extends JPanel {
 		g.setColor(Color.WHITE);
 		g.setFont(new Font("Arial", Font.BOLD, 16));
 		g.drawString(message, 250, 200);
+	}
+	
+	protected void paintScore(Graphics g, String message) {
+		g.setColor(Color.white);
+		g.setFont(new Font("Arial", Font.BOLD, 16));
+		g.drawString("Score: " + String.valueOf(gameScore), 250, 25);
 	}
 
 	public boolean isGameStarted() {

@@ -9,7 +9,7 @@ import com.nttdata.internship.ui.panel.ServerPanel;
 public class KeysAction implements KeyListener {
 
 	private GamePanel gamePanel;
-	private static final int SPEED_INCREMENT = 10;
+	private static final int SPEED_INCREMENT = 15;
 
 	public KeysAction(GamePanel server) {
 		this.gamePanel = server;
@@ -34,30 +34,6 @@ public class KeysAction implements KeyListener {
 			} else {
 				gamePanel.stopGame();
 			} 
-		
-			
-
-			// // ------
-			// if (!gamePanel.isGameStarted()) {
-			// gamePanel.setGameStarted(true);
-			// if (gamePanel instanceof ServerPanel) {
-			// animationThread.start();
-			// }
-			// } else {
-			// gamePanel.setGameStarted(false);
-			// if (gamePanel instanceof ServerPanel) {
-			// try {
-			// animationThread.join();
-			// animationThread = new BallAnimation(gamePanel);
-			//
-			// } catch (InterruptedException e) {
-			// e.printStackTrace();
-			// }
-			//
-			// }
-			// }
-			// ---------
-
 		}
 
 		if (code == KeyEvent.VK_UP) {

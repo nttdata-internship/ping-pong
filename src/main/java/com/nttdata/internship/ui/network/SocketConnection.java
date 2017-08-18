@@ -31,7 +31,7 @@ public class SocketConnection extends Thread {
 			while (true) {
 				in = new ObjectInputStream(socket.getInputStream());
 				GameData receivedData = (GameData) SocketUtil.readData(in);
-
+				panel.setGameStatus(receivedData.getGameStatus());
 				if (GAME_STATUS.RUNNING == receivedData.getGameStatus()) {
 					processResponse(receivedData);
 					GameData sentData = new GameData();
@@ -43,7 +43,7 @@ public class SocketConnection extends Thread {
 					SocketUtil.sendDataToServer(socket.getOutputStream(), sentData);
 					
 				}
-				panel.setGameStatus(receivedData.getGameStatus());
+				
 				panel.repaint(); 
 				
 				// Thread.sleep(60);
