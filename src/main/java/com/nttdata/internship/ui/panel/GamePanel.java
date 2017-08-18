@@ -75,7 +75,6 @@ public class GamePanel extends JPanel {
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		setBackground(Color.BLACK);
-		
 
 		if (ball != null) {
 			g.setColor(Color.WHITE);
@@ -85,12 +84,12 @@ public class GamePanel extends JPanel {
 		if (gameStatus != GAME_STATUS.RUNNING) {
 			paintMessage(g, gameStatus.message);
 		}
-		
-		if(gameStatus == GAME_STATUS.WIN) {
+
+		if (gameStatus == GAME_STATUS.WIN) {
 			paintScore(g, gameStatus.message);
 			gameScore++;
 		}
-		
+
 		if (gameStatus == GAME_STATUS.LOOSE) {
 			paintScore(g, gameStatus.message);
 		}
@@ -111,7 +110,7 @@ public class GamePanel extends JPanel {
 		g.setFont(new Font("Arial", Font.BOLD, 16));
 		g.drawString(message, 250, 200);
 	}
-	
+
 	protected void paintScore(Graphics g, String message) {
 		g.setColor(Color.white);
 		g.setFont(new Font("Arial", Font.BOLD, 16));

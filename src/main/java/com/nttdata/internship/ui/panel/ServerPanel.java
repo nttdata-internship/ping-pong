@@ -65,7 +65,6 @@ public class ServerPanel extends GamePanel implements Serializable {
 
 	}
 
-
 	@Override
 	public void startGame() {
 		super.startGame();
@@ -78,14 +77,13 @@ public class ServerPanel extends GamePanel implements Serializable {
 		super.stopGame();
 		try {
 			animationThread.join();
-			
 
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
 
 	}
-	
+
 	@Override
 	public void paintComponent(Graphics g) {
 		// TODO Auto-generated method stub
