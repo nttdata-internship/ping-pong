@@ -3,7 +3,6 @@ package com.nttdata.internship.chatapp;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.net.ServerSocket;
 
 public class ServerGUI extends JFrame implements ActionListener, WindowListener {
 	private JButton stopStart;

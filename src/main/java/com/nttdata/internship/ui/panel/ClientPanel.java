@@ -22,8 +22,6 @@ import com.nttdata.internship.ui.network.data.GameData;
 public class ClientPanel extends GamePanel implements Serializable {
 
 	private static final long serialVersionUID = 1L;
-	private static Socket socket = null;
-	private static int port = 2222;
 	public static Dimension frameSize = new Dimension(640, 560);
 
 	protected ObjectShape shape;
