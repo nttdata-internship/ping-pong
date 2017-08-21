@@ -9,7 +9,6 @@ import java.awt.event.ComponentListener;
 import java.awt.geom.Rectangle2D;
 import java.io.IOException;
 import java.io.Serializable;
-import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 

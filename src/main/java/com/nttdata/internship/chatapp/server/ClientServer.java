@@ -17,9 +17,7 @@ public class ClientServer extends Thread {
 
 	public void run() {
 		try {
-			PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
 			BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-
 
 			while (true) {
 

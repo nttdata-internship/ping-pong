@@ -29,7 +29,8 @@ public class SocketConnection extends Thread {
 			socket = new Socket("localhost", port);
 			panel.setOutputStream(socket.getOutputStream());
 			while (true) {
-				in = new ObjectInputStream(socket.getInputStream());
+				
+				ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
 				GameData receivedData = (GameData) SocketUtil.readData(in);
 				panel.setGameStatus(receivedData.getGameStatus());
 				if (GAME_STATUS.RUNNING == receivedData.getGameStatus()) {

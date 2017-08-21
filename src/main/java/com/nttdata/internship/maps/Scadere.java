@@ -2,8 +2,8 @@ package com.nttdata.internship.maps;
 
 class Scadere implements Operatie {
 	public int op(int adunare) {
-
-		return --adunare;
+		int param = adunare;
+		return --param;
 	}
 
 	@Override

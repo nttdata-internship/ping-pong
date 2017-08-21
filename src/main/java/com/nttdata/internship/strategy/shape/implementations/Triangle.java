@@ -4,7 +4,7 @@ import com.nttdata.internship.strategy.shape.Perimeter;
 
 public class Triangle implements Perimeter {
 
-	int lA, lB, lC;
+	private int lA, lB, lC;
 
 	public Triangle(int la, int lb, int lc) {
 
