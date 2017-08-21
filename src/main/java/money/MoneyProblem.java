@@ -5,9 +5,6 @@ import java.math.RoundingMode;
 import java.util.Currency;
 
 public class MoneyProblem {
-	private static int ROUNDING_MODE = BigDecimal.ROUND_HALF_EVEN;
-	private static int DECIMALS = 2;
-	private static int EXTRA_DECIMALS = 4;
 	private static BigDecimal HUNDRED = new BigDecimal("100");
 	private static BigDecimal PERCENTAGE = new BigDecimal("5.25");
 	private static BigDecimal PERCENTAGE2 = new BigDecimal("17.9");
@@ -50,7 +47,6 @@ public class MoneyProblem {
 	 * Number of decimals to retain. Also referred to as "scale".
 	 */
 	// same shit as dollar
-	private static int DECIMAL_PLACES = Currency.getInstance("USD").getDefaultFractionDigits();
 
 	private static final BigDecimal TWO = new BigDecimal("2");
 
