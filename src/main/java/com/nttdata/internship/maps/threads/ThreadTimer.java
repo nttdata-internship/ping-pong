@@ -12,13 +12,11 @@ public class ThreadTimer implements Runnable {
 
 	private Integer start;
 	private int end;
-	private Operatie op;
 
 	private SharedCounter sharedCounter;
 
-	public ThreadTimer(Operatie op, int i, int end) throws FileNotFoundException {
+	public ThreadTimer(int i, int end) throws FileNotFoundException {
 		super();
-		this.op = op;
 		this.start = i;
 		this.end = end;
 	}

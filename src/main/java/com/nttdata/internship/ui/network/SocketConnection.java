@@ -26,7 +26,7 @@ public class SocketConnection extends Thread {
 
 	public void run() {
 		try {
-			socket = new Socket("10.224.20.48", port);
+			socket = new Socket("localhost", port);
 			panel.setOutputStream(socket.getOutputStream());
 			while (true) {
 				in = new ObjectInputStream(socket.getInputStream());

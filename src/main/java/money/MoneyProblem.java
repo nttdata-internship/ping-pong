@@ -2,7 +2,6 @@ package money;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.Currency;
 
 public class MoneyProblem {
 	private static BigDecimal HUNDRED = new BigDecimal("100");
