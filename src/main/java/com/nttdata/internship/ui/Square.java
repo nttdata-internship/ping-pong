@@ -194,6 +194,9 @@ public class Square extends JPanel implements
 			running = false;
 
 			if (t2 != null && !(t2.getState() == Thread.State.TERMINATED))
+			{
+				
+			}
 
 		}
 
