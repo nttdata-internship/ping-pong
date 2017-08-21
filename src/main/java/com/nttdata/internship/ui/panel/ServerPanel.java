@@ -6,13 +6,11 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
-import java.awt.geom.Ellipse2D;
 import java.awt.geom.Rectangle2D;
 import java.io.Serializable;
 
 import javax.swing.JFrame;
 
-import com.nttdata.internship.ui.animation.Ball;
 import com.nttdata.internship.ui.animation.BallAnimation;
 
 public class ServerPanel extends GamePanel implements Serializable {
@@ -38,7 +36,7 @@ public class ServerPanel extends GamePanel implements Serializable {
 
 			@Override
 			public void componentShown(ComponentEvent e) {
-
+				// TODO Auto-generated method stub
 			}
 
 			@Override

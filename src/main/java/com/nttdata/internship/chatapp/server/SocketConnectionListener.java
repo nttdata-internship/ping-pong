@@ -3,17 +3,16 @@ package com.nttdata.internship.chatapp.server;
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class SocketConnectionListener extends Thread {
-	Socket socket = null;
-	ChatServer server = null;
-	int serverPort = -1;
-	DataInputStream streamIn = null;
+	private Socket socket = null;
+	private ChatServer server = null;
+	private int serverPort = -1;
+	private DataInputStream streamIn = null;
 
-	Map<String, Socket> connectedClients;
+	private Map<String, Socket> connectedClients;
 
 	public SocketConnectionListener(int serverPort) {
 		connectedClients = new ConcurrentHashMap<>();

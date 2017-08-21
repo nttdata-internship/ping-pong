@@ -18,11 +18,11 @@ public class GamePanel extends JPanel {
 	private static final long serialVersionUID = -8592774932261018198L;
 	protected Ball ball;
 	protected ObjectShape paddle;
-
 	protected ObjectShape clientPaddle;
 	protected OutputStream os;
-	private long gameScore;
-	int ok = 0;
+	private int scoreS = 0;
+	private int scoreC = 0;
+	protected int ok = 0;
 	protected GAME_STATUS gameStatus = GAME_STATUS.NEW;
 
 	public static enum GAME_STATUS {
@@ -34,6 +34,7 @@ public class GamePanel extends JPanel {
 		private GAME_STATUS(String message) {
 			//
 			this.message = message;
+
 		}
 
 		public String getMessage() {
@@ -44,7 +45,7 @@ public class GamePanel extends JPanel {
 	public GamePanel() {
 		this.paddle = new ObjectShape();
 		this.ball = new Ball(ServerPanel.frameSize);
-		this.gameScore = 0;
+		this.clientPaddle = new ObjectShape();
 	}
 
 	public Ball getBall() {
@@ -87,9 +88,13 @@ public class GamePanel extends JPanel {
 		}
 
 		if (gameStatus == GAME_STATUS.WIN && ok == 0) {
-			++gameScore;
 			ok = 1;
 			paintScore(g, gameStatus.message);
+		}
+		if (paddle.getX() > clientPaddle.getX() && ok == 0) {
+			setScoreS(getScoreS() + 1);
+		} else if (paddle.getX() <= clientPaddle.getX()) {
+			setScoreC(getScoreC() + 1);
 		}
 
 		if (gameStatus == GAME_STATUS.LOOSE && ok == 0) {
@@ -117,8 +122,9 @@ public class GamePanel extends JPanel {
 
 	protected void paintScore(Graphics g, String message) {
 		g.setColor(Color.white);
-		g.setFont(new Font("Arial", Font.BOLD, 16));
-		g.drawString("Score: " + String.valueOf(gameScore), 250, 25);
+		g.setFont(new Font("Arial", Font.BOLD, 24));
+		g.drawString(getScoreS() + " | " + getScoreC(), 300, 25);
+		g.drawString(getScoreS() + " | " + getScoreC(), 300, 25);
 	}
 
 	public boolean isGameStarted() {
@@ -140,6 +146,22 @@ public class GamePanel extends JPanel {
 	public void startGame() {
 		this.gameStatus = GAME_STATUS.RUNNING;
 
+	}
+
+	public int getScoreS() {
+		return scoreS;
+	}
+
+	public int getScoreC() {
+		return scoreC;
+	}
+
+	public void setScoreS(int scoreS) {
+		this.scoreS = scoreS;
+	}
+
+	public void setScoreC(int scoreC) {
+		this.scoreC = scoreC;
 	}
 
 }

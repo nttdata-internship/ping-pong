@@ -6,10 +6,10 @@ import java.awt.event.*;
 import java.net.ServerSocket;
 
 public class ServerGUI extends JFrame implements ActionListener, WindowListener {
-	JButton stopStart;
-	JTextArea chat, event;
-	JTextField tPortNumber;
-	ServerSocket server;
+	private JButton stopStart;
+	private JTextArea chat, event;
+	private JTextField tPortNumber;
+	private ServerSocket server;
 
 	ServerGUI(int port) {
 		super("Chat Server");
@@ -40,17 +40,17 @@ public class ServerGUI extends JFrame implements ActionListener, WindowListener 
 		setVisible(true);
 	}
 
-	void appendRoom(String str) {
+	private void appendRoom(String str) {
 		chat.append(str);
 		chat.setCaretPosition(chat.getText().length() - 1);
 
 	}
 
-	void appendEvent(String str) {
+	private void appendEvent(String str) {
 		event.append(str);
 		event.setCaretPosition(chat.getText().length() - 1);
 	}
-	
+
 	public static void main(String[] args) {
 		ServerGUI cg = new ServerGUI(2222);
 		cg.setSize(new Dimension(800, 600));
