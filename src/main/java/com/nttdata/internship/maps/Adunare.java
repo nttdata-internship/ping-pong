@@ -6,14 +6,14 @@ public class Adunare implements Operatie {
 	}
 
 	@Override
-	public boolean stop(int a, int b)  {
-		// TODO Auto-generated method stub
+	public boolean stop(int a, int b) {
+
 		return a <= b;
 	}
 
 	@Override
 	public void writeToFile() {
 		// TODO Auto-generated method stub
-		
+
 	}
 }

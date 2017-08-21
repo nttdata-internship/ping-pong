@@ -7,7 +7,7 @@ class Scadere implements Operatie {
 	}
 
 	@Override
-	public boolean stop(int a, int b)  {
+	public boolean stop(int a, int b) {
 		// TODO Auto-generated method stub
 		return a >= b;
 	}
@@ -15,6 +15,6 @@ class Scadere implements Operatie {
 	@Override
 	public void writeToFile() {
 		// TODO Auto-generated method stub
-		
+
 	}
 }

@@ -7,14 +7,14 @@ package com.nttdata.internship.maps;
  *
  */
 
-interface Operatie {
+public interface Operatie {
 
 	/**
 	 * Strategy method for overriding.
 	 * 
 	 * @param operand
-	 * @return The result of an operation. I.e
-	 *         Subtraction/ Addition/ Division/ Multiplication.
+	 * @return The result of an operation. I.e Subtraction/ Addition/ Division/
+	 *         Multiplication.
 	 */
 	public int op(int operand);
 
