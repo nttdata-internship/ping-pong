@@ -25,7 +25,7 @@ public class AppTest extends TestCase {
 		return new TestSuite(AppTest.class);
 	}
 
-	/**
+	/**s
 	 * Rigourous Test :-)
 	 */
 }

@@ -122,8 +122,7 @@ public class Square extends JPanel implements
 		x += Ox;
 		y += Oy;
 		/*
-		 * if (xc < 0 || xc > 660) Oxc = -Oxc; if (yc < 0 || yc > 560) Oyc =
-		 * -Oyc;
+		 * if (xc < 0 || xc > 660) Oxc = -Oxc; if (yc < 0 || yc > 560) Oyc = -Oyc;
 		 * 
 		 * xc += Oxc; yc += Oyc;
 		 */
@@ -195,7 +194,6 @@ public class Square extends JPanel implements
 			running = false;
 
 			if (t2 != null && !(t2.getState() == Thread.State.TERMINATED))
-				System.exit(1);
 
 		}
 
