@@ -10,9 +10,8 @@ public class Location implements Serializable {
 	private static final long serialVersionUID = -7188040446023298068L;
 
 	private Country country;
-
+	private float temperature;
 	private String city;
-
 	private String region;
 
 	public Location() {
@@ -26,8 +25,6 @@ public class Location implements Serializable {
 	public Location(Country valueOf) {
 		this.country = valueOf;
 	}
-
-	private float temperature;
 
 	public float getTemperature() {
 		return temperature;

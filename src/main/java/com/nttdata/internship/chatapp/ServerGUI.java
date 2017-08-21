@@ -3,17 +3,14 @@ package com.nttdata.internship.chatapp;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.net.ServerSocket;
 
 public class ServerGUI extends JFrame implements ActionListener, WindowListener {
 	private JButton stopStart;
 	private JTextArea chat, event;
 	private JTextField tPortNumber;
-	private ServerSocket server;
 
 	ServerGUI(int port) {
 		super("Chat Server");
-		server = null;
 		JPanel north = new JPanel();
 		north.add(new JLabel("Port number: "));
 		tPortNumber = new JTextField(" " + port);

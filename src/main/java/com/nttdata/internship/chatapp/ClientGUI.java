@@ -7,7 +7,6 @@ import java.awt.event.*;
 public class ClientGUI extends JFrame implements ActionListener, MouseListener, KeyListener, WindowListener {
 	private TextArea message_area;
 	private TextField send_area;
-	private String user_name;
 	private Button clear;
 	private Button send;
 
@@ -47,16 +46,13 @@ public class ClientGUI extends JFrame implements ActionListener, MouseListener, 
 	}
 
 	public static void main(String[] args) {
-		ClientGUI cg = new ClientGUI("Chat Version v0.1");
+		ClientGUI cg = new ClientGUI();
 		cg.setSize(800, 600);
 		cg.setResizable(true);
 		cg.setVisible(true);
 
 	}
 
-	public ClientGUI(String string) {
-		// TODO Auto-generated constructor stub
-	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {

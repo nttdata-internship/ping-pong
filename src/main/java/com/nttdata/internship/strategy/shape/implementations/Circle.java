@@ -4,7 +4,7 @@ import com.nttdata.internship.strategy.shape.Perimeter;
 
 public class Circle implements Perimeter {
 
-	float radius;
+	private float radius;
 
 	public Circle(float radius) {
 		this.radius = radius;

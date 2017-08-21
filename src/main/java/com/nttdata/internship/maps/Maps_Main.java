@@ -124,7 +124,7 @@ public class Maps_Main {
 				/// for (Map.Entry<Location, Float> entry : treeMap.entrySet()){
 				// if(st.equals(entry.getKey().getCity()))
 				// System.out.println(entry.getValue());
-			//	map.get(new Location(args[0], Country.valueOf(args[1])));
+				map.get(new Location(Country.valueOf(args[1])));
 				System.out.println("Input =" + st + " nu exista!");
 			}
 
