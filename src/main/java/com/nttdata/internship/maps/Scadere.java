@@ -1,15 +1,15 @@
 package com.nttdata.internship.maps;
 
 class Scadere implements Operatie {
-	public int op(int a) {
+	public int op(int adunare) {
 
-		return --a;
+		return --adunare;
 	}
 
 	@Override
-	public boolean stop(int a, int b) {
+	public boolean stop(int adunare, int b) {
 		// TODO Auto-generated method stub
-		return a >= b;
+		return adunare >= b;
 	}
 
 	@Override

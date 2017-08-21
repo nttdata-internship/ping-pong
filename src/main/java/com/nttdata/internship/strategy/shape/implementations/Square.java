@@ -4,7 +4,7 @@ import com.nttdata.internship.strategy.shape.Perimeter;
 
 public class Square implements Perimeter {
 
-	int l;
+	private int l;
 
 	public Square(int l) {
 		this.l = l;
