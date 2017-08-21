@@ -193,7 +193,9 @@ public class Square extends JPanel implements
 		if (e.getButton() == MouseEvent.BUTTON3) {
 			running = false;
 
-			if (t2 != null && !(t2.getState() == Thread.State.TERMINATED))
+			if (t2 != null && !(t2.getState() == Thread.State.TERMINATED)) {
+
+			}
 
 		}
 
