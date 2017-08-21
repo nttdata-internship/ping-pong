@@ -7,7 +7,6 @@ public class ChatServer {
 	private Socket socket = null;
 	private ServerSocket server = null;
 	private DataInputStream streamIn = null;
-	private static ChatServer servers;
 
 	public ChatServer(int port) {
 		try {
@@ -51,8 +50,6 @@ public class ChatServer {
 	public static void main(String[] args) {
 		if (args.length != 1) {
 			System.out.println("Usage: Java ChatServer port.");
-		} else {
-			servers = new ChatServer(Integer.parseInt(args[0]));
 		}
 	}
 
