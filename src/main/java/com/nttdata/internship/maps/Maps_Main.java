@@ -44,7 +44,8 @@ public class Maps_Main {
 
 			// System.out.println(locations.size());
 
-//			locations.forEach(l -> System.out.println("Stream it: " + l.getCity() + " " + l.getTemperature()));
+			// locations.forEach(l -> System.out.println("Stream it: " + l.getCity() + " " +
+			// l.getTemperature()));
 
 			Map<Location, Float> map = new HashMap<Location, Float>();
 			for (Location location : locations) {
@@ -137,8 +138,6 @@ public class Maps_Main {
 
 			/// Timer: pornesc de la 100 si un timer numara pana la 0 si unu pana la 200.
 			/// Outputul in consola.
-
-			
 
 		} catch (IOException e) {
 			e.printStackTrace();

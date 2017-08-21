@@ -29,11 +29,11 @@ public class ObjectShape implements Serializable {
 		this.y = y;
 	}
 
-	int getRadius() {
+	public int getRadius() {
 		return radius;
 	}
 
-	void setRadius(int raza) {
+	public void setRadius(int raza) {
 		this.radius = raza;
 	}
 

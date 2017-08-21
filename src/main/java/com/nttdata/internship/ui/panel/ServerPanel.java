@@ -43,7 +43,7 @@ public class ServerPanel extends GamePanel implements Serializable {
 
 			@Override
 			public void componentShown(ComponentEvent e) {
-
+				// TODO Auto-generated method stub
 			}
 
 			@Override

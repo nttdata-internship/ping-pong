@@ -1,15 +1,12 @@
 package com.nttdata.internship.chatapp.server;
 
-import java.io.BufferedInputStream;
-import java.io.DataInputStream;
-import java.io.IOException;
-import java.net.ServerSocket;
-import java.net.Socket;
+import java.io.*;
+import java.net.*;
 
 public class ChatServer {
-	Socket socket = null;
-	ServerSocket server = null;
-	DataInputStream streamIn = null;
+	private Socket socket = null;
+	private ServerSocket server = null;
+	private DataInputStream streamIn = null;
 
 	public ChatServer(int port) {
 		try {
@@ -25,7 +22,7 @@ public class ChatServer {
 				try {
 					String line = streamIn.readUTF();
 					System.out.println(line);
-					done = line.equals("Bye");
+					"Bye".equals(line);
 				} catch (IOException ioe) {
 					done = true;
 				}
@@ -51,7 +48,7 @@ public class ChatServer {
 	}
 
 	public static void main(String[] args) {
-		ChatServer server = null;
+		ChatServer server;
 		if (args.length != 1) {
 			System.out.println("Usage: Java ChatServer port.");
 		} else {

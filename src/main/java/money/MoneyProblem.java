@@ -5,13 +5,6 @@ import java.math.RoundingMode;
 import java.util.Currency;
 
 public class MoneyProblem {
-	private BigDecimal fAmountOne;
-	private BigDecimal fAmountTwo;
-	private static final BigDecimal TWO = new BigDecimal("2");
-	private static BigDecimal HUNDRED = new BigDecimal("100");
-	private static BigDecimal PERCENTAGE = new BigDecimal("5.25");
-	private static BigDecimal PERCENTAGE2 = new BigDecimal("17.9");
-
 	public static void main(String... aArgs) {
 		// TODO: transform first 2 arguments in big decimal values
 
@@ -40,14 +33,26 @@ public class MoneyProblem {
 		log("equals : " + equals());
 	}
 
+	private BigDecimal fAmountOne;
+	private BigDecimal fAmountTwo;
+
 	/**
 	 * Defined centrally, to allow for easy changes to the rounding mode.
 	 */
+	private static int ROUNDING_MODE = BigDecimal.ROUND_HALF_EVEN;
 
 	/**
 	 * Number of decimals to retain. Also referred to as "scale".
 	 */
+	private static int DECIMALS = 2;
 	// same shit as dollar
+	private static int DECIMAL_PLACES = Currency.getInstance("USD").getDefaultFractionDigits();
+
+	private static int EXTRA_DECIMALS = 4;
+	private static final BigDecimal TWO = new BigDecimal("2");
+	private static BigDecimal HUNDRED = new BigDecimal("100");
+	private static BigDecimal PERCENTAGE = new BigDecimal("5.25");
+	private static BigDecimal PERCENTAGE2 = new BigDecimal("17.9");
 
 	private void log(String aText) {
 		System.out.println(aText);

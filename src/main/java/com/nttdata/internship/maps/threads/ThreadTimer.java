@@ -10,10 +10,9 @@ import com.nttdata.internship.maps.Operatie;
 
 public class ThreadTimer implements Runnable {
 
-	private Operatie op;
-
 	private Integer start;
 	private int end;
+	private Operatie op;
 
 	private SharedCounter sharedCounter;
 

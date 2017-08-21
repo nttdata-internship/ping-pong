@@ -5,13 +5,13 @@ import java.awt.*;
 import java.awt.event.*;
 
 public class ClientGUI extends JFrame implements ActionListener, MouseListener, KeyListener, WindowListener {
-	TextArea message_area = null;
-	TextField send_area = null;
-	String user_name = null;
-	Button clear;
-	Button send;
+	private TextArea message_area;
+	private TextField send_area;
+	private String user_name;
+	private Button clear;
+	private Button send;
 
-	ClientGUI(String s) {
+	ClientGUI() {
 		this.addWindowListener(this);
 		this.setSize(800, 600);
 		this.setResizable(true);
@@ -54,7 +54,7 @@ public class ClientGUI extends JFrame implements ActionListener, MouseListener, 
 
 	}
 
-	public ClientGUI(String string, int i) {
+	public ClientGUI(String string) {
 		// TODO Auto-generated constructor stub
 	}
 
@@ -155,7 +155,7 @@ public class ClientGUI extends JFrame implements ActionListener, MouseListener, 
 
 	@Override
 	public void mouseEntered(MouseEvent e) {
-
+		// TODO Auto-generated method stub
 	}
 
 	@Override

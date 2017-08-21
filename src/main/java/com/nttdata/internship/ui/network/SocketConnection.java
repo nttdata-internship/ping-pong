@@ -15,8 +15,8 @@ import com.nttdata.internship.ui.panel.GamePanel.GAME_STATUS;
 
 public class SocketConnection extends Thread {
 
-	static Socket socket = null;
-	static int port = 2222;
+	private static Socket socket = null;
+	private static int port = 2222;
 	private GamePanel panel;
 	private ObjectInputStream in;
 
