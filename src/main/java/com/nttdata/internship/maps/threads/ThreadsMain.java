@@ -68,8 +68,8 @@ public class ThreadsMain {
 
 		BufferedReader br = null;
 		try {
-//			Files.walk(Paths.get("src/main/resources/generated")).filter(Files::isRegularFile)
-//					.collect(Collectors.toList());
+			// Files.walk(Paths.get("src/main/resources/generated")).filter(Files::isRegularFile)
+			// .collect(Collectors.toList());
 
 			File folder = new File("src/main/resources/generated");
 			File[] listOfFiles = folder.listFiles();
@@ -87,15 +87,15 @@ public class ThreadsMain {
 			/*
 			 * List<File> filesInFolder = null;
 			 * Files.walk(Paths.get("src/main/resources/generated"))
-			 * .filter(Files::isRegularFile).map(Path::toFile).collect(Collectors.toList
-			 * ());
+			 * .filter(Files::isRegularFile).map(Path::toFile).collect(
+			 * Collectors.toList ());
 			 */
 
 			System.out.println("All file contents " + allFileContents.size());
 
 			Collections.sort(new ArrayList<>(allFileContents));
 
-			System.out.println("Test ="+(allFileContents.size() == limit));
+			System.out.println("Test =" + (allFileContents.size() == limit));
 
 		} catch (IOException e) {
 			e.printStackTrace();

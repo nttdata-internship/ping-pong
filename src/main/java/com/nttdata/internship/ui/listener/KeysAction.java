@@ -18,7 +18,7 @@ public class KeysAction implements KeyListener {
 
 	@Override
 	public void keyTyped(KeyEvent e) {
-
+		// TODO:
 	}
 
 	@Override
@@ -62,6 +62,7 @@ public class KeysAction implements KeyListener {
 
 	@Override
 	public void keyReleased(KeyEvent e) {
+		// TODO:
 	}
 
 }

@@ -6,14 +6,19 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
-import java.awt.geom.Ellipse2D;
 import java.awt.geom.Rectangle2D;
+import java.io.IOException;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.JFrame;
 
-import com.nttdata.internship.ui.animation.Ball;
 import com.nttdata.internship.ui.animation.BallAnimation;
+import com.nttdata.internship.ui.animation.ObjectShape;
+import com.nttdata.internship.ui.network.SocketUtil;
+import com.nttdata.internship.ui.network.data.GameData;
+import com.nttdata.internship.ui.panel.GamePanel.GAME_STATUS;
 
 public class ServerPanel extends GamePanel implements Serializable {
 
@@ -79,6 +84,18 @@ public class ServerPanel extends GamePanel implements Serializable {
 			animationThread.join();
 
 		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		this.gameStatus = GAME_STATUS.PAUSED;
+		try {
+			GameData data = new GameData();
+			List<ObjectShape> paddle = new ArrayList<>();
+			paddle.add(getPaddle());
+			data.setObjects(paddle);
+			data.setGameStatus(GAME_STATUS.PAUSED);
+			SocketUtil.sendDataToServer(os, data);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 

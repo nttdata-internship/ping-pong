@@ -23,15 +23,14 @@ public class ObjectReader<T> {
 
 	}
 
-	public  T readSingle() throws JsonParseException, JsonMappingException, IOException {
+	public T readSingle() throws JsonParseException, JsonMappingException, IOException {
 
 		return (T) objectMapper.readValue(is, clazz);
 	}
 
-	public  List<T> readList() throws JsonParseException, JsonMappingException, IOException {
+	public List<T> readList() throws JsonParseException, JsonMappingException, IOException {
 
-		return objectMapper.readValue(is, objectMapper.getTypeFactory().
-				  constructCollectionType(List.class, clazz));
+		return objectMapper.readValue(is, objectMapper.getTypeFactory().constructCollectionType(List.class, clazz));
 	}
 
 }

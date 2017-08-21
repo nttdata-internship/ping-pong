@@ -38,7 +38,7 @@ public class SocketConnection extends Thread {
 					List<ObjectShape> paddle = new ArrayList<>();
 					paddle.add(panel.getPaddle());
 					sentData.setObjects(paddle);
-
+					// sentData.setGameScore(panel.getGameScore());
 					sentData.setGameStatus(panel.getGameStatus());
 					SocketUtil.sendDataToServer(socket.getOutputStream(), sentData);
 
@@ -46,7 +46,6 @@ public class SocketConnection extends Thread {
 
 				panel.repaint();
 
-				// Thread.sleep(60);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

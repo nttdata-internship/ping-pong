@@ -17,12 +17,11 @@ public class Square extends JPanel implements
 		/* ActionListener, */
 		KeyListener, MouseListener {
 
-	double x = 275, y = 265, Ox = 0, Oy = 0;
-	double xc = 0, yc = 0, Oxc = 2, Oyc = 2;
+	private double x = 275, y = 265, Ox = 0, Oy = 0;
+	private double xc = 0, yc = 0, Oxc = 2, Oyc = 2;
 
-	boolean running;
-	private static int PAINT = 0;
-	Thread t = new Thread(new Runnable() {
+	private boolean running;
+	private Thread t = new Thread(new Runnable() {
 		public void run() {
 			while (true) {
 
@@ -123,7 +122,8 @@ public class Square extends JPanel implements
 		x += Ox;
 		y += Oy;
 		/*
-		 * if (xc < 0 || xc > 660) Oxc = -Oxc; if (yc < 0 || yc > 560) Oyc = -Oyc;
+		 * if (xc < 0 || xc > 660) Oxc = -Oxc; if (yc < 0 || yc > 560) Oyc =
+		 * -Oyc;
 		 * 
 		 * xc += Oxc; yc += Oyc;
 		 */

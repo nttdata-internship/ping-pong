@@ -32,14 +32,14 @@ public class ClientGUI extends JFrame implements ActionListener, MouseListener, 
 
 		p.add(send_area);
 		p.setBackground(new Color(221, 221, 221));
-	    send = new Button("Send");
+		send = new Button("Send");
 		send.addActionListener(this);
 		p.add(send);
- 
+
 		this.clear = new Button("Clear");
 		clear.addActionListener(this);
 		p.add(clear);
-		
+
 		this.add(p, "South");
 		this.setVisible(true);
 		send_area.requestFocus();
@@ -62,18 +62,16 @@ public class ClientGUI extends JFrame implements ActionListener, MouseListener, 
 	public void actionPerformed(ActionEvent e) {
 
 		String st = send_area.getText().trim();
-		
-		if(e.getSource() == send){
-	   
-	        if (st.length() == 0) 
-	            st = null;
-	        message_area.append("\n" + st);
-	        
-		} 
-		else
-			if(e.getSource() == clear)
-				 message_area.setText("");
-		
+
+		if (e.getSource() == send) {
+
+			if (st.length() == 0)
+				st = null;
+			message_area.append("\n" + st);
+
+		} else if (e.getSource() == clear)
+			message_area.setText("");
+
 		send_area.setText("");
 	}
 

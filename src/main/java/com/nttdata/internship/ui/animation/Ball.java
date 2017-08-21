@@ -49,7 +49,7 @@ public class Ball extends ObjectShape {
 				speedX = -speedX;
 			} else {
 				status = GAME_STATUS.LOOSE;
-			
+
 			}
 		}
 		if (x >= 600) {
@@ -57,7 +57,7 @@ public class Ball extends ObjectShape {
 				speedX = -speedX;
 			} else {
 				status = GAME_STATUS.WIN;
-				
+
 			}
 		}
 

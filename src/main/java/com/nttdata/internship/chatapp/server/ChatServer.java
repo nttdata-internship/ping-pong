@@ -1,11 +1,10 @@
 package com.nttdata.internship.chatapp.server;
 
-import java.io.*;
-import java.net.*;
-import java.util.ArrayList;
-import java.util.List;
-
-import com.nttdata.internship.chatapp.client.ChatClient;
+import java.io.BufferedInputStream;
+import java.io.DataInputStream;
+import java.io.IOException;
+import java.net.ServerSocket;
+import java.net.Socket;
 
 public class ChatServer {
 	Socket socket = null;

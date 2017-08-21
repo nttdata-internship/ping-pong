@@ -9,6 +9,7 @@ import javax.swing.JPanel;
 
 import com.nttdata.internship.ui.animation.Ball;
 import com.nttdata.internship.ui.animation.ObjectShape;
+import com.nttdata.internship.ui.network.data.GameData;
 
 public class GamePanel extends JPanel {
 
@@ -21,8 +22,8 @@ public class GamePanel extends JPanel {
 
 	protected ObjectShape clientPaddle;
 	protected OutputStream os;
-	private long gameScore;
-	int ok=0;
+	private int gameScore;
+
 	protected GAME_STATUS gameStatus = GAME_STATUS.NEW;
 
 	public static enum GAME_STATUS {
@@ -44,7 +45,9 @@ public class GamePanel extends JPanel {
 	public GamePanel() {
 		this.paddle = new ObjectShape();
 		this.ball = new Ball(ServerPanel.frameSize);
-		this.gameScore = 0;
+
+		setGameScore(0);
+		// this.gameScore = 0;
 	}
 
 	public Ball getBall() {
@@ -76,6 +79,7 @@ public class GamePanel extends JPanel {
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		setBackground(Color.BLACK);
+		int ok = 0;
 
 		if (ball != null) {
 			g.setColor(Color.WHITE);
@@ -86,18 +90,19 @@ public class GamePanel extends JPanel {
 			paintMessage(g, gameStatus.message);
 		}
 
-		if (gameStatus == GAME_STATUS.WIN && ok==0) {
-			++gameScore;
+		if (gameStatus == GAME_STATUS.WIN && ok == 0) {
+			setGameScore(getGameScore() + 1);
 			ok = 1;
 			paintScore(g, gameStatus.message);
 		}
 
-		if (gameStatus == GAME_STATUS.LOOSE && ok==0) {
+		if (gameStatus == GAME_STATUS.LOOSE && ok == 0) {
 			paintScore(g, gameStatus.message);
-			ok =1;
+			ok = 1;
 		}
-		if(ok==1)
-			ok=0;
+		if (ok == 1)
+			ok = 0;
+
 	}
 
 	public OutputStream getOutputStream() {
@@ -118,7 +123,7 @@ public class GamePanel extends JPanel {
 	protected void paintScore(Graphics g, String message) {
 		g.setColor(Color.white);
 		g.setFont(new Font("Arial", Font.BOLD, 16));
-		g.drawString("Score: " + String.valueOf(gameScore), 250, 25);
+		g.drawString("Score: " + String.valueOf(getGameScore()), 250, 25);
 	}
 
 	public boolean isGameStarted() {
@@ -140,6 +145,14 @@ public class GamePanel extends JPanel {
 	public void startGame() {
 		this.gameStatus = GAME_STATUS.RUNNING;
 
+	}
+
+	public int getGameScore() {
+		return gameScore;
+	}
+
+	public void setGameScore(int gameScore) {
+		this.gameScore = gameScore;
 	}
 
 }

@@ -1,23 +1,10 @@
 package com.nttdata.internship.chatapp.server;
 
-import java.io.BufferedReader;
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
-import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.Collections;
-import java.util.Map;
-import java.util.Map.Entry;
-
-import com.nttdata.internship.chatapp.client.ChatClient;
 
 public class MultiServers {
-	ServerSocket server = null;
-	Thread thread = null;
-	SocketConnectionListener client = null;
+	private Thread thread = null;
 	static Socket c;
 
 	// public MultiServers(int port) {
@@ -68,7 +55,6 @@ public class MultiServers {
 	}
 
 	public static void main(String args[]) throws IOException {
-		ChatServer server = null;
 		if (args.length != 1) {
 			System.out.println("Usage: java ChatServer port");
 			return;
@@ -86,12 +72,13 @@ public class MultiServers {
 		 * String clientName = clients.getKey(); Socket clientSocket =
 		 * clients.getValue();
 		 * 
-		 * PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
-		 * BufferedReader in = new BufferedReader( new
-		 * InputStreamReader(clientSocket.getInputStream())); out.println("Stream");
+		 * PrintWriter out = new PrintWriter(clientSocket.getOutputStream(),
+		 * true); BufferedReader in = new BufferedReader( new
+		 * InputStreamReader(clientSocket.getInputStream()));
+		 * out.println("Stream");
 		 * 
-		 * String inputLine, outputLine; String read = null; System.out.println("read "
-		 * + read + "  from" + clientName);
+		 * String inputLine, outputLine; String read = null; System.out.println(
+		 * "read " + read + "  from" + clientName);
 		 * 
 		 * }
 		 */

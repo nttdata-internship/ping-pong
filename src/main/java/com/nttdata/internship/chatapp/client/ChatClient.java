@@ -1,13 +1,17 @@
 package com.nttdata.internship.chatapp.client;
 
-import java.io.*;
-import java.net.*;
-
-import com.nttdata.internship.chatapp.server.ChatServer;
+import java.io.BufferedReader;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.net.Socket;
+import java.net.UnknownHostException;
 
 public class ChatClient {
-	Socket socket = null;
-	DataInputStream console = null;
+	private Socket socket = null;
+	private DataInputStream console = null;
 	DataOutputStream streamOut = null;
 
 	public ChatClient(String serverName, int serverPort) throws IOException {
@@ -56,8 +60,6 @@ public class ChatClient {
 		Socket socket = new Socket("10.224.20.171", 2222);
 		DataInputStream input = new DataInputStream(socket.getInputStream());
 		PrintWriter output = new PrintWriter(socket.getOutputStream(), true);
-
-		boolean stop = false;
 
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		String line = null;
