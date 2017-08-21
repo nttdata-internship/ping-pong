@@ -1,23 +1,15 @@
 package com.nttdata.internship.maps;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.text.Collator;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Set;
-import java.util.SortedMap;
-import java.util.SortedSet;
 import java.util.TreeMap;
-import java.util.TreeSet;
 
 import com.nttdata.internship.maps.databind.ObjectReader;
 import com.nttdata.internship.maps.entity.Country;

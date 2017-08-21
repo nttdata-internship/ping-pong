@@ -23,8 +23,7 @@ public class Location implements Serializable {
 		this.region = region;
 	}
 
-	public Location(String country, Country valueOf) {
-		this.city = city;
+	public Location(Country valueOf) {
 		this.country = valueOf;
 	}
 
