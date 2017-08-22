@@ -8,7 +8,6 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class SocketConnectionListener extends Thread {
 	private Socket socket = null;
-	private ChatServer server = null;
 	private int serverPort = -1;
 	private DataInputStream streamIn = null;
 
@@ -22,8 +21,9 @@ public class SocketConnectionListener extends Thread {
 	public void run() {
 		// System.out.println("Server thread " + ID + " running.");
 		System.out.println("Binding to port " + serverPort + " ,please wait...");
+		ServerSocket server=null;
 		try {
-			ServerSocket server = new ServerSocket(serverPort);
+			 server = new ServerSocket(serverPort);
 			int clientCount = 0;
 			while (clientCount <= 10) {
 				System.out.println("waiting for connection....");

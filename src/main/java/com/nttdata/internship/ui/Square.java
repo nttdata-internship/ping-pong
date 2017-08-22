@@ -17,6 +17,10 @@ public class Square extends JPanel implements
 		/* ActionListener, */
 		KeyListener, MouseListener {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private double x = 275, y = 265, Ox = 0, Oy = 0;
 	private double xc = 0, yc = 0, Oxc = 2, Oyc = 2;
 

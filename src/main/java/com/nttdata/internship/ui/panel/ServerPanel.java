@@ -18,7 +18,6 @@ import com.nttdata.internship.ui.animation.BallAnimation;
 import com.nttdata.internship.ui.animation.ObjectShape;
 import com.nttdata.internship.ui.network.SocketUtil;
 import com.nttdata.internship.ui.network.data.GameData;
-import com.nttdata.internship.ui.panel.GamePanel.GAME_STATUS;
 
 public class ServerPanel extends GamePanel implements Serializable {
 

@@ -5,6 +5,10 @@ import java.awt.*;
 import java.awt.event.*;
 
 public class ServerGUI extends JFrame implements ActionListener, WindowListener {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private JTextArea chat, event;
 
 	ServerGUI(int port) {
