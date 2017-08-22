@@ -98,9 +98,9 @@ public class ClientPanel extends GamePanel implements Serializable {
 		this.gameStatus = GAME_STATUS.PAUSED;
 		try {
 			GameData data = new GameData();
-			List<ObjectShape> paddle = new ArrayList<>();
-			paddle.add(getPaddle());
-			data.setObjects(paddle);
+			List<ObjectShape> clientPaddle = new ArrayList<>();
+			clientPaddle.add(getClientPaddle());
+			data.setObjects(clientPaddle);
 			data.setGameStatus(GAME_STATUS.PAUSED);
 			data.setScore(getScoreS());
 			SocketUtil.sendDataToServer(os, data);

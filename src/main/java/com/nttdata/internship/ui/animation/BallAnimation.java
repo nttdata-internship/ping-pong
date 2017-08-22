@@ -63,10 +63,8 @@ public class BallAnimation extends Thread {
 
 			GameData gameData = new GameData();
 			gameData.setObjects(objectsToSend);
-			GAME_STATUS status = GAME_STATUS.WIN;
-			if (panel.getGameStatus() == status)
-				status = GAME_STATUS.LOOSE;
-			gameData.setGameStatus(status);
+		
+			gameData.setGameStatus(panel.getGameStatus());
 
 			SocketUtil.sendDataToServer(panel.getOutputStream(), gameData);
 			panel.repaint();

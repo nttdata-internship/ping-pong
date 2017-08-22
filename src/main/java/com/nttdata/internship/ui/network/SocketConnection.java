@@ -1,5 +1,6 @@
 package com.nttdata.internship.ui.network;
 
+import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;
@@ -18,7 +19,6 @@ public class SocketConnection extends Thread {
 	private static Socket socket = null;
 	private static int port = 2222;
 	private GamePanel panel;
-	private ObjectInputStream in;
 
 	public SocketConnection(GamePanel panel) {
 		this.panel = panel;
@@ -29,7 +29,8 @@ public class SocketConnection extends Thread {
 			socket = new Socket("10.224.20.171", port);
 			panel.setOutputStream(socket.getOutputStream());
 			while (true) {
-				in = new ObjectInputStream(socket.getInputStream());
+
+				ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
 				GameData receivedData = (GameData) SocketUtil.readData(in);
 				panel.setGameStatus(receivedData.getGameStatus());
 				panel.setScoreS(receivedData.getScore());
@@ -40,7 +41,7 @@ public class SocketConnection extends Thread {
 					List<ObjectShape> paddle = new ArrayList<>();
 					paddle.add(panel.getPaddle());
 					sentData.setObjects(paddle);
-					sentData.setScore(panel.getScoreC());
+					// sentData.setScore(panel.getScoreC());
 					sentData.setGameStatus(panel.getGameStatus());
 					SocketUtil.sendDataToServer(socket.getOutputStream(), sentData);
 
@@ -58,9 +59,10 @@ public class SocketConnection extends Thread {
 	public void listenForConnection() {
 		Thread clientReceiverThread = new Thread(new Runnable() {
 			public void run() {
+				ServerSocket server = null;
 				try {
-					ServerSocket server = new ServerSocket();
-					server.bind(new InetSocketAddress("localhost", port));
+					server = new ServerSocket();
+					server.bind(new InetSocketAddress("10.224.20.171", port));
 					socket = server.accept();
 					panel.setOutputStream(socket.getOutputStream());
 					while (true) {
@@ -73,7 +75,7 @@ public class SocketConnection extends Thread {
 						if (panel.getGameStatus() != gameData.getGameStatus()) {
 							if (gameData.isGameRunning()) {
 								//panel.setScoreS(gameData.getScoreC());
-								panel.startGame();
+								// panel.startGame();
 							}
 							
 							panel.setGameStatus(gameData.getGameStatus());
@@ -86,6 +88,14 @@ public class SocketConnection extends Thread {
 
 				} catch (Exception e) {
 					e.printStackTrace();
+				} finally {
+					try {
+						if (server != null)
+							server.close();
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 				}
 			}
 		}

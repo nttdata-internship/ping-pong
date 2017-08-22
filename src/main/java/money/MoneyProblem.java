@@ -7,6 +7,9 @@ public class MoneyProblem {
 	private static BigDecimal HUNDRED = new BigDecimal("100");
 	private static BigDecimal PERCENTAGE = new BigDecimal("5.25");
 	private static BigDecimal PERCENTAGE2 = new BigDecimal("17.9");
+	private static final BigDecimal TWO = new BigDecimal("2");
+	private BigDecimal fAmountOne;
+	private BigDecimal fAmountTwo;
 
 	public static void main(String... aArgs) {
 		// TODO: transform first 2 arguments in big decimal values
@@ -36,9 +39,6 @@ public class MoneyProblem {
 		log("equals : " + equals());
 	}
 
-	private BigDecimal fAmountOne;
-	private BigDecimal fAmountTwo;
-
 	/**
 	 * Defined centrally, to allow for easy changes to the rounding mode.
 	 */
@@ -46,8 +46,6 @@ public class MoneyProblem {
 	 * Number of decimals to retain. Also referred to as "scale".
 	 */
 	// same shit as dollar
-
-	private static final BigDecimal TWO = new BigDecimal("2");
 
 	private void log(String aText) {
 		System.out.println(aText);

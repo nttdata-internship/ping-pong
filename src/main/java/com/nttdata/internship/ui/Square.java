@@ -17,6 +17,10 @@ public class Square extends JPanel implements
 		/* ActionListener, */
 		KeyListener, MouseListener {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private double x = 275, y = 265, Ox = 0, Oy = 0;
 	private double xc = 0, yc = 0, Oxc = 2, Oyc = 2;
 
@@ -87,15 +91,18 @@ public class Square extends JPanel implements
 
 		int code = e.getKeyCode();
 
-		if (code == KeyEvent.VK_UP)
+		if (code == KeyEvent.VK_UP) {
 			up();
-		if (code == KeyEvent.VK_DOWN)
+		}
+		if (code == KeyEvent.VK_DOWN) {
 			down();
-		if (code == KeyEvent.VK_LEFT)
+		}
+		if (code == KeyEvent.VK_LEFT) {
 			left();
-		if (code == KeyEvent.VK_RIGHT)
+		}
+		if (code == KeyEvent.VK_RIGHT) {
 			right();
-
+		}
 		if (code == KeyEvent.VK_W) {
 			Oyc -= 1;
 			Oxc = 0;
@@ -114,10 +121,12 @@ public class Square extends JPanel implements
 			Oyc = 0;
 		}
 
-		if (x < 0 || x > 660)
+		if (x < 0 || x > 660) {
 			Ox = -Ox;
-		if (y < 0 || y > 560)
+		}
+		if (y < 0 || y > 560) {
 			Oy = -Oy;
+		}
 
 		x += Ox;
 		y += Oy;
@@ -154,7 +163,7 @@ public class Square extends JPanel implements
 
 	@Override
 	public void mouseClicked(MouseEvent e) {
-
+		// TODO Auto-generated method stub
 	}
 
 	@Override

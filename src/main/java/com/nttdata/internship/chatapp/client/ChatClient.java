@@ -12,7 +12,7 @@ import java.net.UnknownHostException;
 public class ChatClient {
 	private Socket socket = null;
 	private DataInputStream console = null;
-	DataOutputStream streamOut = null;
+	protected DataOutputStream streamOut;
 
 	public ChatClient(String serverName, int serverPort) throws IOException {
 		System.out.println("Establishing connection, please wait...");
