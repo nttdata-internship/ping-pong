@@ -21,7 +21,7 @@ public class GamePanel extends JPanel {
 	protected ObjectShape clientPaddle;
 	protected OutputStream os;
 	private int scoreC = 0;
-	protected int ok = 0;
+	private int scoreS = 0;
 	protected GAME_STATUS gameStatus = GAME_STATUS.NEW;
 
 	public static enum GAME_STATUS {
@@ -77,7 +77,7 @@ public class GamePanel extends JPanel {
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		setBackground(Color.BLACK);
-
+	//	int ok=0;
 		if (ball != null) {
 			g.setColor(Color.WHITE);
 			ball.draw(g);
@@ -87,19 +87,19 @@ public class GamePanel extends JPanel {
 			paintMessage(g, gameStatus.message);
 		}
 
-		if (gameStatus == GAME_STATUS.WIN && ok == 0) {
-			setScoreC(getScoreC() + 1);
-			ok = 1;
+		if (gameStatus == GAME_STATUS.WIN){ //&& ok == 0) {
+			//setScoreC(getScoreC() + 1);
+			//ok = 1;
 			paintScore(g, gameStatus.message);
 		}
 
-		if (gameStatus == GAME_STATUS.LOOSE && ok == 0) {
+		if (gameStatus == GAME_STATUS.LOOSE ){//&& ok == 0) {
 			paintScore(g, gameStatus.message);
-			ok = 1;
+			//ok = 1;
 		}
 
-		if (ok == 1)
-			ok = 0;
+		//if (ok == 1)
+			//ok = 0;
 	}
 
 	public OutputStream getOutputStream() {
@@ -120,7 +120,7 @@ public class GamePanel extends JPanel {
 	protected void paintScore(Graphics g, String message) {
 		g.setColor(Color.white);
 		g.setFont(new Font("Arial", Font.BOLD, 24));
-		g.drawString(getScoreC() + " | " + getScoreC(), 300, 25);
+		g.drawString( getScoreS()+"-" + getScoreC(), 300, 25);
 	}
 
 	public boolean isGameStarted() {
@@ -150,6 +150,14 @@ public class GamePanel extends JPanel {
 
 	public void setScoreC(int scoreC) {
 		this.scoreC = scoreC;
+	}
+
+	public int getScoreS() {
+		return scoreS;
+	}
+
+	public void setScoreS(int scoreS) {
+		this.scoreS = scoreS;
 	}
 
 }

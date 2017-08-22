@@ -1,4 +1,4 @@
-package com.nttdata.internship.ui.panel;
+package money;
 
 public class Swap {
 
@@ -17,7 +17,6 @@ public class Swap {
 		System.out.println(a[a.length-1]);
 		System.out.println();
 	}
-
 	public static void main(String[] a) {
 		int c[] = { 7, 9, 10, 12, 32, 67 };
 		printVect(c);

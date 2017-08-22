@@ -4,6 +4,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
 import com.nttdata.internship.ui.panel.GamePanel;
+import com.nttdata.internship.ui.panel.GamePanel.GAME_STATUS;
 import com.nttdata.internship.ui.panel.ServerPanel;
 
 public class KeysAction implements KeyListener {

@@ -26,13 +26,14 @@ public class SocketConnection extends Thread {
 
 	public void run() {
 		try {
-			socket = new Socket("localhost", port);
+			socket = new Socket("10.224.20.171", port);
 			panel.setOutputStream(socket.getOutputStream());
 			while (true) {
 				in = new ObjectInputStream(socket.getInputStream());
 				GameData receivedData = (GameData) SocketUtil.readData(in);
 				panel.setGameStatus(receivedData.getGameStatus());
-				panel.setScoreC(receivedData.getScore());
+				panel.setScoreS(receivedData.getScore());
+				System.out.println(panel.getScoreC()+" "+panel.getScoreS());
 				if (GAME_STATUS.RUNNING == receivedData.getGameStatus()) {
 					processResponse(receivedData);
 					GameData sentData = new GameData();
@@ -66,17 +67,20 @@ public class SocketConnection extends Thread {
 						ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
 						GameData gameData = (GameData) SocketUtil.readData(in);
 						if (gameData != null && !gameData.getObjects().isEmpty()) {
+							
 							panel.setClientPaddle(gameData.getObjects().get(0));
 						}
 						if (panel.getGameStatus() != gameData.getGameStatus()) {
 							if (gameData.isGameRunning()) {
+								//panel.setScoreS(gameData.getScoreC());
 								panel.startGame();
 							}
-
+							
 							panel.setGameStatus(gameData.getGameStatus());
 
 						}
-
+						panel.setScoreC(gameData.getScore());
+						System.out.println(panel.getScoreS()+ " -" + panel.getScoreC());
 						panel.repaint();
 					}
 
@@ -98,6 +102,7 @@ public class SocketConnection extends Thread {
 
 					panel.getBall().setX(coords.getX());
 					panel.getBall().setY(coords.getY());
+				
 				} else {
 					ObjectShape clientPaddle = new ObjectShape();
 					clientPaddle.setX(coords.getX());

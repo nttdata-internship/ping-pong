@@ -40,6 +40,8 @@ public class BallAnimation extends Thread {
 					GameData gameData = new GameData();
 					gameData.setObjects(objectsToSend);
 					gameData.setGameStatus(panel.getGameStatus());
+					//gameData.setScore(panel.getScoreC());
+					//gameData.setScore(panel.getScoreS());
 
 					SocketUtil.sendDataToServer(panel.getOutputStream(), gameData);
 					panel.repaint();
