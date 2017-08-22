@@ -70,26 +70,6 @@ public class ClientPanel extends GamePanel implements Serializable {
 	}
 
 	@Override
-	public void startGame() {
-		// TODO Auto-generated method stub
-		super.startGame();
-
-		super.stopGame();
-		this.gameStatus = GAME_STATUS.PAUSED;
-		try {
-			GameData data = new GameData();
-			List<ObjectShape> paddle = new ArrayList<>();
-			paddle.add(getPaddle());
-			data.setObjects(paddle);
-			data.setGameStatus(GAME_STATUS.RUNNING);
-			SocketUtil.sendDataToServer(os, data);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-
-	@Override
 	public void stopGame() {
 		super.stopGame();
 		this.gameStatus = GAME_STATUS.PAUSED;
