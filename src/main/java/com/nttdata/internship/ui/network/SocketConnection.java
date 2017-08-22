@@ -29,18 +29,18 @@ public class SocketConnection extends Thread {
 			socket = new Socket("localhost", port);
 			panel.setOutputStream(socket.getOutputStream());
 			while (true) {
-				
+
 				ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
 				GameData receivedData = (GameData) SocketUtil.readData(in);
 				panel.setGameStatus(receivedData.getGameStatus());
-//				panel.setScoreC(receivedData.getScore());
+				// panel.setScoreC(receivedData.getScore());
 				if (GAME_STATUS.RUNNING == receivedData.getGameStatus()) {
 					processResponse(receivedData);
 					GameData sentData = new GameData();
 					List<ObjectShape> paddle = new ArrayList<>();
 					paddle.add(panel.getPaddle());
 					sentData.setObjects(paddle);
-//					sentData.setScore(panel.getScoreC());
+					// sentData.setScore(panel.getScoreC());
 					sentData.setGameStatus(panel.getGameStatus());
 					SocketUtil.sendDataToServer(socket.getOutputStream(), sentData);
 

@@ -57,9 +57,9 @@ public class Ball extends ObjectShape {
 
 			}
 		}
-		
-		if ( x < 20) {
-			
+
+		if (x < 20) {
+
 		}
 
 		return status;
