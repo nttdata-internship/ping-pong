@@ -15,11 +15,10 @@ public class GameData implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private GAME_STATUS gameStatus;
 	private List<ObjectShape> objects;
-	private GamePanel score;
 
 	public GameData() {
 		this.objects = new ArrayList<>();
-	//	this.setScore(new GamePanel()); 
+		// this.setScore(new GamePanel());
 	}
 
 	public List<ObjectShape> getObjects() {
@@ -41,14 +40,6 @@ public class GameData implements Serializable {
 	public boolean isGameRunning() {
 
 		return GAME_STATUS.RUNNING == gameStatus;
-	}
-
-	public int getScore() {
-		return score.getScoreC();
-	}
-
-	public void setScore(int score) {
-		this.score.setScoreC(score);
 	}
 
 }
