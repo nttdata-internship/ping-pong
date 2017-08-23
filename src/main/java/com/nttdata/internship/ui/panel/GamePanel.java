@@ -77,7 +77,7 @@ public class GamePanel extends JPanel {
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		setBackground(Color.BLACK);
-	//	int ok=0;
+	
 		if (ball != null) {
 			g.setColor(Color.WHITE);
 			ball.draw(g);
@@ -87,19 +87,16 @@ public class GamePanel extends JPanel {
 			paintMessage(g, gameStatus.message);
 		}
 
-		if (gameStatus == GAME_STATUS.WIN){ //&& ok == 0) {
-			//setScoreC(getScoreC() + 1);
-			//ok = 1;
+		if (gameStatus == GAME_STATUS.WIN){ 
+			//setScoreC(getScoreS() + 1);
 			paintScore(g, gameStatus.message);
 		}
 
-		if (gameStatus == GAME_STATUS.LOOSE ){//&& ok == 0) {
+		if (gameStatus == GAME_STATUS.LOOSE ){
 			paintScore(g, gameStatus.message);
-			//ok = 1;
+			
 		}
 
-		//if (ok == 1)
-			//ok = 0;
 	}
 
 	public OutputStream getOutputStream() {

@@ -9,7 +9,6 @@ import java.awt.event.ComponentListener;
 import java.awt.geom.Rectangle2D;
 import java.io.IOException;
 import java.io.Serializable;
-import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,7 +17,6 @@ import javax.swing.JFrame;
 import com.nttdata.internship.ui.animation.ObjectShape;
 import com.nttdata.internship.ui.network.SocketUtil;
 import com.nttdata.internship.ui.network.data.GameData;
-import com.nttdata.internship.ui.panel.GamePanel.GAME_STATUS;
 
 public class ClientPanel extends GamePanel implements Serializable {
 
@@ -76,7 +74,7 @@ public class ClientPanel extends GamePanel implements Serializable {
 		// TODO Auto-generated method stub
 		super.startGame();
 
-		super.stopGame();
+		//super.stopGame();
 		this.gameStatus = GAME_STATUS.PAUSED;
 		try {
 			GameData data = new GameData();
@@ -124,8 +122,8 @@ public class ClientPanel extends GamePanel implements Serializable {
 			g2.setColor(Color.ORANGE);
 			g2.fill(new Rectangle2D.Double(ServerPanel.frameSize.getWidth() - 35, 0 + paddle.getY(), 20, 80));
 		}
-		if (gameStatus == GAME_STATUS.WIN)
-			setScoreC(getScoreC() + 1);
+		/*if (gameStatus == GAME_STATUS.WIN)
+			setScoreC(getScoreC() + 1);*/
 	}
 
 }

@@ -41,7 +41,6 @@ public class BallAnimation extends Thread {
 					gameData.setObjects(objectsToSend);
 					gameData.setGameStatus(panel.getGameStatus());
 					//gameData.setScore(panel.getScoreC());
-					//gameData.setScore(panel.getScoreS());
 
 					SocketUtil.sendDataToServer(panel.getOutputStream(), gameData);
 					panel.repaint();
@@ -63,8 +62,12 @@ public class BallAnimation extends Thread {
 
 			GameData gameData = new GameData();
 			gameData.setObjects(objectsToSend);
-		
-			gameData.setGameStatus(panel.getGameStatus());
+			GAME_STATUS status = GAME_STATUS.WIN;
+			if (panel.getGameStatus() == status)
+				status = GAME_STATUS.LOOSE;
+			gameData.setGameStatus(status);
+		//	gameData.setScore(panel.getScoreC());
+			//gameData.setGameStatus(panel.getGameStatus());
 
 			SocketUtil.sendDataToServer(panel.getOutputStream(), gameData);
 			panel.repaint();
