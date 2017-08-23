@@ -17,6 +17,7 @@ import javax.swing.JFrame;
 import com.nttdata.internship.ui.animation.ObjectShape;
 import com.nttdata.internship.ui.network.SocketUtil;
 import com.nttdata.internship.ui.network.data.GameData;
+import com.nttdata.internship.ui.panel.GamePanel.GAME_STATUS;
 
 public class ClientPanel extends GamePanel implements Serializable {
 
@@ -82,7 +83,6 @@ public class ClientPanel extends GamePanel implements Serializable {
 			paddle.add(getPaddle());
 			data.setObjects(paddle);
 			data.setGameStatus(GAME_STATUS.RUNNING);
-			//data.setScore(getScoreC());
 			SocketUtil.sendDataToServer(os, data);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -93,14 +93,14 @@ public class ClientPanel extends GamePanel implements Serializable {
 	@Override
 	public void stopGame() {
 		super.stopGame();
-		this.gameStatus = GAME_STATUS.PAUSED;
+		this.gameStatus = GAME_STATUS.RUNNING;
 		try {
 			GameData data = new GameData();
 			List<ObjectShape> clientPaddle = new ArrayList<>();
 			clientPaddle.add(getClientPaddle());
 			data.setObjects(clientPaddle);
 			data.setGameStatus(GAME_STATUS.PAUSED);
-			data.setScore(getScoreS());
+			//data.setScore(data.getScore());
 			SocketUtil.sendDataToServer(os, data);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -122,8 +122,12 @@ public class ClientPanel extends GamePanel implements Serializable {
 			g2.setColor(Color.ORANGE);
 			g2.fill(new Rectangle2D.Double(ServerPanel.frameSize.getWidth() - 35, 0 + paddle.getY(), 20, 80));
 		}
-		/*if (gameStatus == GAME_STATUS.WIN)
-			setScoreC(getScoreC() + 1);*/
+		if (gameStatus == GAME_STATUS.WIN){ 
+			setScoreC(getScoreC() + 1);
+			setGameStatus(GAME_STATUS.RESUME);
+		}
+		paintScore(g2, gameStatus.message);
 	}
 
+	
 }

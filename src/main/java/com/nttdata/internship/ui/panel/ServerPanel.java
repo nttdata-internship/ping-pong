@@ -7,11 +7,17 @@ import java.awt.Graphics2D;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.awt.geom.Rectangle2D;
+import java.io.IOException;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.JFrame;
 
 import com.nttdata.internship.ui.animation.BallAnimation;
+import com.nttdata.internship.ui.animation.ObjectShape;
+import com.nttdata.internship.ui.network.SocketUtil;
+import com.nttdata.internship.ui.network.data.GameData;
 
 public class ServerPanel extends GamePanel implements Serializable {
 
@@ -79,12 +85,12 @@ public class ServerPanel extends GamePanel implements Serializable {
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-		/*this.gameStatus = GAME_STATUS.PAUSED;
+		this.gameStatus = GAME_STATUS.PAUSED;
 		try {
 			GameData data = new GameData();
-			List<ObjectShape> paddle = new ArrayList<>();
-			paddle.add(getPaddle());
-			data.setObjects(paddle);
+			//List<ObjectShape> paddle = new ArrayList<>();
+			//paddle.add(getPaddle());
+			//data.setObjects(paddle);
 			data.setGameStatus(GAME_STATUS.PAUSED);
 			data.setScore(getScoreS());
 			SocketUtil.sendDataToServer(os, data);
@@ -92,7 +98,7 @@ public class ServerPanel extends GamePanel implements Serializable {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-*/
+
 	}
 
 	@Override
@@ -108,8 +114,13 @@ public class ServerPanel extends GamePanel implements Serializable {
 			g2.setColor(Color.ORANGE);
 			g2.fill(new Rectangle2D.Double(ServerPanel.frameSize.getWidth() - 35, 0 + clientPaddle.getY(), 20, 80));
 		}
-		/*if (gameStatus == GAME_STATUS.WIN)
-			setScoreC(getScoreS() + 1);*/
+		if (gameStatus == GAME_STATUS.WIN){ 
+			setScoreS(getScoreS() + 1);
+			setGameStatus(GAME_STATUS.RESUME);
+		}
+		
+		paintScore(g2, gameStatus.message);	
 	}
+		
 
 }

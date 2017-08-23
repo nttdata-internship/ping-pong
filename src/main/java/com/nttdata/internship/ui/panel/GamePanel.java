@@ -21,14 +21,14 @@ public class GamePanel extends JPanel {
 	protected ObjectShape clientPaddle;
 	protected OutputStream os;
 	private int scoreC = 0;
-	private int scoreS = 0;
+	protected int scoreS = 0;
 	protected GAME_STATUS gameStatus = GAME_STATUS.NEW;
 
 	public static enum GAME_STATUS {
 		RUNNING("Game running..."), PAUSED("Game paused."), NEW("Press SPACE to start"), LOOSE("You've lost!"), WIN(
-				"You won!");
+				"You won!"),RESUME("Continue game.");
 
-		private String message;
+		protected String message;
 
 		private GAME_STATUS(String message) {
 			//
@@ -87,15 +87,6 @@ public class GamePanel extends JPanel {
 			paintMessage(g, gameStatus.message);
 		}
 
-		if (gameStatus == GAME_STATUS.WIN){ 
-			//setScoreC(getScoreS() + 1);
-			paintScore(g, gameStatus.message);
-		}
-
-		if (gameStatus == GAME_STATUS.LOOSE ){
-			paintScore(g, gameStatus.message);
-			
-		}
 
 	}
 
@@ -117,7 +108,7 @@ public class GamePanel extends JPanel {
 	protected void paintScore(Graphics g, String message) {
 		g.setColor(Color.white);
 		g.setFont(new Font("Arial", Font.BOLD, 24));
-		g.drawString( getScoreS()+"-" + getScoreC(), 300, 25);
+		g.drawString( getScoreS()+ "-"+getScoreC(), 300, 25);
 	}
 
 	public boolean isGameStarted() {
@@ -141,6 +132,14 @@ public class GamePanel extends JPanel {
 
 	}
 
+	public int getScoreS() {
+		return scoreS;
+	}
+
+	public void setScoreS(int scoreC) {
+		this.scoreS = scoreC;
+	}
+
 	public int getScoreC() {
 		return scoreC;
 	}
@@ -149,12 +148,5 @@ public class GamePanel extends JPanel {
 		this.scoreC = scoreC;
 	}
 
-	public int getScoreS() {
-		return scoreS;
-	}
-
-	public void setScoreS(int scoreS) {
-		this.scoreS = scoreS;
-	}
 
 }

@@ -45,7 +45,7 @@ public class SocketConnection extends Thread {
 				GameData receivedData = (GameData) SocketUtil.readData(in);
 				panel.setGameStatus(receivedData.getGameStatus());
 				panel.setScoreS(receivedData.getScore());
-				System.out.println(panel.getScoreC() + " " + panel.getScoreS());
+				System.out.println(panel.getScoreS()+ "-"+ panel.getScoreC() );
 				if (GAME_STATUS.RUNNING == receivedData.getGameStatus()) {
 					processResponse(receivedData);
 					GameData sentData = new GameData();
@@ -95,7 +95,7 @@ public class SocketConnection extends Thread {
 
 						}
 						panel.setScoreC(gameData.getScore());
-						System.out.println(panel.getScoreS() + " -" + panel.getScoreC());
+						System.out.println( panel.getScoreS()+ "-"+ panel.getScoreC() );
 						panel.repaint();
 					}
 
