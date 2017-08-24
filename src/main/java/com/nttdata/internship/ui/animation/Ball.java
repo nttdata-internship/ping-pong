@@ -6,6 +6,11 @@ import java.awt.Graphics;
 
 import com.nttdata.internship.ui.panel.GamePanel.GAME_STATUS;
 
+/**
+ * 
+ * @author ioana.constantin
+ *
+ */
 public class Ball extends ObjectShape {
 	/**
 	 * 
@@ -39,6 +44,12 @@ public class Ball extends ObjectShape {
 		}
 	}
 
+	/**
+	 * checks if the player wins or looses the ball
+	 * @param paddle is server player
+	 * @param clientPaddle is client player
+	 * @return
+	 */
 	public GAME_STATUS checkObjectCollision(ObjectShape paddle, ObjectShape clientPaddle) {
 		GAME_STATUS status = GAME_STATUS.RUNNING;
 		if (x <= 20) {
@@ -61,7 +72,11 @@ public class Ball extends ObjectShape {
 		return status;
 
 	}
-
+	
+	/**
+	 * 
+	 * Change the direction of the ball when it hits the wall
+	 */
 	public void move() {
 		x += speedX;
 		y += speedY;

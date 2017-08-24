@@ -17,7 +17,6 @@ import javax.swing.JFrame;
 import com.nttdata.internship.ui.animation.ObjectShape;
 import com.nttdata.internship.ui.network.SocketUtil;
 import com.nttdata.internship.ui.network.data.GameData;
-import com.nttdata.internship.ui.panel.GamePanel.GAME_STATUS;
 
 public class ClientPanel extends GamePanel implements Serializable {
 
@@ -83,6 +82,7 @@ public class ClientPanel extends GamePanel implements Serializable {
 			paddle.add(getPaddle());
 			data.setObjects(paddle);
 			data.setGameStatus(GAME_STATUS.RUNNING);
+			//data.setScore(getScoreS()+1);
 			SocketUtil.sendDataToServer(os, data);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -100,7 +100,7 @@ public class ClientPanel extends GamePanel implements Serializable {
 			clientPaddle.add(getClientPaddle());
 			data.setObjects(clientPaddle);
 			data.setGameStatus(GAME_STATUS.PAUSED);
-			//data.setScore(data.getScore());
+			//data.setScore(getScoreS()+1);
 			SocketUtil.sendDataToServer(os, data);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -126,6 +126,7 @@ public class ClientPanel extends GamePanel implements Serializable {
 			setScoreC(getScoreC() + 1);
 			setGameStatus(GAME_STATUS.RESUME);
 		}
+
 		paintScore(g2, gameStatus.message);
 	}
 

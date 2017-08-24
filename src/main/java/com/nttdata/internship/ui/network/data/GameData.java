@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.nttdata.internship.ui.animation.ObjectShape;
-import com.nttdata.internship.ui.panel.GamePanel;
 import com.nttdata.internship.ui.panel.GamePanel.GAME_STATUS;
 
 public class GameData implements Serializable {

@@ -7,6 +7,11 @@ import com.nttdata.internship.ui.network.data.GameData;
 import com.nttdata.internship.ui.panel.GamePanel;
 import com.nttdata.internship.ui.panel.GamePanel.GAME_STATUS;
 
+/**
+ * Syncs data between client and server(game status, score)
+ * @author ioana.constantin
+ *
+ */
 public class BallAnimation extends Thread {
 
 	private Ball ball;
@@ -25,7 +30,6 @@ public class BallAnimation extends Thread {
 				GAME_STATUS status = ball.checkObjectCollision(panel.getPaddle(), panel.getClientPaddle());
 				panel.setGameStatus(status);
 				if (status == GAME_STATUS.RUNNING) {
-
 					ObjectShape ballShape = new Ball(null);
 					ballShape.setX(ball.getX());
 					ballShape.setY(ball.getY());
@@ -47,6 +51,7 @@ public class BallAnimation extends Thread {
 				} else {
 					ball.setX(280);
 					ball.setY(280);
+					panel.repaint();
 					break;
 				}
 				Thread.sleep(20);
@@ -63,10 +68,13 @@ public class BallAnimation extends Thread {
 			GameData gameData = new GameData();
 			gameData.setObjects(objectsToSend);
 			GAME_STATUS status = GAME_STATUS.WIN;
-			if (panel.getGameStatus() == status)
+			if (panel.getGameStatus() == status){
 				status = GAME_STATUS.LOOSE;
+				gameData.setScore(panel.getScoreS()+1);
+			}else
+				gameData.setScore(panel.getScoreS());
+			
 			gameData.setGameStatus(status);
-			gameData.setScore(panel.getScoreS());
 			//gameData.setGameStatus(panel.getGameStatus());
 
 			SocketUtil.sendDataToServer(panel.getOutputStream(), gameData);
