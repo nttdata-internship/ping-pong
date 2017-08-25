@@ -24,7 +24,7 @@ public class SocketConnection extends Thread {
 
 	static {
 		try {
-			gameProperties.load(Thread.currentThread().getClass().getResourceAsStream("game.properties"));
+			gameProperties.load(new java.io.FileReader("src/main/java/com/nttdata/internship/game.properties"));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -36,7 +36,7 @@ public class SocketConnection extends Thread {
 
 	public void run() {
 		try {
-			clientSocket = new Socket(gameProperties.getProperty("game.host"), (int) gameProperties.get("game.port"));
+			clientSocket = new Socket(gameProperties.getProperty("game.host"), Integer.parseInt( (String) gameProperties.get("game.port")));
 			panel.setOutputStream(clientSocket.getOutputStream());
 			while (true) {
 
@@ -73,7 +73,7 @@ public class SocketConnection extends Thread {
 				try {
 					server = new ServerSocket();
 					server.bind(new InetSocketAddress(gameProperties.getProperty("game.host"),
-							(int) gameProperties.get("game.port")));
+							Integer.parseInt( (String) gameProperties.get("game.port"))));
 					clientSocket = server.accept();
 					panel.setOutputStream(clientSocket.getOutputStream());
 					while (true) {

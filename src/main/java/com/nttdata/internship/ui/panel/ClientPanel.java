@@ -84,7 +84,7 @@ public class ClientPanel extends GamePanel implements Serializable {
 			paddle.add(getPaddle());
 			data.setObjects(paddle);
 			data.setGameStatus(GAME_STATUS.RUNNING);
-			//data.setScore(getScoreC());
+			// data.setScore(getScoreC());
 			SocketUtil.sendDataToServer(os, data);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
