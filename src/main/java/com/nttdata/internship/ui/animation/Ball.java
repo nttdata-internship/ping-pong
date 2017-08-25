@@ -3,18 +3,15 @@ package com.nttdata.internship.ui.animation;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
-import java.awt.Image;
-import java.awt.image.BufferedImage;
-import java.awt.image.ImageObserver;
-import java.io.File;
-import java.io.IOException;
-import java.io.Serializable;
-
-import javax.imageio.ImageIO;
 
 import com.nttdata.internship.ui.panel.GamePanel.GAME_STATUS;
 
-public class Ball extends ObjectShape implements ImageObserver, Serializable {
+/**
+ * 
+ * @author ioana.constantin
+ *
+ */
+public class Ball extends ObjectShape {
 	/**
 	 * 
 	 */
@@ -22,24 +19,16 @@ public class Ball extends ObjectShape implements ImageObserver, Serializable {
 	public transient Dimension frameSize;
 	public double speedX = getRandomSpeed() * getRandomDirection();
 	public double speedY = getRandomSpeed() * getRandomDirection();
-	protected transient BufferedImage ballImage;
 
 	public Ball(Dimension frameSize) {
 		x = 340;
 		y = 275;
 		this.frameSize = frameSize;
-		try {
-			ballImage = ImageIO.read(new File("C:\\Users\\stefan.neacsu\\Desktop\\ball.png"));
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 	}
 
 	public void draw(Graphics g) {
-		// g.setColor(Color.WHITE);
-		// g.fillOval(x, y, 20, 20);
-		g.drawImage(ballImage, 320, 250, this);
+		g.setColor(Color.WHITE);
+		g.fillOval(x, y, 20, 20);
 	}
 
 	public double getRandomSpeed() {
@@ -55,6 +44,12 @@ public class Ball extends ObjectShape implements ImageObserver, Serializable {
 		}
 	}
 
+	/**
+	 * checks if the player wins or looses the ball
+	 * @param paddle is server player
+	 * @param clientPaddle is client player
+	 * @return
+	 */
 	public GAME_STATUS checkObjectCollision(ObjectShape paddle, ObjectShape clientPaddle) {
 		GAME_STATUS status = GAME_STATUS.RUNNING;
 		if (x <= 20) {
@@ -77,7 +72,11 @@ public class Ball extends ObjectShape implements ImageObserver, Serializable {
 		return status;
 
 	}
-
+	
+	/**
+	 * 
+	 * Change the direction of the ball when it hits the wall
+	 */
 	public void move() {
 		x += speedX;
 		y += speedY;
@@ -97,12 +96,6 @@ public class Ball extends ObjectShape implements ImageObserver, Serializable {
 
 	public void setFrameSize(Dimension frameSize) {
 		this.frameSize = frameSize;
-	}
-
-	@Override
-	public boolean imageUpdate(Image img, int infoflags, int x, int y, int width, int height) {
-		// TODO Auto-generated method stub
-		return false;
 	}
 
 }
