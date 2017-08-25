@@ -4,11 +4,18 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.io.OutputStream;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import com.nttdata.internship.ui.animation.Ball;
 import com.nttdata.internship.ui.animation.ObjectShape;
+
+import dataBase.Driver;
 
 public class GamePanel extends JPanel {
 
@@ -23,10 +30,13 @@ public class GamePanel extends JPanel {
 	private int scoreC = 0;
 	protected int scoreS = 0;
 	protected GAME_STATUS gameStatus = GAME_STATUS.NEW;
+	private Connection con = null;
+	private ResultSet rs = null;
+	private PreparedStatement st = null;
 
 	public static enum GAME_STATUS {
 		RUNNING("Game running..."), PAUSED("Game paused."), NEW("Press SPACE to start"), LOOSE("You've lost!"), WIN(
-				"You won!"),RESUME("Continue game.");
+				"You won!"), RESUME("Continue game.");
 
 		protected String message;
 
@@ -45,6 +55,7 @@ public class GamePanel extends JPanel {
 		this.paddle = new ObjectShape();
 		this.ball = new Ball(ServerPanel.frameSize);
 		this.clientPaddle = new ObjectShape();
+		con = Driver.DB();
 
 	}
 
@@ -77,7 +88,7 @@ public class GamePanel extends JPanel {
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		setBackground(Color.BLACK);
-	
+
 		if (ball != null) {
 			g.setColor(Color.WHITE);
 			ball.draw(g);
@@ -86,7 +97,6 @@ public class GamePanel extends JPanel {
 		if (gameStatus != GAME_STATUS.RUNNING) {
 			paintMessage(g, gameStatus.message);
 		}
-
 
 	}
 
@@ -108,7 +118,28 @@ public class GamePanel extends JPanel {
 	protected void paintScore(Graphics g, String message) {
 		g.setColor(Color.white);
 		g.setFont(new Font("Arial", Font.BOLD, 24));
-		g.drawString( getScoreS()+ "-"+getScoreC(), 300, 25);
+
+		try {
+
+			String sql = "select score from Score where id=1";
+			st = con.prepareStatement(sql);
+			rs = st.executeQuery();
+			int scoreS = rs.getInt(1);
+
+			String clientScore = "select score from Score where id=2";
+			st = con.prepareStatement(clientScore);
+			rs = st.executeQuery();
+			int scoreC = rs.getInt(1);
+
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(null, e);
+		} finally {
+			try {
+				st.close();
+			} catch (Exception e) {
+			}
+		}
+		g.drawString(scoreS + "-" + scoreC, 300, 25);
 	}
 
 	public boolean isGameStarted() {
@@ -147,6 +178,5 @@ public class GamePanel extends JPanel {
 	public void setScoreC(int scoreC) {
 		this.scoreC = scoreC;
 	}
-
 
 }

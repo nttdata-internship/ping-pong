@@ -1,11 +1,16 @@
 package com.nttdata.internship.ui.animation;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.util.ArrayList;
 
 import com.nttdata.internship.ui.network.SocketUtil;
 import com.nttdata.internship.ui.network.data.GameData;
 import com.nttdata.internship.ui.panel.GamePanel;
 import com.nttdata.internship.ui.panel.GamePanel.GAME_STATUS;
+
+import dataBase.Driver;
 
 /**
  * Syncs data between client and server(game status, score)
@@ -16,7 +21,7 @@ public class BallAnimation extends Thread {
 
 	private Ball ball;
 	private GamePanel panel;
-
+	
 	public BallAnimation(GamePanel panel) {
 		this.ball = panel.getBall();
 		this.panel = panel;
@@ -44,7 +49,7 @@ public class BallAnimation extends Thread {
 					GameData gameData = new GameData();
 					gameData.setObjects(objectsToSend);
 					gameData.setGameStatus(panel.getGameStatus());
-					gameData.setScore(panel.getScoreS());
+					//gameData.setScore(panel.getScoreS());
 
 					SocketUtil.sendDataToServer(panel.getOutputStream(), gameData);
 					panel.repaint();
@@ -68,11 +73,11 @@ public class BallAnimation extends Thread {
 			GameData gameData = new GameData();
 			gameData.setObjects(objectsToSend);
 			GAME_STATUS status = GAME_STATUS.WIN;
-			if (panel.getGameStatus() == status){
+			if (panel.getGameStatus() == status)//{
 				status = GAME_STATUS.LOOSE;
-				gameData.setScore(panel.getScoreS()+1);
-			}else
-				gameData.setScore(panel.getScoreS());
+				//gameData.setScore(panel.getScoreS()+1);
+			//}else
+				//gameData.setScore(panel.getScoreS());
 			
 			gameData.setGameStatus(status);
 			//gameData.setGameStatus(panel.getGameStatus());

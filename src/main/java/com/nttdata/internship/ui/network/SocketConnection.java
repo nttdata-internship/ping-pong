@@ -52,16 +52,17 @@ public class SocketConnection extends Thread {
 				ObjectInputStream in = new ObjectInputStream(clientSocket.getInputStream());
 				GameData receivedData = (GameData) SocketUtil.readData(in);
 				panel.setGameStatus(receivedData.getGameStatus());
-				panel.setScoreS(receivedData.getScore());
-				System.out.println(panel.getScoreS() + "-" + panel.getScoreC());
+				//panel.setScoreS(receivedData.getScore());
+				//System.out.println(panel.getScoreS() + "-" + panel.getScoreC());
 				if (GAME_STATUS.RUNNING == receivedData.getGameStatus()) {
 					processResponse(receivedData);
 					GameData sentData = new GameData();
 					List<ObjectShape> paddle = new ArrayList<>();
 					paddle.add(panel.getPaddle());
 					sentData.setObjects(paddle);
-					sentData.setScore(panel.getScoreC());
+					//sentData.setScore(panel.getScoreC());
 					sentData.setGameStatus(panel.getGameStatus());
+					
 					SocketUtil.sendDataToServer(clientSocket.getOutputStream(), sentData);
 				}
 
@@ -100,10 +101,10 @@ public class SocketConnection extends Thread {
 							panel.setGameStatus(gameData.getGameStatus());
 						}
 
-						panel.setScoreC(gameData.getScore());
+						//panel.setScoreC(gameData.getScore());
 						// gameData.setGameStatus(status);
 
-						System.out.println(panel.getScoreS() + "-" + panel.getScoreC());
+						//System.out.println(panel.getScoreS() + "-" + panel.getScoreC());
 						panel.repaint();
 					}
 

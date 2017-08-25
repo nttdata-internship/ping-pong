@@ -9,14 +9,19 @@ import java.awt.event.ComponentListener;
 import java.awt.geom.Rectangle2D;
 import java.io.IOException;
 import java.io.Serializable;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 
 import com.nttdata.internship.ui.animation.ObjectShape;
 import com.nttdata.internship.ui.network.SocketUtil;
 import com.nttdata.internship.ui.network.data.GameData;
+
+import dataBase.Driver;
 
 public class ClientPanel extends GamePanel implements Serializable {
 
@@ -24,11 +29,14 @@ public class ClientPanel extends GamePanel implements Serializable {
 	public static Dimension frameSize = new Dimension(640, 560);
 
 	protected ObjectShape shape;
+	private Connection con = null;
+    private PreparedStatement st = null;
 
 	public ClientPanel() {
 		setFocusable(true);
 		gameStatus = GAME_STATUS.RUNNING;
 		setPreferredSize(ServerPanel.frameSize);
+		//con = Driver.DB();
 	}
 
 	public void clientFrame() {
@@ -123,7 +131,23 @@ public class ClientPanel extends GamePanel implements Serializable {
 			g2.fill(new Rectangle2D.Double(ServerPanel.frameSize.getWidth() - 35, 0 + paddle.getY(), 20, 80));
 		}
 		if (gameStatus == GAME_STATUS.WIN){ 
-			setScoreC(getScoreC() + 1);
+			//setScoreC(getScoreC() + 1);
+			 try{
+	        	 
+		            String sql="Update Score SET score = score + 1 where id = 2";
+		            st = con.prepareStatement(sql);
+		            st.executeUpdate();
+
+		        } catch(Exception e){
+		            JOptionPane.showMessageDialog(null,e);
+		        }finally{
+		            try{
+		                st.close();
+		        }catch(Exception e){
+//		            catch(SQLException e){
+		                JOptionPane.showMessageDialog(null, e);
+		            }
+		        }
 			setGameStatus(GAME_STATUS.RESUME);
 		}
 
