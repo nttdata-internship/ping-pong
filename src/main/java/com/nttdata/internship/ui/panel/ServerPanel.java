@@ -7,9 +7,12 @@ import java.awt.Graphics2D;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.awt.geom.Rectangle2D;
+import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
 
+import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 
 import com.nttdata.internship.ui.animation.BallAnimation;
@@ -21,7 +24,7 @@ public class ServerPanel extends GamePanel implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private BallAnimation animationThread;
-
+	private transient BufferedImage paddleS;
 	public static Dimension frameSize = new Dimension(640, 560);
 
 	public ServerPanel() {
@@ -32,7 +35,12 @@ public class ServerPanel extends GamePanel implements Serializable {
 		f.setTitle("SERVER");
 		f.add(this);
 		f.setVisible(true);
-
+		
+		try {
+			paddleS = ImageIO.read(new File("C:\\Users\\stefan.neacsu\\Desktop\\Pong Resources\\paddle.png"));
+		} catch (IOException e) {
+			System.out.println("The paddle is not loading.");
+		}
 		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 		f.addComponentListener(new ComponentListener() {
@@ -104,27 +112,28 @@ public class ServerPanel extends GamePanel implements Serializable {
 		super.paintComponent(g);
 		Graphics2D g2 = (Graphics2D) g;
 		if (paddle != null) {
-			g2.setColor(Color.GREEN);
-			g2.fill(new Rectangle2D.Double(paddle.getX(), paddle.getY(), 20, 80));
+			g.drawImage(paddleS, paddle.getX(), paddle.getY(), this);
+//			g2.setColor(Color.GREEN);
+//			g2.fill(new Rectangle2D.Double(paddle.getX(), paddle.getY(), 20, 80));
 		}
 		if (clientPaddle != null) {
-			g2.setColor(Color.ORANGE);
-			g2.fill(new Rectangle2D.Double(ServerPanel.frameSize.getWidth() - 35, 0 + clientPaddle.getY(), 20, 80));
+			g.drawImage(paddleS, (int) (ServerPanel.frameSize.getWidth() - 35), 0 + clientPaddle.getY(), this);
+//			g2.setColor(Color.ORANGE);
+//			g2.fill(new Rectangle2D.Double(ServerPanel.frameSize.getWidth() - 35, 0 + clientPaddle.getY(), 20, 80));
 		}
-		paintScore(g2, gameStatus.message);
+  		paintScore(g2, gameStatus.message);
 		if (gameStatus == GAME_STATUS.WIN) {
-			setScoreS(getScoreS() + 1);
-			paintMessage(g2, gameStatus.message);
 			paintScore(g2, gameStatus.message);
+			paintMessage(g2, gameStatus.message);
 			setGameStatus(GAME_STATUS.RESUME);
+			setScoreS(getScoreS() + 1);
 		}
 		if (gameStatus == GAME_STATUS.LOOSE) {
 			paintScore(g2, gameStatus.message);
-			setScoreC(getScoreC()+1);
 			paintMessage(g2, gameStatus.message);
 			setGameStatus(GAME_STATUS.RESUME);
+			setScoreC(getScoreC() + 1);
 		}
-		
 
 	}
 

@@ -98,6 +98,7 @@ public class SocketConnection extends Thread {
 								// panel.startGame();
 							}
 							panel.setGameStatus(gameData.getGameStatus());
+							panel.setScoreC(gameData.getScore());
 						}
 
 						panel.setScoreC(gameData.getScore());

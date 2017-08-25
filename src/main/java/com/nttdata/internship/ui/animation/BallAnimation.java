@@ -9,6 +9,7 @@ import com.nttdata.internship.ui.panel.GamePanel.GAME_STATUS;
 
 /**
  * Syncs data between client and server(game status, score)
+ * 
  * @author ioana.constantin
  *
  */
@@ -68,14 +69,14 @@ public class BallAnimation extends Thread {
 			GameData gameData = new GameData();
 			gameData.setObjects(objectsToSend);
 			GAME_STATUS status = GAME_STATUS.WIN;
-			if (panel.getGameStatus() == status){
+			if (panel.getGameStatus() == status) {
 				status = GAME_STATUS.LOOSE;
-				gameData.setScore(panel.getScoreS()+1);
-			}else
+				gameData.setScore(panel.getScoreS() + 1);
+			} else
 				gameData.setScore(panel.getScoreS());
-			
+
 			gameData.setGameStatus(status);
-			//gameData.setGameStatus(panel.getGameStatus());
+			// gameData.setGameStatus(panel.getGameStatus());
 
 			SocketUtil.sendDataToServer(panel.getOutputStream(), gameData);
 			panel.repaint();
