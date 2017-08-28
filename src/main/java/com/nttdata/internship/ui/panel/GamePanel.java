@@ -124,15 +124,20 @@ public class GamePanel extends JPanel {
 			String sql = "select score from Score where id=1";
 			st = con.prepareStatement(sql);
 			rs = st.executeQuery();
-			int scoreS = rs.getInt(1);
+			if (rs.getRow() != 0) {
+				int scoreS = rs.getInt(1);
+			}
 
 			String clientScore = "select score from Score where id=2";
 			st = con.prepareStatement(clientScore);
 			rs = st.executeQuery();
-			int scoreC = rs.getInt(1);
+			if (rs.getRow() != 0) {
+				int scoreC = rs.getInt(1);
+			}
 
 		} catch (Exception e) {
-			JOptionPane.showMessageDialog(null, e);
+			e.printStackTrace();
+			// JOptionPane.showMessageDialog(null, e);
 		} finally {
 			try {
 				st.close();

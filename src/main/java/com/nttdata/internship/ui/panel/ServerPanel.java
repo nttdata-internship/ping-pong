@@ -9,18 +9,12 @@ import java.awt.event.ComponentListener;
 import java.awt.geom.Rectangle2D;
 import java.io.IOException;
 import java.io.Serializable;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 
 import javax.swing.JFrame;
-import javax.swing.JOptionPane;
 
 import com.nttdata.internship.ui.animation.BallAnimation;
 import com.nttdata.internship.ui.network.SocketUtil;
 import com.nttdata.internship.ui.network.data.GameData;
-
-import dataBase.Driver;
 
 public class ServerPanel extends GamePanel implements Serializable {
 
@@ -29,12 +23,10 @@ public class ServerPanel extends GamePanel implements Serializable {
 	private BallAnimation animationThread;
 
 	public static Dimension frameSize = new Dimension(640, 560);
-	private Connection con = null;
-	private ResultSet rs = null;
-	private PreparedStatement st = null;
+	
 
 	public ServerPanel() {
-		con = Driver.DB();
+		
 		setFocusable(true);
 		setFocusTraversalKeysEnabled(false);
 		setPreferredSize(frameSize);
@@ -121,38 +113,18 @@ public class ServerPanel extends GamePanel implements Serializable {
 			g2.setColor(Color.ORANGE);
 			g2.fill(new Rectangle2D.Double(ServerPanel.frameSize.getWidth() - 35, 0 + clientPaddle.getY(), 20, 80));
 		}
-		//paintScore(g2, gameStatus.message);
+		// paintScore(g2, gameStatus.message);
 
 		if (gameStatus == GAME_STATUS.WIN) {
-			//paintScore(g2, gameStatus.message);
-			//setScoreS(getScoreS() + 1);
-			
 			
 
-			         try{
-			        	 
-			            String sql="Update Score SET score = score + 1 where id = 1";
-			            st = con.prepareStatement(sql);
-			            st.executeUpdate();
-
-			        } catch(Exception e){
-			            JOptionPane.showMessageDialog(null,e);
-			        }finally{
-			            try{
-			                st.close();
-			        }catch(Exception e){
-//			            catch(SQLException e){
-			                JOptionPane.showMessageDialog(null, e);
-			            }
-			        }
-			
 			paintMessage(g2, gameStatus.message);
 			paintScore(g2, gameStatus.message);
 			setGameStatus(GAME_STATUS.RESUME);
 		}
 		if (gameStatus == GAME_STATUS.LOOSE) {
 			paintScore(g2, gameStatus.message);
-			//setScoreC(getScoreC() + 1);
+			// setScoreC(getScoreC() + 1);
 			paintMessage(g2, gameStatus.message);
 			setGameStatus(GAME_STATUS.RESUME);
 		}

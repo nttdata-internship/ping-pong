@@ -132,22 +132,7 @@ public class ClientPanel extends GamePanel implements Serializable {
 		}
 		if (gameStatus == GAME_STATUS.WIN){ 
 			//setScoreC(getScoreC() + 1);
-			 try{
-	        	 
-		            String sql="Update Score SET score = score + 1 where id = 2";
-		            st = con.prepareStatement(sql);
-		            st.executeUpdate();
-
-		        } catch(Exception e){
-		            JOptionPane.showMessageDialog(null,e);
-		        }finally{
-		            try{
-		                st.close();
-		        }catch(Exception e){
-//		            catch(SQLException e){
-		                JOptionPane.showMessageDialog(null, e);
-		            }
-		        }
+			
 			setGameStatus(GAME_STATUS.RESUME);
 		}
 

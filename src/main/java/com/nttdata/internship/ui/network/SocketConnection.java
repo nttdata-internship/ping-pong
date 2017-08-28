@@ -5,9 +5,14 @@ import java.io.ObjectInputStream;
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
+
+import org.h2.tools.Server;
 
 import com.nttdata.internship.ui.animation.Ball;
 import com.nttdata.internship.ui.animation.ObjectShape;
@@ -15,16 +20,24 @@ import com.nttdata.internship.ui.network.data.GameData;
 import com.nttdata.internship.ui.panel.GamePanel;
 import com.nttdata.internship.ui.panel.GamePanel.GAME_STATUS;
 
+import dataBase.Driver;
+
 /**
  * 
  *
- *	the class connects the client to server
+ * the class connects the client to server
  *
  */
 public class SocketConnection extends Thread {
 
 	private Socket clientSocket = null;
 	private GamePanel panel;
+
+	protected int rowId;
+
+	public int getRowid() {
+		return rowId;
+	}
 
 	static Properties gameProperties = new Properties();
 
@@ -39,6 +52,7 @@ public class SocketConnection extends Thread {
 	public SocketConnection(GamePanel panel) {
 		this.panel = panel;
 	}
+
 	/**
 	 * sends data from client to server(score, game status position of client)
 	 */
@@ -52,17 +66,18 @@ public class SocketConnection extends Thread {
 				ObjectInputStream in = new ObjectInputStream(clientSocket.getInputStream());
 				GameData receivedData = (GameData) SocketUtil.readData(in);
 				panel.setGameStatus(receivedData.getGameStatus());
-				//panel.setScoreS(receivedData.getScore());
-				//System.out.println(panel.getScoreS() + "-" + panel.getScoreC());
+				// panel.setScoreS(receivedData.getScore());
+				// System.out.println(panel.getScoreS() + "-" +
+				// panel.getScoreC());
 				if (GAME_STATUS.RUNNING == receivedData.getGameStatus()) {
 					processResponse(receivedData);
 					GameData sentData = new GameData();
 					List<ObjectShape> paddle = new ArrayList<>();
 					paddle.add(panel.getPaddle());
 					sentData.setObjects(paddle);
-					//sentData.setScore(panel.getScoreC());
+					// sentData.setScore(panel.getScoreC());
 					sentData.setGameStatus(panel.getGameStatus());
-					
+
 					SocketUtil.sendDataToServer(clientSocket.getOutputStream(), sentData);
 				}
 
@@ -78,12 +93,33 @@ public class SocketConnection extends Thread {
 	public void listenForConnection() {
 		Thread clientReceiverThread = new Thread(new Runnable() {
 			public void run() {
+
+				PreparedStatement st = null;
+				ResultSet rs = null;
 				ServerSocket server = null;
+				// int rowId;
 				try {
+					
 					server = new ServerSocket();
 					server.bind(new InetSocketAddress(gameProperties.getProperty("game.host"),
 							Integer.parseInt((String) gameProperties.get("game.port"))));
 					clientSocket = server.accept();
+					
+					final Connection con = Driver.DB();
+					 Server.createTcpServer().start();
+					String init = "delete from score";
+
+					st = con.prepareStatement(init);
+					// `'"
+					String insertData = "insert into score values(null,'server',0,'"
+							+ gameProperties.getProperty("game.host") + "',0)";
+
+					st = con.prepareStatement(insertData);
+					rowId = st.executeUpdate();
+					
+					st.executeUpdate();
+					con.close();
+
 					panel.setOutputStream(clientSocket.getOutputStream());
 
 					while (true) {
@@ -101,10 +137,11 @@ public class SocketConnection extends Thread {
 							panel.setGameStatus(gameData.getGameStatus());
 						}
 
-						//panel.setScoreC(gameData.getScore());
+						// panel.setScoreC(gameData.getScore());
 						// gameData.setGameStatus(status);
 
-						//System.out.println(panel.getScoreS() + "-" + panel.getScoreC());
+						// System.out.println(panel.getScoreS() + "-" +
+						// panel.getScoreC());
 						panel.repaint();
 					}
 
