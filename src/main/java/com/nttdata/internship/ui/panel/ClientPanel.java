@@ -21,7 +21,7 @@ import com.nttdata.internship.ui.animation.ObjectShape;
 import com.nttdata.internship.ui.network.SocketUtil;
 import com.nttdata.internship.ui.network.data.GameData;
 
-import dataBase.Driver;
+import dataBase.DatabaseUtil;
 
 public class ClientPanel extends GamePanel implements Serializable {
 
@@ -30,13 +30,13 @@ public class ClientPanel extends GamePanel implements Serializable {
 
 	protected ObjectShape shape;
 	private Connection con = null;
-    private PreparedStatement st = null;
+	private PreparedStatement st = null;
 
 	public ClientPanel() {
 		setFocusable(true);
 		gameStatus = GAME_STATUS.RUNNING;
 		setPreferredSize(ServerPanel.frameSize);
-		//con = Driver.DB();
+		// con = Driver.DB();
 	}
 
 	public void clientFrame() {
@@ -82,7 +82,7 @@ public class ClientPanel extends GamePanel implements Serializable {
 		// TODO Auto-generated method stub
 		super.startGame();
 
-		//super.stopGame();
+		// super.stopGame();
 		this.gameStatus = GAME_STATUS.PAUSED;
 		try {
 			GameData data = new GameData();
@@ -90,7 +90,7 @@ public class ClientPanel extends GamePanel implements Serializable {
 			paddle.add(getPaddle());
 			data.setObjects(paddle);
 			data.setGameStatus(GAME_STATUS.RUNNING);
-			//data.setScore(getScoreS()+1);
+			// data.setScore(getScoreS()+1);
 			SocketUtil.sendDataToServer(os, data);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -108,7 +108,7 @@ public class ClientPanel extends GamePanel implements Serializable {
 			clientPaddle.add(getClientPaddle());
 			data.setObjects(clientPaddle);
 			data.setGameStatus(GAME_STATUS.PAUSED);
-			//data.setScore(getScoreS()+1);
+			// data.setScore(getScoreS()+1);
 			SocketUtil.sendDataToServer(os, data);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -130,14 +130,14 @@ public class ClientPanel extends GamePanel implements Serializable {
 			g2.setColor(Color.ORANGE);
 			g2.fill(new Rectangle2D.Double(ServerPanel.frameSize.getWidth() - 35, 0 + paddle.getY(), 20, 80));
 		}
-		if (gameStatus == GAME_STATUS.WIN){ 
-			//setScoreC(getScoreC() + 1);
-			
+		if (gameStatus == GAME_STATUS.WIN) {
+			// setScoreC(getScoreC() + 1);
+
 			setGameStatus(GAME_STATUS.RESUME);
 		}
 
-		paintScore(g2, gameStatus.message);
+		if (gameStatus != GAME_STATUS.RUNNING)
+			paintScore(g2, gameStatus.message);
 	}
 
-	
 }

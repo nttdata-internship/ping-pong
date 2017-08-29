@@ -3,7 +3,6 @@ package com.nttdata.internship.ui.animation;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.RowId;
 import java.util.ArrayList;
 
 import javax.swing.JOptionPane;
@@ -14,7 +13,7 @@ import com.nttdata.internship.ui.network.data.GameData;
 import com.nttdata.internship.ui.panel.GamePanel;
 import com.nttdata.internship.ui.panel.GamePanel.GAME_STATUS;
 
-import dataBase.Driver;
+import dataBase.DatabaseUtil;
 
 /**
  * Syncs data between client and server(game status, score)
@@ -28,7 +27,6 @@ public class BallAnimation extends Thread {
 	private GamePanel panel;
 
 	private Connection con = null;
-	private SocketConnection socket;
 
 	public BallAnimation(GamePanel panel) {
 		this.ball = panel.getBall();
@@ -40,7 +38,6 @@ public class BallAnimation extends Thread {
 			PreparedStatement st = null;
 			ResultSet rs = null;
 
-			con = Driver.DB();
 			while (panel.isGameStarted()) {
 				ball.move();
 				GAME_STATUS status = ball.checkObjectCollision(panel.getPaddle(), panel.getClientPaddle());
@@ -75,29 +72,19 @@ public class BallAnimation extends Thread {
 					}
 
 					try {
-
-						String sql = "update score SET " + winner_column + " = "+ winner_column +"+ 1 where id = ?";
-						//?= rowId
-						
+						con = DatabaseUtil.getConnection();
+						String sql = "update score SET " + winner_column + " = " + winner_column + "+ 1 where id = ?";
 						st = con.prepareStatement(sql);
-						st.setInt(1,socket.getRowid());
-						
-						con.setAutoCommit(false);
-						con.commit();
-
+						st.setInt(1, panel.getRowId());
 						st.executeUpdate();
+						st.close();
+						con.close();
 
 					} catch (Exception e) {
 						e.printStackTrace();
-						JOptionPane.showMessageDialog(null, e);
+						throw new RuntimeException(e);
 					} finally {
-						try {
-							st.close();
-						} catch (Exception e) {
-							// catch(SQLException e){
 
-							JOptionPane.showMessageDialog(null, e);
-						}
 					}
 
 					break;

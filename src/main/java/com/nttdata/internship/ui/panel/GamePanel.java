@@ -14,8 +14,9 @@ import javax.swing.JPanel;
 
 import com.nttdata.internship.ui.animation.Ball;
 import com.nttdata.internship.ui.animation.ObjectShape;
+import com.nttdata.internship.ui.network.SocketConnection;
 
-import dataBase.Driver;
+import dataBase.DatabaseUtil;
 
 public class GamePanel extends JPanel {
 
@@ -27,12 +28,14 @@ public class GamePanel extends JPanel {
 	protected ObjectShape paddle;
 	protected ObjectShape clientPaddle;
 	protected OutputStream os;
-	private int scoreC = 0;
-	protected int scoreS = 0;
 	protected GAME_STATUS gameStatus = GAME_STATUS.NEW;
 	private Connection con = null;
 	private ResultSet rs = null;
 	private PreparedStatement st = null;
+	private SocketConnection socket;
+	private int rowId;
+	private int serverScore;
+	private int clientScore;
 
 	public static enum GAME_STATUS {
 		RUNNING("Game running..."), PAUSED("Game paused."), NEW("Press SPACE to start"), LOOSE("You've lost!"), WIN(
@@ -55,7 +58,7 @@ public class GamePanel extends JPanel {
 		this.paddle = new ObjectShape();
 		this.ball = new Ball(ServerPanel.frameSize);
 		this.clientPaddle = new ObjectShape();
-		con = Driver.DB();
+		// con = Driver.DB();
 
 	}
 
@@ -120,31 +123,30 @@ public class GamePanel extends JPanel {
 		g.setFont(new Font("Arial", Font.BOLD, 24));
 
 		try {
-
-			String sql = "select score from Score where id=1";
-			st = con.prepareStatement(sql);
+			//
+			Connection con = DatabaseUtil.getConnection();
+			String scoreSelect = "select host_score, client_score from score where id=?";
+			st = con.prepareStatement(scoreSelect);
+			st.setInt(1, this.getRowId());
 			rs = st.executeQuery();
-			if (rs.getRow() != 0) {
-				int scoreS = rs.getInt(1);
-			}
+			if (rs.next()) {
+				serverScore = rs.getInt(1);
+				clientScore = rs.getInt(2);
 
-			String clientScore = "select score from Score where id=2";
-			st = con.prepareStatement(clientScore);
-			rs = st.executeQuery();
-			if (rs.getRow() != 0) {
-				int scoreC = rs.getInt(1);
 			}
 
 		} catch (Exception e) {
 			e.printStackTrace();
-			// JOptionPane.showMessageDialog(null, e);
+
 		} finally {
 			try {
 				st.close();
 			} catch (Exception e) {
 			}
 		}
-		g.drawString(scoreS + "-" + scoreC, 300, 25);
+
+		g.drawString(serverScore + "-" + clientScore, 300, 25);
+
 	}
 
 	public boolean isGameStarted() {
@@ -168,20 +170,13 @@ public class GamePanel extends JPanel {
 
 	}
 
-	public int getScoreS() {
-		return scoreS;
+	public void setRowId(int i) {
+		this.rowId = i;
+
 	}
 
-	public void setScoreS(int scoreC) {
-		this.scoreS = scoreC;
-	}
-
-	public int getScoreC() {
-		return scoreC;
-	}
-
-	public void setScoreC(int scoreC) {
-		this.scoreC = scoreC;
+	public int getRowId() {
+		return rowId;
 	}
 
 }
