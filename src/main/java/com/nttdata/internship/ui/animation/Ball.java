@@ -1,12 +1,10 @@
 package com.nttdata.internship.ui.animation;
 
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.awt.image.ImageObserver;
-import java.io.File;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
@@ -33,15 +31,17 @@ public class Ball extends ObjectShape implements ImageObserver {
 		y = 275;
 		this.frameSize = frameSize;
 		try {
-			ballAnim = ImageIO.read(new File("C:\\Users\\stefan.neacsu\\Desktop\\Pong Resources\\ball.png"));
+			ballAnim = ImageIO.read(
+					this.getClass().getClassLoader().getResource("ball.png")
+					/*new File("/maps/src/main/resources/ball.png")*/
+					);
 		} catch (IOException e) {
+			e.printStackTrace();
 			System.out.println("The ball is not loading.");
 		}
 	}
 
 	public void draw(Graphics g) {
-//		g.setColor(Color.WHITE);
-//		g.fillOval(x, y, 20, 20);
 		g.drawImage(ballAnim, x, y, this);
 	}
 

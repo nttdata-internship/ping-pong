@@ -7,12 +7,21 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 
 import com.nttdata.internship.ui.animation.Ball;
 import com.nttdata.internship.ui.animation.ObjectShape;
+import com.nttdata.internship.ui.network.SocketConnection;
+
+import dataBase.DatabaseUtil;
 
 public class GamePanel extends JPanel {
 
@@ -25,13 +34,16 @@ public class GamePanel extends JPanel {
 	protected ObjectShape clientPaddle;
 	protected OutputStream os;
 	private BufferedImage img;
-	private int scoreC = 0;
-	protected int scoreS = 0;
 	protected GAME_STATUS gameStatus = GAME_STATUS.NEW;
+	private SocketConnection socket;
+	private int rowId;
+	private int serverScore;
+	private int clientScore;
+	private BufferedImage ballAnim;
 
 	public static enum GAME_STATUS {
-		RUNNING("The game is running..."), PAUSED("The game is paused..."), NEW("Press SPACE to START"), LOOSE("Awww...you've lost"), WIN(
-				"Great job, you won!"), RESUME("Press SPACE to RESUME");
+		RUNNING("The game is running..."), PAUSED("The game is paused..."), NEW("Press SPACE to START"), LOOSE(
+				"Awww...you've lost"), WIN("Great job, you won!"), RESUME("Press SPACE to RESUME");
 
 		protected String message;
 
@@ -51,7 +63,7 @@ public class GamePanel extends JPanel {
 		this.ball = new Ball(ServerPanel.frameSize);
 		this.clientPaddle = new ObjectShape();
 		try {
-			img = ImageIO.read(new File("C:\\Users\\stefan.neacsu\\Desktop\\Pong Resources\\bg.png"));
+			img = ImageIO.read(this.getClass().getClassLoader().getResource("bg.png"));
 		} catch (IOException e) {
 			System.out.println("Image could not be read");
 		}
@@ -109,15 +121,45 @@ public class GamePanel extends JPanel {
 	}
 
 	protected void paintMessage(Graphics g, String message) {
-		g.setColor(Color.BLACK);
-		g.setFont(new Font("Times New Roman", Font.BOLD, 16));
+		g.setColor(Color.WHITE);
+		g.setFont(new Font("Arial", Font.BOLD, 16));
 		g.drawString(message, 250, 200);
 	}
 
-	protected void paintScore(Graphics g, String message) {
+	protected List<Integer> getScore() {
+		List<Integer> scoreList = new ArrayList<>();
+		try {
+			//
+			Connection con = DatabaseUtil.getConnection();
+			String scoreSelect = "select host_score, client_score from score where id=?";
+			PreparedStatement st = con.prepareStatement(scoreSelect);
+			st.setInt(1, this.getRowId());
+			ResultSet rs = st.executeQuery();
+			if (rs.next()) {
+
+				scoreList.add(rs.getInt(1));
+				scoreList.add(rs.getInt(2));
+
+			}
+			rs.close();
+			st.close();
+			con.close();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+
+		} finally {
+
+		}
+		return scoreList;
+
+	}
+
+	protected void paintScore(List<Integer> score, Graphics g) {
+		
 		g.setColor(Color.BLACK);
 		g.setFont(new Font("Helvetica Neue", Font.BOLD, 24));
-		g.drawString(getScoreS() + "-" + getScoreC(), 300, 25);
+		g.drawString(score.get(0) + "-" + score.get(1), 300, 25);
 	}
 
 	public boolean isGameStarted() {
@@ -141,20 +183,12 @@ public class GamePanel extends JPanel {
 
 	}
 
-	public int getScoreS() {
-		return scoreS;
+	public void setRowId(int i) {
+		this.rowId = i;
 	}
 
-	public void setScoreS(int scoreC) {
-		this.scoreS = scoreC;
-	}
-
-	public int getScoreC() {
-		return scoreC;
-	}
-
-	public void setScoreC(int scoreC) {
-		this.scoreC = scoreC;
+	public int getRowId() {
+		return rowId;
 	}
 
 }

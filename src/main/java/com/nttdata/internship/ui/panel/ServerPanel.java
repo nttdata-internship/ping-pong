@@ -11,6 +11,8 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
+import java.util.Collections;
+import java.util.List;
 
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;
@@ -37,7 +39,7 @@ public class ServerPanel extends GamePanel implements Serializable {
 		f.setVisible(true);
 		
 		try {
-			paddleS = ImageIO.read(new File("C:\\Users\\stefan.neacsu\\Desktop\\Pong Resources\\paddle.png"));
+			paddleS = ImageIO.read(this.getClass().getClassLoader().getResource("paddle.png"));
 		} catch (IOException e) {
 			System.out.println("The paddle is not loading.");
 		}
@@ -97,7 +99,7 @@ public class ServerPanel extends GamePanel implements Serializable {
 			// paddle.add(getPaddle());
 			// data.setObjects(paddle);
 			data.setGameStatus(GAME_STATUS.PAUSED);
-			data.setScore(getScoreS());
+			// data.setScore(getScoreS());
 			SocketUtil.sendDataToServer(os, data);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -121,18 +123,21 @@ public class ServerPanel extends GamePanel implements Serializable {
 //			g2.setColor(Color.ORANGE);
 //			g2.fill(new Rectangle2D.Double(ServerPanel.frameSize.getWidth() - 35, 0 + clientPaddle.getY(), 20, 80));
 		}
-  		paintScore(g2, gameStatus.message);
+		
+		
+		List<Integer> score=getScore();
+		if(!score.isEmpty() && score.size()>1)
+		paintScore(score, g2);
+		
 		if (gameStatus == GAME_STATUS.WIN) {
-			paintScore(g2, gameStatus.message);
 			paintMessage(g2, gameStatus.message);
 			setGameStatus(GAME_STATUS.RESUME);
-			setScoreS(getScoreS() + 1);
+			//setScoreS(getScoreS() + 1);
 		}
 		if (gameStatus == GAME_STATUS.LOOSE) {
-			paintScore(g2, gameStatus.message);
 			paintMessage(g2, gameStatus.message);
 			setGameStatus(GAME_STATUS.RESUME);
-			setScoreC(getScoreC() + 1);
+			//setScoreC(getScoreC() + 1);
 		}
 
 	}

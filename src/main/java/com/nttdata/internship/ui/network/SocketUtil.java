@@ -16,7 +16,7 @@ public final class SocketUtil {
 	public static void sendDataToServer(OutputStream os, GameData gameData) throws IOException {
 		ObjectOutputStream out = new ObjectOutputStream(os);
 		out.writeObject(gameData);
-		System.out.println("gameStatus sent= " + gameData.getGameStatus());
+//		System.out.println("gameStatus sent= " + gameData.getGameStatus());
 		out.flush();
 
 	}
