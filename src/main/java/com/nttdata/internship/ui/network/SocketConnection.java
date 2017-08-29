@@ -31,7 +31,7 @@ public class SocketConnection extends Thread {
 	private Socket clientSocket = null;
 	private GamePanel panel;
 
-	static Properties gameProperties = new Properties();
+	public static Properties gameProperties = new Properties();
 
 	static {
 		try {
