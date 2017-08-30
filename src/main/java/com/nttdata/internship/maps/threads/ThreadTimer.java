@@ -6,8 +6,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
-import com.nttdata.internship.maps.Operatie;
-
 public class ThreadTimer implements Runnable {
 
 	private Integer start;
@@ -34,9 +32,10 @@ public class ThreadTimer implements Runnable {
 			e1.printStackTrace();
 		}
 
+		FileWriter out = null ;
 		try {
 
-			final FileWriter out = new FileWriter(
+			out = new FileWriter(
 					"src/main/resources/generated/" + Thread.currentThread().getName() + ".txt");
 
 			while (sharedCounter.getValue() < end) {
@@ -55,6 +54,15 @@ public class ThreadTimer implements Runnable {
 
 		} catch (IOException | InterruptedException e) {
 			e.printStackTrace();
+		}
+		finally {
+			if(out!=null)
+				try {
+					out.close();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 		}
 
 	}

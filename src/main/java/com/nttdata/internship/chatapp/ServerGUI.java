@@ -5,17 +5,21 @@ import java.awt.*;
 import java.awt.event.*;
 
 public class ServerGUI extends JFrame implements ActionListener, WindowListener {
-	private JButton stopStart;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private JTextArea chat, event;
-	private JTextField tPortNumber;
 
 	ServerGUI(int port) {
 		super("Chat Server");
 		JPanel north = new JPanel();
 		north.add(new JLabel("Port number: "));
+		JTextField tPortNumber = new JTextField();
 		tPortNumber = new JTextField(" " + port);
 		north.add(tPortNumber);
 
+		JButton stopStart = new JButton();
 		stopStart = new JButton("Start");
 		stopStart.addActionListener(this);
 		north.add(stopStart);

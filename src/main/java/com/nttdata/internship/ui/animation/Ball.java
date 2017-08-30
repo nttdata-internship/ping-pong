@@ -1,17 +1,28 @@
 package com.nttdata.internship.ui.animation;
 
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.Image;
+import java.awt.image.BufferedImage;
+import java.awt.image.ImageObserver;
+import java.io.IOException;
+
+import javax.imageio.ImageIO;
 
 import com.nttdata.internship.ui.panel.GamePanel.GAME_STATUS;
 
-public class Ball extends ObjectShape {
+/**
+ * 
+ * @author ioana.constantin
+ *
+ */
+public class Ball extends ObjectShape implements ImageObserver {
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 	public transient Dimension frameSize;
+	protected transient BufferedImage ballAnim;
 	public double speedX = getRandomSpeed() * getRandomDirection();
 	public double speedY = getRandomSpeed() * getRandomDirection();
 
@@ -19,19 +30,27 @@ public class Ball extends ObjectShape {
 		x = 340;
 		y = 275;
 		this.frameSize = frameSize;
+		try {
+			ballAnim = ImageIO.read(
+					this.getClass().getClassLoader().getResource("ball.png")
+					/*new File("/maps/src/main/resources/ball.png")*/
+					);
+		} catch (IOException e) {
+			e.printStackTrace();
+			System.out.println("The ball is not loading.");
+		}
 	}
 
 	public void draw(Graphics g) {
-		g.setColor(Color.WHITE);
-		g.fillOval(x, y, 20, 20);
+		g.drawImage(ballAnim, x, y, this);
 	}
 
 	public double getRandomSpeed() {
-		return (Math.random() * 4 + 2);
+		return (Math.random() * 4 + 3);
 	}
 
 	public int getRandomDirection() {
-		int rand = (int) (Math.random() * 2);
+		int rand = (int) (Math.random() * 2 + 6);
 		if (rand == 1) {
 			return 1;
 		} else {
@@ -39,6 +58,12 @@ public class Ball extends ObjectShape {
 		}
 	}
 
+	/**
+	 * checks if the player wins or looses the ball
+	 * @param paddle is server player
+	 * @param clientPaddle is client player
+	 * @return
+	 */
 	public GAME_STATUS checkObjectCollision(ObjectShape paddle, ObjectShape clientPaddle) {
 		GAME_STATUS status = GAME_STATUS.RUNNING;
 		if (x <= 20) {
@@ -61,7 +86,11 @@ public class Ball extends ObjectShape {
 		return status;
 
 	}
-
+	
+	/**
+	 * 
+	 * Change the direction of the ball when it hits the wall
+	 */
 	public void move() {
 		x += speedX;
 		y += speedY;
@@ -81,6 +110,12 @@ public class Ball extends ObjectShape {
 
 	public void setFrameSize(Dimension frameSize) {
 		this.frameSize = frameSize;
+	}
+
+	@Override
+	public boolean imageUpdate(Image img, int infoflags, int x, int y, int width, int height) {
+		// TODO Auto-generated method stub
+		return false;
 	}
 
 }

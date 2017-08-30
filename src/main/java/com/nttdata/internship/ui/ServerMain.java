@@ -13,5 +13,4 @@ public class ServerMain {
 		SocketConnection sc = new SocketConnection(server);
 		sc.listenForConnection();
 	}
-
 }
